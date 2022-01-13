@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/css/main.c20638e0.css",
+    "main.js": "/static/js/main.9bfc18ad.js",
+    "static/js/787.62a19a16.chunk.js": "/static/js/787.62a19a16.chunk.js",
+    "static/media/dashLogo.jpg": "/static/media/dashLogo.4bc759d3128898fa9984.jpg",
+    "static/media/logo.png": "/static/media/logo.04b7801377e8f63ad9ac.png",
+    "index.html": "/index.html",
+    "main.c20638e0.css.map": "/static/css/main.c20638e0.css.map",
+    "main.9bfc18ad.js.map": "/static/js/main.9bfc18ad.js.map",
+    "787.62a19a16.chunk.js.map": "/static/js/787.62a19a16.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c20638e0.css",
+    "static/js/main.9bfc18ad.js"
+  ]
+}
