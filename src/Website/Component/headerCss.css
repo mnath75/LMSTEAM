@@ -1,0 +1,33 @@
+.logo{
+    width: 150px;
+}
+.active_link{
+    border-bottom: 1px solid #fff;
+}
+.header{
+    height: 70px;
+    z-index: 99;
+}
+nav ul li a{
+    color:#fff !important;
+}
+nav ul li a a:hover{
+    color: #fff !important;
+}
+ul{
+    margin-top:15px ;
+}
+.dropdown-menu{
+    background:  rgb(0, 99, 169);
+    z-index: 101 !important;
+}
+.dropdown-menu li a:hover{
+    background: black;
+}
+@media (min-width: 1000px) {
+    .navbar-expand-lg .navbar-collapse{
+        position: absolute;
+        right: 10px;
+    }
+}
+
