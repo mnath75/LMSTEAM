@@ -1,5 +1,7 @@
 export const Themes = {
     MainHeaderColor:'rgb(0, 99, 169)',
+    ParticleBackgroundColor:'#0d47a1',
+    ParticlesColor:'#fff',
     SecondHeaderColor:'#dc3545',
     WHITE: "#fff",
     BLACK: "#313639",

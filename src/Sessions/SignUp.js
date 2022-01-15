@@ -16,11 +16,11 @@ export default function SignUp(){
                     <h3 className={'h3'}>Create Account</h3>
                     <SocialLogin/>
                     <p>or use your email for registration</p>
-                    <input type="text" name="txt" placeholder="UserName" required=""/>
-                    <input type="text" name="txt" placeholder="First Name" required=""/>
-                    <input  placeholder="Last Name" required=""/>
+                    <input type="text" name="txt" placeholder="Name" required=""/>
+                    <input type="text" name="txt" placeholder="Email" required=""/>
+                    <input type={'number'}  placeholder="Mobile" required=""/>
                     <input type="password" name="pswd" placeholder="Password" required=""/>
-                    <input  name="pswd" placeholder="Referral Code" required=""/>
+                    <input  name="pswd" placeholder="Confirm Password" required=""/>
                     <Link to={'/login'} className={'d-lg-none'}>Already Have an Account? <span className={'text-primary'}>Sign in</span></Link>
                     <button onClick={() => {setState(false)}}>Sign Up</button>
                 </div>:<>

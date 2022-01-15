@@ -4,6 +4,7 @@ import Login from "./Login";
 import SignUp from "./SignUp";
 import {Player, Controls} from '@lottiefiles/react-lottie-player';
 import HeaderWeb from "../Website/Component/HeaderComponent";
+import Particles from "../MainComponents/Particles";
 import './FormStyle.css';
 import {Themes} from "../Theme/theme";
 export default function Form() {
@@ -15,7 +16,7 @@ export default function Form() {
         if (path === '/sign-up') setState('right-panel-active')
     }, [path])
     return (
-        <>
+        <><div className={'d-none d-xl-block'}><Particles/></div>
             <HeaderWeb/>
             <div className={'d-flex justify-content-center align-items-center'} style={{height: '93vh'}}>
                 <div className={`container ${state}`}>
