@@ -35,7 +35,6 @@ export const DashboadNav = [
     {id: 6, title: "Reports", icon: <PollIcon/>, page: "/reports"},
     {id: 7,title: "Site & App Manager",icon: <DvrIcon/>,page: "/site-&-app-manager",},
     {id: 8,title: "Setting",icon: <SettingsIcon/>,page: "/setting",},
-    {id: 9,title: "Log Out",icon: <ExitToAppIcon/>,page: "/login",},
 ];
 //Website-header
 export const WebsiteNav = [

@@ -11,6 +11,9 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import DehazeIcon from '@material-ui/icons/Dehaze';
 import WebLogo from '../Images/logo.png';
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import {useDispatch} from 'react-redux';
+import {makeLogout} from "../services/Slices/UserSlice";
 const useStyles = makeStyles({
     list: {
         width: 250,
@@ -29,9 +32,10 @@ const useStyles = makeStyles({
         height:'80%',
     }
 });
-
 export default function Drawer(props) {
     const classes = useStyles();
+    const dispatch=useDispatch();
+
     const [state, setState] = React.useState({
         left: false,
     });
@@ -62,6 +66,12 @@ export default function Drawer(props) {
                     <ListItem button key={nav.title} to={nav.page} component={Link} >
                         <ListItemIcon>{nav.icon}</ListItemIcon>
                         <ListItemText primary={nav.title}/>
+                    </ListItem>
+                    <ListItem button  to={'/login'} component={Link} onClick={() => {
+                        dispatch(makeLogout({}));
+                    }} >
+                        <ListItemIcon><ExitToAppIcon/></ListItemIcon>
+                        <ListItemText primary={'Log Out'}/>
                     </ListItem>
                 </>
             )))}

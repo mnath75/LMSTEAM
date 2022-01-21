@@ -1,26 +1,27 @@
 import React, {useState} from "react";
 import {Button} from "@material-ui/core";
-import {Link , useHistory} from 'react-router-dom'
+import {Link , useHistory,Redirect} from 'react-router-dom'
 import OtpInput from 'react-otp-input';
 import SocialLogin from "./SocialLogin";
+import _ from 'lodash';
+import {useDispatch, useSelector} from 'react-redux';
+import {selectUser,makeLogin} from "../services/Slices/UserSlice";
+import {crud} from "../services/crud";
 import './FormStyle.css';
-
 export default function Login() {
+    const history = useHistory();
+    const  isAuthenticated = useSelector(selectUser);
+    const dispatch=useDispatch();
     const [login, setLogin] = useState('login');
     const [otpView, setOtpVIew] = useState({
         otpscreen: false,
         value: ''
     })
+    const [params , setParams] = useState({
+        username:"",
+        password:""
+    });
     const [otp, setOtp] = useState();
-    const history = useHistory();
-    function UserLogin() {
-        setLogin('false');
-        setOtpVIew({
-            otpscreen: true,
-            value: 1
-        });
-    }
-
     function ForgetPassword() {
         setLogin('false');
         setOtpVIew({
@@ -28,23 +29,66 @@ export default function Login() {
             value: 2
         });
     }
+    const loginFunction = async ()=>{
+        const {username, password} = params
+        let error = [];
+        if(!username)
+            error.push("The username field is required");
+        if(!password)
+            error.push("The password field is required");
+        if(!_.isEmpty(error)){
+            crud.notify({
+                message: error[0],
+                type: "error"
+            });
+        }else{
+            try {
+                await dispatch(makeLogin(params));
+                setLogin('false');
+                setOtpVIew({
+                    otpscreen: true,
+                    value: 1
+                });
 
+            } catch (e) {
+                console.log(e)
+            }
+        }
+    }
+    if(!(_.isEmpty(isAuthenticated))){
+        return <Redirect to='/dashboard'/>
+    }
     return (
         <>
             <div className="sign-in d-flex justify-content-center">
-                {login === 'login' ? <div className={'form'}>
+                {login === 'login' ?
+                    <div className={'form'}>
                     <h1 className={'h3'}>Sign in</h1>
                     <SocialLogin/>
                     <p>or use your account</p>
-                    <input name="email" placeholder="Username/Mobile" required=""/>
-                    <input type="password" name="pswd" placeholder="Password" required=""/>
+                    <input placeholder="Username/Mobile" name="username"   value={params.username}
+                           onChange={
+                        e => {
+                            const {value: username} = e.target;
+                            setParams(params => ({
+                                ...params,
+                                username
+                            }));
+                        }
+                    }/>
+                    <input type="password" name="password" placeholder="Password" value={params.password}
+                           onChange={(e) => {
+                               const {value: password} = e.target;
+                               setParams(params => ({
+                                   ...params,
+                                   password
+                               }));}}/>
                     <Link to={'/'} onClick={() => {
                         setLogin('forget')
                     }}>Forget your Password?</Link>
                     <Link className={'d-lg-none'} to={'/sign-up'}>Create a new Account? <span
                         className={'text-primary'}>Sign Up</span></Link>
-                    <button onClick={() => {
-                        UserLogin()
+                    <button onClick={() => {loginFunction();
                     }}>Sign In
                     </button>
                 </div> : <></>}
