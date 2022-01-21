@@ -2,7 +2,7 @@ import {LineChart,ResponsiveContainer,Legend, Tooltip,Line,XAxis,YAxis,Cartesian
 function MyLinechart(props) {
     return (
         <>
-            <div className={'px-lg-3 my-4'}>
+            <div className={'px-lg-3 my-3'}>
             <ResponsiveContainer width="100%" height={200} aspect={0}>
                 <LineChart data={props.data} >
                     <CartesianGrid vertical={false} />

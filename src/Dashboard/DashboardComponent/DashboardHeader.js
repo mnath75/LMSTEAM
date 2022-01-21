@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from 'clsx';
-import {Link, NavLink} from 'react-router-dom';
+import {Link, NavLink,useHistory} from 'react-router-dom';
 import {useDispatch} from 'react-redux';
 import {makeLogout} from "../../services/Slices/UserSlice";
 import {Button, makeStyles, Badge, Menu, MenuItem, Avatar} from "@material-ui/core";
@@ -13,9 +13,11 @@ import logo from "../../Images/dashLogo.jpg";
 import '../../Website/Component/headerCss.css';
 export default function HeaderWeb() {
     const dispatch = useDispatch();
+    const history = useHistory();
     const classes = styles();
     const [userLogin, setUserLogin] = React.useState(null);
-    return (<>
+    return (
+        <>
             <nav className="navbar navbar-expand-lg navbar-light header d-none d-xl-block"
                  style={{background: Themes.MainHeaderColor}}>
                 <div className={clsx("container-fluid",)} style={{background: Themes.MainHeaderColor}}>
@@ -59,10 +61,12 @@ export default function HeaderWeb() {
                                     <MenuItem onClick={() => {
                                         setUserLogin(null)
                                     }}>My account</MenuItem>
-                                    <MenuItem onClick={() => {
-                                        dispatch(makeLogout({}));
-                                        setUserLogin(null);
-                                    }}>Logout</MenuItem>
+                                    <MenuItem
+                                        onClick={() => {
+                                        // dispatch(makeLogout({}));
+                                            history.push('/login')
+                                        setUserLogin(null);}}
+                                    >Logout</MenuItem>
                                 </Menu></li>
                         </ul>
                     </div>

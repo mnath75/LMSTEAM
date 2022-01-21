@@ -2,16 +2,13 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import { Typography } from '@material-ui/core';
-import clsx from 'clsx'
-
-
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
         '& > *': {
             margin:theme.spacing(0.5),
             width:'100%',
-            height: theme.spacing(9),
+            height: theme.spacing(7),
             display:'flex',
             flexDirection:'column',
             alignItems:'center',
@@ -20,11 +17,10 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     bold: {
-        fontWeight: 800,
-        fontSize:'20px'
+        fontWeight: 600,
+        fontSize:'17px'
     }
 }));
-
 export default function Box(props) {
 
     const classes = useStyles();

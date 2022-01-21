@@ -9,17 +9,17 @@ const PrivateRouter = ({Component, ...rest}) => {
     return (
         <>
             <Route  {...rest} render={(props) => (
-                !(_.isEmpty(isAuthenticated)) ?
+                // !(_.isEmpty(isAuthenticated)) ?
                     <>
                         <DashboardHeader/>
-                        <div className={'mt-3'}>
+                        <div className={'mt-xl-2 mt-3'}>
                             <Component {...props}/>
                         </div>
                         )
                     </>
-                : (
-                        <Redirect to='/login'/>
-                    )
+                // : (
+                //         <Redirect to='/login'/>
+                //     )
             )}/>
         </>
     )

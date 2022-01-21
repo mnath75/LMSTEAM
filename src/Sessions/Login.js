@@ -30,34 +30,39 @@ export default function Login() {
         });
     }
     const loginFunction = async ()=>{
-        const {username, password} = params
-        let error = [];
-        if(!username)
-            error.push("The username field is required");
-        if(!password)
-            error.push("The password field is required");
-        if(!_.isEmpty(error)){
-            crud.notify({
-                message: error[0],
-                type: "error"
-            });
-        }else{
-            try {
-                await dispatch(makeLogin(params));
-                setLogin('false');
-                setOtpVIew({
-                    otpscreen: true,
-                    value: 1
-                });
-
-            } catch (e) {
-                console.log(e)
-            }
-        }
+        setLogin('false');
+        setOtpVIew({
+            otpscreen: true,
+            value: 1
+        });
+        // const {username, password} = params
+        // let error = [];
+        // if(!username)
+        //     error.push("The username field is required");
+        // if(!password)
+        //     error.push("The password field is required");
+        // if(!_.isEmpty(error)){
+        //     crud.notify({
+        //         message: error[0],
+        //         type: "error"
+        //     });
+        // }else{
+        //     try {
+        //         await dispatch(makeLogin(params));
+        //         setLogin('false');
+        //         setOtpVIew({
+        //             otpscreen: true,
+        //             value: 1
+        //         });
+        //
+        //     } catch (e) {
+        //         console.log(e)
+        //     }
+        // }
     }
-    if(!(_.isEmpty(isAuthenticated))){
-        return <Redirect to='/dashboard'/>
-    }
+    // if(!(_.isEmpty(isAuthenticated))){
+    //     return <Redirect to='/dashboard'/>
+    // }
     return (
         <>
             <div className="sign-in d-flex justify-content-center">

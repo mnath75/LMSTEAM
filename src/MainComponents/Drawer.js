@@ -67,9 +67,9 @@ export default function Drawer(props) {
                         <ListItemIcon>{nav.icon}</ListItemIcon>
                         <ListItemText primary={nav.title}/>
                     </ListItem>
-                    <ListItem button  to={'/login'} component={Link} onClick={() => {
-                        dispatch(makeLogout({}));
-                    }} >
+                    <ListItem button  to={'/login'} component={Link}
+                              // onClick={() => {dispatch(makeLogout({}));}}
+                    >
                         <ListItemIcon><ExitToAppIcon/></ListItemIcon>
                         <ListItemText primary={'Log Out'}/>
                     </ListItem>

@@ -5,7 +5,7 @@ export const crud = new CrudRequest();
 crud.config(ajaxRequest);
 crud.config(chooseFile);
 crud.config(config => {
-    config.baseUrl =  "https://staging.breezie.loans/api/";
+    config.baseUrl =  "/";
     return config;
 });
 

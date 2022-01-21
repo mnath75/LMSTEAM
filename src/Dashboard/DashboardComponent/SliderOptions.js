@@ -4,8 +4,9 @@ export const Options ={
     responsiveClass: true,
     nav: true,
     dots: false,
-    autoplay: false,
-    navText: ["<div className='nav-btn prev-slide' style='font-size: 20px;width: 40px'><</div>","<div className='nav-btn next-slide'style='font-size: 20px;width: 40px'>  ></div>"],
+    autoplay: true,
+    // navText: ["<div className='nav-btn prev-slide' style='font-size: 20px;width: 40px'><</div>","<div className='nav-btn next-slide'style='font-size: 20px;width: 40px'>  ></div>"],
+    navText: ["",""],
     smartSpeed: 1000,
     responsive: {
         0: {
