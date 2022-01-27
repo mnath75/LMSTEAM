@@ -6,10 +6,11 @@ import {Provider} from 'react-redux';
 import {store, persistor} from "./services/store";
 import {PersistGate} from 'redux-persist/integration/react'
 import {CrudProvider} from "@crud/react";
-import {AlertDialog, ConfirmDialog, NotifySnackbar, ProgressIndicator, PromptDialog} from "react-material-crud";
+import {AlertDialog, ConfirmDialog,  ProgressIndicator, PromptDialog} from "react-material-crud";
 import {crud} from "./services/crud";
 import './App.css';
 import Route from "./Routing/Route";
+import Notifications from "react-notify-toast";
 
 function App() {
     return (
@@ -19,7 +20,7 @@ function App() {
                     <CrudProvider crud={crud}>
                         <ProgressIndicator/>
                         <Route/>
-                        <NotifySnackbar autoHideDuration={2000}/>
+                        <Notifications options={{zIndex: 200000, bottom: '50px'}} />
                         <AlertDialog/>
                         <PromptDialog/>
                         <ConfirmDialog/>

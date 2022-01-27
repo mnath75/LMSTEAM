@@ -4,6 +4,7 @@ import PrivateRouter from "../PrivateRouter";
 import Form from '../Sessions/Form';
 import Dashboard from "../Dashboard/Pages/Dashboard";
 import Courses from "../Dashboard/Pages/Courses";
+import QuestionBank from "../Dashboard/Pages/QuestionBank";
 export default function Routing() {
     return(
 <>
@@ -14,6 +15,7 @@ export default function Routing() {
             <Route path="/sign-up" exact  component={Form}/>
             <PrivateRouter Component={Dashboard} path={'/dashboard'} exact/>
             <PrivateRouter Component={Courses} path={'/courses'} exact/>
+            <PrivateRouter Component={QuestionBank} path={'/question-bank'} exact/>
         </Switch>
     </BrowserRouter>
     </>

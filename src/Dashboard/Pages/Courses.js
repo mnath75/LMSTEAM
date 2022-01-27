@@ -1,8 +1,7 @@
-import React from 'react';
 export default function Courses() {
-    return(
-        <>
-            <h1>Courses</h1>
+return(
+    <>
+        <h2 className={'text-center mt-3'}>Courses is coming soon..</h2>
         </>
-    )
+)
 }

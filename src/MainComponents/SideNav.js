@@ -1,5 +1,4 @@
 import React from "react";
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import SettingsIcon from '@material-ui/icons/Settings';
 import ViewListIcon from "@material-ui/icons/ViewList";
@@ -22,6 +21,10 @@ import ContactMailIcon from '@material-ui/icons/ContactMail';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 import TableChartIcon from '@material-ui/icons/TableChart';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
+import OpenInBrowserIcon from '@material-ui/icons/OpenInBrowser';
+import AirplayIcon from '@material-ui/icons/Airplay';
 //Admin-Header
 export const DashboadNav = [
     {id: 1,title: "Dashboard",icon: <DashboardIcon/>,page: "/dashboard",},
@@ -50,6 +53,21 @@ export const WebsiteNav = [
     {id: 10,title: "Login",icon: <LockOpenIcon/>,page: "/login",},
     {id: 11,title: "Sign Up",icon: <ContactMailIcon/>,page: "/sign-up",},
 ];
+//CourseSideNav
+export const CoursesSideNav =[
+    {id:1,title:'Courses',path:'/question-bank',icon:<DashboardIcon/>},
+    {id:2,title:'Subject',path:'/subject',icon:<AirplayIcon/>},
+    {id:3,title:'Topic',path:'/topic',icon:<MenuBookIcon/>},
+    {id:4,title:'Create Questions',path:'/create-question',icon:<HelpOutlineIcon/>},
+    {id:5,title:'Import Questions',path:'/create-question',icon:<SystemUpdateAltIcon/>},
+    {id:6,title:'Export Questions',path:'/create-question',icon:<OpenInBrowserIcon/>},
+]
+//MutliSelect-data
+export const colourOptions = [
+    { value: "ocean", label: "Maths"},
+    { value: "blue", label: "English" },
+    { value: "purple", label: "Hindi"},
 
+];
 
 

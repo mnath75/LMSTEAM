@@ -4,6 +4,7 @@ import React from "react";
 import Box from "./Box";
 import Box2 from "./Box2";
 import clsx from 'clsx'
+import {Tooltip, withStyles} from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
     paper: {
         border: "1px solid lightgrey",
@@ -16,9 +17,21 @@ export default function SideTable() {
     return (
         <>
             <Grid container>
+                <HtmlTooltip title={<>
+                    <div className={'d-flex justify-content-between'}>
+                        <h6 className={'text-success'}>Active</h6>
+                        <h6 className={'px-2'}>45</h6>
+                    </div>
+                    <div className={'d-flex justify-content-between'}>
+                        <h6 className={'text-danger'}>Inactive</h6>
+                        <h6 className={'px-2'}>10</h6>
+                    </div>
+                </>}>
                 <Grid item xs={12}>
                     <Box number={51} title="institutions" />
                 </Grid>
+                </HtmlTooltip>
+
             </Grid>
             <Grid container className={clsx(classes.paper,)}>
                 <Grid item xs={6}>
@@ -76,3 +89,13 @@ export default function SideTable() {
         </>
     );
 }
+const HtmlTooltip = withStyles((theme) => ({
+    tooltip: {
+        backgroundColor: '#f5f5f9',
+        color: 'rgba(0, 0, 0, 0.87)',
+        maxWidth: 220,
+        fontSize: theme.typography.pxToRem(12),
+        border: '1px solid #dadde9',
+
+    },
+}))(Tooltip);

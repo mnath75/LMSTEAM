@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     },
     bold: {
         fontWeight: 600,
-        fontSize:'18px'
+        fontSize:'16px'
     },
     title:{
         fontSize:'18px',

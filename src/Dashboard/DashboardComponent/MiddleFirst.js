@@ -1,7 +1,9 @@
 import React, {useState} from 'react'
 import MyLinechart from './MyLinechart';
 import MixedChart from "./MixedChart";
-import {makeStyles, Grid, Tooltip, withStyles,} from '@material-ui/core';
+import {makeStyles, Grid,TextField,MenuItem} from '@material-ui/core';
+import DateFnsUtils from '@date-io/date-fns';
+import {MuiPickersUtilsProvider,KeyboardDatePicker,} from '@material-ui/pickers';
 import ArrowUpwardRoundedIcon from "@material-ui/icons/ArrowUpwardRounded";
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,6 +33,10 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'center',
         boxShadow: '2px 2px 2px grey',
         cursor: 'pointer',
+    },
+    TextFieldHeight: {
+        height: 35,
+        width: 300
     },
 
 }));
@@ -256,9 +262,13 @@ const data1 = [
 export default function Middlefirst() {
     const [active, setActive] = useState(0);
     const [chartData, setCharData] = useState(pdata);
+    const [selectedDate, setSelectedDate] = React.useState(new Date().toDateString());
     const [mixedChart, setMixedChart] = useState(data)
     const [title, setTitle] = useState('student')
     const classes = useStyles();
+    const handleDateChange = (date) => {
+        setSelectedDate(date);
+    };
     function GetData(index) {
         setActive(index);
         if (index === 1) {
@@ -281,20 +291,35 @@ export default function Middlefirst() {
     }
     return (
         <>
+            <Grid item xs={12}>
+                {/*<MuiPickersUtilsProvider utils={DateFnsUtils}>*/}
+                {/*    <div className={'mx-2 d-flex justify-content-end'}>*/}
+                {/*        <KeyboardDatePicker*/}
+                {/*            margin="normal"*/}
+                {/*            id="date-picker-dialog"*/}
+                {/*            label="Select Date"*/}
+                {/*            format="MM/dd/yyyy"*/}
+                {/*            value={selectedDate}*/}
+                {/*            onChange={handleDateChange}*/}
+                {/*            KeyboardButtonProps={{*/}
+                {/*                'aria-label': 'change date',*/}
+                {/*            }}/> </div> </MuiPickersUtilsProvider>*/}
+                    <div className={'mx-2 d-flex justify-content-end'}>
+                <TextField select label={'Select Date'}  InputProps={{className: classes.TextFieldHeight}} >
+                    <MenuItem  value={''}>Select</MenuItem>
+                    <MenuItem  value={'7'}>7 Days</MenuItem>
+                    <MenuItem  value={'15'}>15 Days</MenuItem>
+                    <MenuItem  value={'monyh_1'}>1 month</MenuItem>
+                    <MenuItem  value={'monyh_2'}>2 month</MenuItem>
+                </TextField>
+                    </div>
+            </Grid>
+
             <div className={classes.root}>
                 <Grid container>
                     {cards.map((value, index) => (
                         <Grid item xs={12} sm={6} md={6} lg={3}>
-                            <HtmlTooltip placement="top-start" title={<>
-                                        <div className={'d-flex justify-content-between'}>
-                                            <h6 className={'text-success'}>Active</h6>
-                                            <h6 className={'px-2'}>{value.active}</h6>
-                                        </div>
-                                        <div className={'d-flex justify-content-between'}>
-                                            <h6 className={'text-danger'}>Inactive</h6>
-                                            <h6 className={'px-2'}>{value.inactive}</h6>
-                                        </div>
-                                    </>}>
+
                                 <div  onClick={() => {GetData(index)}} className={classes.box} style={{
                                     borderTop: active === index ? '3px solid blue' : '3px solid transparent',
                                     background: active === index ? '#fff' : '#eee'}}>
@@ -302,7 +327,7 @@ export default function Middlefirst() {
                                     <h5>{value.value} <ArrowUpwardRoundedIcon className={classes.icons}/></h5>
                                     <p className='text-muted'>{value.des}</p>
                                 </div>
-                            </HtmlTooltip>
+
                         </Grid>
                     ))}
                 </Grid>
@@ -320,13 +345,3 @@ export default function Middlefirst() {
         </>
     )
 }
-const HtmlTooltip = withStyles((theme) => ({
-    tooltip: {
-        backgroundColor: '#f5f5f9',
-        color: 'rgba(0, 0, 0, 0.87)',
-        maxWidth: 220,
-        fontSize: theme.typography.pxToRem(12),
-        border: '1px solid #dadde9',
-
-    },
-}))(Tooltip);

@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     },
     bold: {
         fontWeight: 600,
-        fontSize:'17px'
+        fontSize:'15px'
     }
 }));
 export default function Box(props) {

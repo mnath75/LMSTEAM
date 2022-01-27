@@ -11,7 +11,8 @@ export default function Dashboard() {
                         <SideTable/>
                     </div>
                     <div className={'col-12 col-md-7 col-lg-9 col-xl-8'}>
-                      <div>  <MiddleFirst/></div>
+                      <div>
+                          <MiddleFirst/></div>
                     </div>
                     <div className={'col-12 col-xl-2'}>
                         <Rightsidebar />

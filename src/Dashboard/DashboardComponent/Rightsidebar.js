@@ -11,6 +11,8 @@ export default function Rightsidebar() {
     const TopCourses = [{title: 'Html Css Series'}, {title: 'JAVA Series'}, {title: 'C# Series'}]
     return (
         <>
+            <h5 className={'mt-1'}>Realtime</h5>
+            <p  className={'d-flex'} style={{marginTop:'-5px'}}><div className={'mt-1 mx-1'} style={{width:10,borderRadius:'50%',height:10,background:'green'}}/>Updating Time</p>
             <hr/>
             <div className="d-flex justify-content-between pb-4 pb-lg-0">
                 <HtmlTooltip placement="top-start" title={<>
