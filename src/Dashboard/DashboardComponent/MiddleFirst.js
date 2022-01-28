@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import MyLinechart from './MyLinechart';
 import MixedChart from "./MixedChart";
-import {makeStyles, Grid,TextField,MenuItem} from '@material-ui/core';
+import {makeStyles, Grid,TextField,MenuItem,Divider} from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
 import {MuiPickersUtilsProvider,KeyboardDatePicker,} from '@material-ui/pickers';
 import ArrowUpwardRoundedIcon from "@material-ui/icons/ArrowUpwardRounded";
@@ -307,10 +307,21 @@ export default function Middlefirst() {
                     <div className={'mx-2 d-flex justify-content-end'}>
                 <TextField select label={'Select Date'}  InputProps={{className: classes.TextFieldHeight}} >
                     <MenuItem  value={''}>Select</MenuItem>
-                    <MenuItem  value={'7'}>7 Days</MenuItem>
-                    <MenuItem  value={'15'}>15 Days</MenuItem>
-                    <MenuItem  value={'monyh_1'}>1 month</MenuItem>
-                    <MenuItem  value={'monyh_2'}>2 month</MenuItem>
+                    <MenuItem  value={'7'}>Last 7 Days</MenuItem>
+                    <MenuItem  value={'7'}>Last 28 Days</MenuItem>
+                    <MenuItem  value={'7'}>Last 90 Days</MenuItem>
+                    <MenuItem  value={'7'}>Last 365 Days</MenuItem>
+                    <Divider/>
+                    <MenuItem  value={'15'}>Lifetime</MenuItem>
+                    <Divider/>
+                    <MenuItem  value={'monyh_1'}>2022</MenuItem>
+                    <MenuItem  value={'monyh_1'}>2021</MenuItem>
+                    <Divider/>
+                    <MenuItem  value={'monyh_2'}>January</MenuItem>
+                    <MenuItem  value={'monyh_2'}>December 2021</MenuItem>
+                    <MenuItem  value={'monyh_2'}>November 2021</MenuItem>
+                    <Divider/>
+                    <MenuItem  value={'monyh_2'}>Custom</MenuItem>
                 </TextField>
                     </div>
             </Grid>

@@ -39,23 +39,23 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 const courses =[
-    {id:1,title:'IIT Advanced',topic:45},
-    {id:2,title:'JEE Mains',topic:405},
-    {id:3,title:'NEET',topic:125},
-    {id:4,title:'SSC',topic:35},
-    {id:5,title:'Banking',topic:85},
+    {id:1,title:'IIT Advanced',topic:45,subtitle:'Maths,Physics, Chemistry'},
+    {id:2,title:'JEE Mains',topic:405,subtitle:'Maths,Physics, Chemistry'},
+    {id:3,title:'NEET',topic:125,subtitle:'Maths,Physics, Chemistry'},
+    {id:4,title:'SSC',topic:35,subtitle:'Maths,Physics, Chemistry'},
+    {id:5,title:'Banking',topic:85,subtitle:'Maths,Physics, Chemistry'},
 ]
 const Subjects =[
-    {id:1,title:'Maths',topic:45},
-    {id:2,title:'English',topic:405},
-    {id:3,title:'Science',topic:125},
-    {id:4,title:'Physics',topic:35},
+    {id:1,title:'Maths',topic:45,subtitle:'IIT Advanced'},
+    {id:2,title:'English',topic:405,subtitle:'SSC'},
+    {id:3,title:'Science',topic:125,subtitle:'Banking'},
+    {id:4,title:'Physics',topic:35,subtitle:'NEET'},
 ]
 const Topics =[
-    {id:1,title:'Kinetic',topic:45},
-    {id:2,title:'Motion',topic:405},
-    {id:3,title:'Electro Magnetic Induction',topic:125},
-    {id:4,title:'Magnetic Field',topic:35},
+    {id:1,title:'Kinetic',topic:45,subtitle:'Physics'},
+    {id:2,title:'Motion',topic:405,subtitle:'Physics'},
+    {id:3,title:'Electro Magnetic Induction',topic:125,subtitle:'Physics'},
+    {id:4,title:'Magnetic Field',topic:35,subtitle:'Physics'},
 ]
 function QuestionBank(props) {
     const {window} = props;

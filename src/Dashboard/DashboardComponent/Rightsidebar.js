@@ -37,7 +37,7 @@ export default function Rightsidebar() {
                 </>}><h6>324321<br/>Students on App</h6></HtmlTooltip>
             </div>
             <hr/>
-            <div>
+            <div >
                 <MyBarchart/>
             </div>
             <div className="mt-2">

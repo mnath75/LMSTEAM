@@ -26,6 +26,7 @@ import makeAnimated from "react-select/animated";
 import {components} from "react-select";
 import MultiSelect from "../../MainComponents/MultiSelectComponent";
 import {colourOptions} from "../../MainComponents/SideNav";
+import Select from 'react-select'
 
 const Option = props => {
     return (
@@ -188,7 +189,7 @@ export default function QuestionCreateCourse(props) {
                         <div key={index} className={'col-xl-3 col-lg-4 col-md-6 col-12  mt-4'}>
                             <div className={clsx(classes.card, 'px-3 pt-2')}>
                                 <h5>{value.title}</h5>
-                                <p>Maths,Physics, Chemistry</p>
+                                <p>{value.subtitle}</p>
                                 <IconButton onClick={(event) => {
                                     setAnchorEl(event.currentTarget);
                                     setData(value);
@@ -210,8 +211,8 @@ export default function QuestionCreateCourse(props) {
                                     }}>
                                         Delete <DeleteIcon className={classes.menuIcon}/></MenuItem>
                                     <MenuItem className={'text-success'} onClick={() => {
-                                        setAnchorEl(false)
-                                    }}>Active</MenuItem>
+                                        setAnchorEl(false);
+                                    }}>Enabled</MenuItem>
                                     <MenuItem onClick={() => {
                                         setAnchorEl(false);
                                         crud.confirm()
@@ -247,17 +248,17 @@ export default function QuestionCreateCourse(props) {
                             <h6 className={classes.InputTitle}>Category</h6>
                         </div>
                         <div className={'col-lg-9 col-12'}>
-                            <MultiSelect
-                                options={colourOptions}
+                            <Select
+                                value={state.courseCategory}
                                 isMulti
-                                closeMenuOnSelect={false}
-                                hideSelectedOptions={false}
-                                components={{Option, MultiValue, animatedComponents}}
                                 onChange={(selected) => {
                                     setState({courseCategory: selected});
                                 }}
-                                allowSelectAll={true}
-                                value={state.courseCategory}/>
+                                name="colors"
+                                options={colourOptions}
+                                className="basic-multi-select"
+                                classNamePrefix="select"
+                            />
                         </div>
                     </div>
                         <div className={'row pl-0 pr-0'}>
@@ -265,17 +266,17 @@ export default function QuestionCreateCourse(props) {
                                 <h6 className={classes.InputTitle}>Subjects</h6>
                             </div>
                             <div className={'col-lg-9 col-12'}>
-                                <MultiSelect
-                                    options={colourOptions}
+                                <Select
+                                    value={state.courseSubject}
                                     isMulti
-                                    closeMenuOnSelect={false}
-                                    hideSelectedOptions={false}
-                                    components={{Option, MultiValue, animatedComponents}}
                                     onChange={(selected) => {
                                         setState({courseSubject: selected});
                                     }}
-                                    allowSelectAll={true}
-                                    value={state.courseSubject}/>
+                                    name="colors"
+                                    options={colourOptions}
+                                    className="basic-multi-select"
+                                    classNamePrefix="select"
+                                />
                             </div>
                         </div></>:<></>}
                     {props.Title==='Subject'?<> <div className={'row my-4 pl-0 pr-0'}>
@@ -283,17 +284,17 @@ export default function QuestionCreateCourse(props) {
                             <h6 className={classes.InputTitle}>Course</h6>
                         </div>
                         <div className={'col-lg-9 col-12'}>
-                            <MultiSelect
-                                options={colourOptions}
+                            <Select
+                                value={subjectData.subjectCourse}
                                 isMulti
-                                closeMenuOnSelect={false}
-                                hideSelectedOptions={false}
-                                components={{Option, MultiValue, animatedComponents}}
                                 onChange={(selected) => {
                                     setSubjectData({subjectCourse: selected});
                                 }}
-                                allowSelectAll={true}
-                                value={subjectData.subjectCourse}/>
+                                name="colors"
+                                options={colourOptions}
+                                className="basic-multi-select"
+                                classNamePrefix="select"
+                            />
                         </div>
                     </div>
                         <div className={'row pl-0 pr-0'}>
@@ -301,17 +302,17 @@ export default function QuestionCreateCourse(props) {
                                 <h6 className={classes.InputTitle}>Category</h6>
                             </div>
                             <div className={'col-lg-9 col-12'}>
-                                <MultiSelect
-                                    options={colourOptions}
+                                <Select
+                                    value={subjectData.subjectCategory}
                                     isMulti
-                                    closeMenuOnSelect={false}
-                                    hideSelectedOptions={false}
-                                    components={{Option, MultiValue, animatedComponents}}
                                     onChange={(selected) => {
                                         setSubjectData({subjectCategory: selected});
                                     }}
-                                    allowSelectAll={true}
-                                    value={subjectData.subjectCategory}/>
+                                    name="colors"
+                                    options={colourOptions}
+                                    className="basic-multi-select"
+                                    classNamePrefix="select"
+                                />
                             </div>
                         </div>
                         <div className={'row pl-0 pr-0 my-4'}>
@@ -319,17 +320,18 @@ export default function QuestionCreateCourse(props) {
                                 <h6 className={classes.InputTitle}>Topics</h6>
                             </div>
                             <div className={'col-lg-9 col-12'}>
-                                <MultiSelect
-                                    options={colourOptions}
+
+                                <Select
+                                    value={subjectData.subjectTopic}
                                     isMulti
-                                    closeMenuOnSelect={false}
-                                    hideSelectedOptions={false}
-                                    components={{Option, MultiValue, animatedComponents}}
                                     onChange={(selected) => {
                                         setSubjectData({subjectTopic: selected});
                                     }}
-                                    allowSelectAll={true}
-                                    value={subjectData.subjectTopic}/>
+                                    name="colors"
+                                    options={colourOptions}
+                                    className="basic-multi-select"
+                                    classNamePrefix="select"
+                                />
                             </div>
                         </div>
                     </>:<></>}
@@ -339,35 +341,36 @@ export default function QuestionCreateCourse(props) {
                             <h6 className={classes.InputTitle}>Course</h6>
                         </div>
                         <div className={'col-lg-9 col-12'}>
-                            <MultiSelect
-                                options={colourOptions}
+                            <Select
+                                value={topicData.topicCourse}
                                 isMulti
-                                closeMenuOnSelect={false}
-                                hideSelectedOptions={false}
-                                components={{Option, MultiValue, animatedComponents}}
                                 onChange={(selected) => {
                                     setTopicData({topicCourse: selected});
                                 }}
-                                allowSelectAll={true}
-                                value={topicData.topicCourse}/>
+                                name="colors"
+                                options={colourOptions}
+                                className="basic-multi-select"
+                                classNamePrefix="select"
+                            />
                         </div>
                     </div>
                         <div className={'row pl-0 pr-0'}>
                             <div className={clsx('col-lg-3 col-12')}>
                                 <h6 className={classes.InputTitle}>Category</h6>
                             </div>
+
                             <div className={'col-lg-9 col-12'}>
-                                <MultiSelect
-                                    options={colourOptions}
+                                <Select
+                                    value={topicData.topicCategory}
                                     isMulti
-                                    closeMenuOnSelect={false}
-                                    hideSelectedOptions={false}
-                                    components={{Option, MultiValue, animatedComponents}}
                                     onChange={(selected) => {
                                         setTopicData({topicCategory: selected});
                                     }}
-                                    allowSelectAll={true}
-                                    value={topicData.topicCategory}/>
+                                    name="colors"
+                                    options={colourOptions}
+                                    className="basic-multi-select"
+                                    classNamePrefix="select"
+                                />
                             </div>
                         </div>
                         <div className={'row pl-0 pr-0 my-4'}>
@@ -375,17 +378,17 @@ export default function QuestionCreateCourse(props) {
                                 <h6 className={classes.InputTitle}>Subject</h6>
                             </div>
                             <div className={'col-lg-9 col-12'}>
-                                <MultiSelect
-                                    options={colourOptions}
+                                <Select
+                                    value={topicData.topicSubject}
                                     isMulti
-                                    closeMenuOnSelect={false}
-                                    hideSelectedOptions={false}
-                                    components={{Option, MultiValue, animatedComponents}}
                                     onChange={(selected) => {
                                         setTopicData({topicSubject: selected});
                                     }}
-                                    allowSelectAll={true}
-                                    value={topicData.topicSubject}/>
+                                    name="colors"
+                                    options={colourOptions}
+                                    className="basic-multi-select"
+                                    classNamePrefix="select"
+                                />
                             </div>
                         </div>
                         <div className={'row pl-0 pr-0 my-4'}>
@@ -393,22 +396,27 @@ export default function QuestionCreateCourse(props) {
                                 <h6 className={classes.InputTitle}>Tags</h6>
                             </div>
                             <div className={'col-lg-9 col-12'}>
-                                <MultiSelect
-                                    options={colourOptions}
+                                <Select
+                                    value={topicData.topicTag}
                                     isMulti
-                                    closeMenuOnSelect={false}
-                                    hideSelectedOptions={false}
-                                    components={{Option, MultiValue, animatedComponents}}
                                     onChange={(selected) => {setTopicData({topicTag: selected});}}
-                                    allowSelectAll={true}
-                                    value={topicData.topicTag}/>
+                                    name="colors"
+                                    options={colourOptions}
+                                    className="basic-multi-select"
+                                    classNamePrefix="select"
+                                     styles={ base => ({
+                                         ...base,
+                                         height: 35,
+                                         minHeight: 35
+                                     })}
+                                />
                             </div>
                         </div>
                     </>:<></>}
 
                 </div>
                 <DialogActions className={'mx-2'}>
-                    <Button className={classes.Btn} variant={'contained'} onClick={() => {
+                    <Button className={clsx(classes.Btn,)} variant={'contained'} onClick={() => {
                         setOpen(false)
                     }} color="primary">
                         {formData.ButtonTitle}
@@ -477,7 +485,7 @@ const useStyles = makeStyles((theme) => ({
     Btn: {
         background: Themes.MainHeaderColor,
         color: Themes.WHITE
-    }
+    },
 }));
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
