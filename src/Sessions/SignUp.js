@@ -37,10 +37,9 @@ export default function SignUp() {
                 setLoader(true);
                 var formdata = new FormData();
                 formdata.append("phone", params.phone);
-              const status =  crud.create('validate_phone/', formdata);
-              console.log(status)
+              const status = await  crud.create('validate_phone/', formdata);
                 setLoader(false);
-                // setState(false);
+                setState(false);
             }
         }
         if (hide.ButtonText === 'Register me') {
@@ -55,10 +54,15 @@ export default function SignUp() {
                     formdata.append("phone", params.phone);
                     formdata.append("password", params.password);
                     setLoader(true);
-                    const {status} = crud.create('Register/', formdata);
+                    const {status} = await crud.create('Register/', formdata);
                     setLoader(false);
                     if (status === true) {
-
+                      history.push('/login');
+                        setHide({
+                            phoneHide: true,
+                            formHIde: false,
+                            ButtonText: 'Send Otp'
+                        });
                     }
                 } catch (e) {
                     setLoader(false);
@@ -74,7 +78,7 @@ export default function SignUp() {
             var formdata = new FormData();
             formdata.append("phone", params.phone);
             formdata.append("otp", otp);
-            const {status} = crud.create('validate_otp/', formdata);
+            const {status} = await crud.create('validate_otp/', formdata);
             setLoader(false);
             if (status === true)
                 setState(true);
