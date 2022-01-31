@@ -22,34 +22,11 @@ import {Themes} from "../../Theme/theme";
 import clsx from "clsx";
 import {crud} from "../../services/crud";
 import Slide from '@material-ui/core/Slide';
-import makeAnimated from "react-select/animated";
-import {components} from "react-select";
-import MultiSelect from "../../MainComponents/MultiSelectComponent";
 import {colourOptions} from "../../MainComponents/SideNav";
 import Select from 'react-select'
 
-const Option = props => {
-    return (
-        <div>
-            <components.Option {...props}>
-                <input
-                    type="checkbox"
-                    checked={props.isSelected}
-                    onChange={() => null}
-                />{" "}
-                <label>{props.label}</label>
-            </components.Option>
-        </div>
-    );
-};
 
-const MultiValue = props => (
-    <components.MultiValue {...props}>
-        <span>{props.data.label}</span>
-    </components.MultiValue>
-);
 
-const animatedComponents = makeAnimated();
 export default function QuestionCreateCourse(props) {
     const classes = useStyles();
     const [state, setState] = useState({

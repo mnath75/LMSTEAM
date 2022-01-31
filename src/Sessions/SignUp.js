@@ -3,17 +3,20 @@ import {Button} from "@material-ui/core";
 import OtpInput from 'react-otp-input';
 import './FormStyle.css';
 import SocialLogin from "./SocialLogin";
-import {Link, useHistory} from "react-router-dom";
+import {Link, Redirect, useHistory} from "react-router-dom";
 import {crud} from "../services/crud";
 import _ from 'lodash'
 import {notify} from "react-notify-toast";
 import Loader from "../MainComponents/Loader";
+import {useSelector} from "react-redux";
+import {selectUser} from "../services/Slices/UserSlice";
 
 export default function SignUp() {
     const history = useHistory();
     let error = [];
+    const  isAuthenticated = useSelector(selectUser);
     const [state, setState] = useState(true);
-    const [loader, setLoader] = useState(false)
+    const [loader, setLoader] = useState(false);
     const [otp, setOtp] = useState();
     const [hide, setHide] = useState({
         phoneHide: true,
@@ -37,9 +40,14 @@ export default function SignUp() {
                 setLoader(true);
                 var formdata = new FormData();
                 formdata.append("phone", params.phone);
-              const status = await  crud.create('validate_phone/', formdata);
-                setLoader(false);
-                setState(false);
+                try {
+                    const {status} = await crud.create('validate_phone/', formdata);
+                    setLoader(false);
+                    setState(false);
+                } catch (e) {
+                    setLoader(false);
+                }
+
             }
         }
         if (hide.ButtonText === 'Register me') {
@@ -57,7 +65,7 @@ export default function SignUp() {
                     const {status} = await crud.create('Register/', formdata);
                     setLoader(false);
                     if (status === true) {
-                      history.push('/login');
+                        history.push('/login');
                         setHide({
                             phoneHide: true,
                             formHIde: false,
@@ -87,7 +95,9 @@ export default function SignUp() {
             setLoader(false);
         }
     }
-
+    if(!(_.isEmpty(isAuthenticated))){
+        return <Redirect to='/dashboard'/>
+    }
     return (
         <>
             <div className="sign-up my-2">
@@ -95,8 +105,6 @@ export default function SignUp() {
                     <h3 className={'h3'}>Create Account</h3>
                     <SocialLogin/>
                     <p>or use your email for registration</p>
-                    {/*<input type="text" name="txt" placeholder="Name" required=""/>*/}
-                    {/*<input type="text" name="txt" placeholder="Email" required=""/>*/}
                     {hide.phoneHide ? <><input type={'number'} placeholder="Mobile" name='phone' value={params.phone}
                                                onChange={(e) => {
                                                    const {value: phone} = e.target;
