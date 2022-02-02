@@ -11,7 +11,6 @@ import './FormStyle.css';
 import {notify} from "react-notify-toast";
 import Loader from "../MainComponents/Loader";
 export default function Login() {
-    const history = useHistory();
     let error = [];
     const  isAuthenticated = useSelector(selectUser);
     const dispatch=useDispatch();

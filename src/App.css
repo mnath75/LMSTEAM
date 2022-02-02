@@ -1,0 +1,11 @@
+@font-face {
+    font-family: myFirstFont;
+    src: url("fonts/KRDEV011.ttf");
+}
+.mydivider{
+    width: 92%;
+    height: 1px;
+    background: lightgrey;
+    align-self: center;
+    margin-left: 4%;
+}

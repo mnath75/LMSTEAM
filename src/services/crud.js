@@ -1,7 +1,7 @@
 import {CrudRequest} from "@crud/core";
 import  { notify } from "react-notify-toast";
 export class CrudFactory extends CrudRequest {
-    baseUrl = "https://lmsoskill.herokuapp.com/api";
+    baseUrl = "https://lmsoskill.herokuapp.com";
     getUrl = (...segments) => segments.reduce((url, segment) => url + segment, this.baseUrl);
 
     async retrieve(url, data= {}, requestOptions = {}) {
@@ -16,7 +16,7 @@ export class CrudFactory extends CrudRequest {
     async create(url, data = {}, requestOptions = {}) {
         return this.send({
             method: "POST",
-            url: "/" + url,
+            url: "/api/" + url,
             data,
             ...requestOptions
         });
@@ -36,7 +36,7 @@ export class CrudFactory extends CrudRequest {
     async delete(url, data, requestOptions = {}) {
     return this.send({
     method: "POST",
-    url: "delete/" + url,
+    url: "/" + url,
     data,
     ...requestOptions
 });

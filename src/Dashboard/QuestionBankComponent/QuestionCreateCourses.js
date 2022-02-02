@@ -24,9 +24,6 @@ import {crud} from "../../services/crud";
 import Slide from '@material-ui/core/Slide';
 import {colourOptions} from "../../MainComponents/SideNav";
 import Select from 'react-select'
-
-
-
 export default function QuestionCreateCourse(props) {
     const classes = useStyles();
     const [state, setState] = useState({

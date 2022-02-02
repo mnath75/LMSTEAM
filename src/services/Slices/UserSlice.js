@@ -14,13 +14,15 @@ export const UserSlice = createSlice({
 
 export const {setUser} = UserSlice.actions;
 export const makeLogin = (params) => async (dispatch) => {
-    const {user} = await crud.create("login/", params);
-    dispatch(setUser(user))
+    const {user ,token} = await crud.create("login/", params);
+    localStorage.setItem('login_token',token);
+    dispatch(setUser(user));
 };
 
 export const makeLogout = (params) => async (dispatch) => {
-    await crud.delete("login-token");
-    localStorage.removeItem('theme')
+    await crud.delete("logout/");
+    localStorage.removeItem('theme');
+    localStorage.removeItem('login_token');
     dispatch(setUser({}));
 }
 

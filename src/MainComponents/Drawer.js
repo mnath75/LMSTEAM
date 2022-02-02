@@ -70,8 +70,7 @@ export default function Drawer(props) {
 
                 </>
             )))}
-            <ListItem button  to={'/login'} component={Link}
-                // onClick={() => {dispatch(makeLogout({}));}}
+            <ListItem button onClick={() => {dispatch(makeLogout({}));}}
             >
                 <ListItemIcon><ExitToAppIcon/></ListItemIcon>
                 <ListItemText primary={'Log Out'}/>

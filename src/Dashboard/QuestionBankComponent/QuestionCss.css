@@ -1,0 +1,36 @@
+.QuestionRedirect{
+    position: absolute;
+    left: 0;
+    top:0;
+    width: 88%;
+    height: 100%;
+}
+.divider{
+    width: 100%;
+    height: 1px;
+    background: #eee;
+    margin-top: 10px
+}
+.card{
+    width: 100%;
+    min-height: 140px;
+    border: 1px solid grey;
+    border-radius: 15px;
+    position: relative;
+    cursor:pointer;
+}
+
+.justifyContentForm{
+    display: flex;
+    justify-content: space-between;
+}
+.TextFieldHeight{
+    height: 35px;
+    width: 100%
+}
+@media(min-width: 1000px){
+    .card{
+        width: 95%;
+
+    }
+}

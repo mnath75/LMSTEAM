@@ -62,7 +62,9 @@ export default function HeaderWeb() {
                                         setUserLogin(null)
                                     }}>My account</MenuItem>
                                     <MenuItem
+
                                         onClick={() => {
+                                            dispatch(makeLogout({}))
                                             history.push('/login')
                                         setUserLogin(null);}}
                                     >Logout</MenuItem>
