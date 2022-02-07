@@ -15,7 +15,7 @@ export const UserSlice = createSlice({
 export const {setUser} = UserSlice.actions;
 export const makeLogin = (params) => async (dispatch) => {
     const {user ,token} = await crud.create("login/", params);
-    localStorage.setItem('login_token',token);
+    localStorage.setItem('/api/login_token',token);
     dispatch(setUser(user));
 };
 

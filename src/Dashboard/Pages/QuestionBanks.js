@@ -67,13 +67,13 @@ export default function QuestionCreateCourse() {
                 ButtonTitle: 'UPDATE'
             });
             setCourseData({
-                courseName: data.title
+                courseName: data.category_title
             })
     }
     async function getCourses()
     {
-        setCourses(course)
-        const data= await crud.retrieve('/course/cat/')
+        const data= await crud.retrieve('/categoryapi/');
+        setCourses(data);
 
     }
     useEffect(() => {
@@ -85,7 +85,7 @@ export default function QuestionCreateCourse() {
             <div className={'container-fluid py-4 '}>
                 <div className={'row px-lg-5'}>
                     <div className={'col-lg-3 col-12'}>
-                        <h3 className={classes.title}>Courses(5)</h3>
+                        <h3 className={classes.title}>Courses({courses?.length})</h3>
                     </div>
                     <div className={'col-lg-4 col-12 my-3 mt-lg-0'}>
                         <TextField fullWidth placeholder={'search here...'} InputProps={{
@@ -102,16 +102,16 @@ export default function QuestionCreateCourse() {
                         </Button>
                     </div>
                     <div className={'divider'}/>
-                    {courses.map((value, index) => (
+                    {courses?.map((value, index) => (
                         <div key={index} className={'col-xl-3 col-lg-4 col-md-6 col-12  mt-4'}>
                             <div className={clsx('px-3 pt-2 card')} >
                                 <div onClick={()=>{history.push({pathname: '/question-subject',
-                                    state: {course:value.title}})}} className={'QuestionRedirect'} />
-                                <h5>{value.title}</h5>
-                                <p>{value.subtitle}</p>
+                                    state: {course:value.category_title}})}} className={'QuestionRedirect'} />
+                                <h5>{value?.category_title}</h5>
+                                <p>{value?.category_short}</p>
                                 <IconButton  onClick={(event) => {
                                     setAnchorEl(event.currentTarget);
-                                    setData(value);}} className={classes.menu}><MoreVertIcon/></IconButton>
+                                    setData(value)}} className={classes.menu}><MoreVertIcon/></IconButton>
                                 <Menu key={index}
                                       id="simple-menu"
                                       anchorEl={anchorEl}
@@ -132,7 +132,7 @@ export default function QuestionCreateCourse() {
                                         crud.confirm()
                                     }}>Disabled</MenuItem>
                                 </Menu>
-                                <h6>{value.topic} Topics</h6>
+                                <h6>{value?.topic} Topics</h6>
                             </div>
                         </div>
                     ))}
@@ -146,13 +146,16 @@ export default function QuestionCreateCourse() {
                     setOpen(false);
                     getClearAll()
                 }} className={classes.CloseBtn}><ClearIcon/></IconButton>
+                   
                 <div className={clsx('container-fluid mx-lg-4', classes.FormWidth)}>
                     <div className={'row pl-0 pr-0'}>
                         <div className={clsx('col-lg-3 col-12')}>
                             <h6 className={classes.InputTitle}>Course Name</h6>
                         </div>
                         <div className={'col-lg-9 col-12'}>
-                            <TextField value={courseData.courseName} fullWidth variant="outlined" InputProps={{className: 'TextFieldHeight',}}/>
+                            <TextField value={courseData.courseName} onChange={(e)=>{
+                                     setCourseData({...courseData,courseName:e.target.value})
+                            }} name='courseName'  fullWidth variant="outlined" InputProps={{className: 'TextFieldHeight',}}/>
                         </div>
                     </div>
                         <div className={'row  my-4 pl-0 pr-0'}>
@@ -172,7 +175,14 @@ export default function QuestionCreateCourse() {
                         </div>
                 </div>
                 <DialogActions className={'mx-2'}>
-                    <Button className={clsx(classes.Btn,)} variant={'contained'} onClick={() => {
+                    <Button className={clsx(classes.Btn,)} variant={'contained'} onClick={async() => {
+                     if(formData.ButtonTitle==='Create Course'){
+                          await crud.create('/categoryapi/',{
+                                    category_short:courseData.courseName,      
+                                    category_title:courseData.courseName,      
+                         });
+                         getCourses();
+                     }
                         setOpen(false)
                     }} color="primary">
                         {formData.ButtonTitle}

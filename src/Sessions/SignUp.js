@@ -41,7 +41,7 @@ export default function SignUp() {
                 var formdata = new FormData();
                 formdata.append("phone", params.phone);
                 try {
-                    const {status} = await crud.create('validate_phone/', formdata);
+                    const {status} = await crud.create('/api/validate_phone/', formdata);
                     setLoader(false);
                     setState(false);
                 } catch (e) {
@@ -62,7 +62,7 @@ export default function SignUp() {
                     formdata.append("phone", params.phone);
                     formdata.append("password", params.password);
                     setLoader(true);
-                    const {status} = await crud.create('Register/', formdata);
+                    const {status} = await crud.create('/api/Register/', formdata);
                     setLoader(false);
                     if (status === true) {
                         history.push('/login');
@@ -86,7 +86,7 @@ export default function SignUp() {
             var formdata = new FormData();
             formdata.append("phone", params.phone);
             formdata.append("otp", otp);
-            const {status} = await crud.create('validate_otp/', formdata);
+            const {status} = await crud.create('/api/validate_otp/', formdata);
             setLoader(false);
             if (status === true)
                 setState(true);

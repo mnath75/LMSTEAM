@@ -7,7 +7,7 @@ export class CrudFactory extends CrudRequest {
     async retrieve(url, data= {}, requestOptions = {}) {
         return this.send({
             method: "GET",
-            url: " " + url,
+            url: "" + url,
             data,
             ...requestOptions
         });
@@ -16,7 +16,7 @@ export class CrudFactory extends CrudRequest {
     async create(url, data = {}, requestOptions = {}) {
         return this.send({
             method: "POST",
-            url: "/api/" + url,
+            url: "" + url,
             data,
             ...requestOptions
         });
@@ -26,8 +26,8 @@ export class CrudFactory extends CrudRequest {
 
     async update(url, data = {}, requestOptions= {}) {
         return this.send({
-            method: "POST",
-            url: "update/" + url,
+            method: "PUT",
+            url: "" + url,
             data,
             ...requestOptions
         });
@@ -35,8 +35,8 @@ export class CrudFactory extends CrudRequest {
 
     async delete(url, data, requestOptions = {}) {
     return this.send({
-    method: "POST",
-    url: "/" + url,
+    method: "DELETE",
+    url: "" + url,
     data,
     ...requestOptions
 });
