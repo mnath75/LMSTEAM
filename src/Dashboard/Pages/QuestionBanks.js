@@ -15,8 +15,12 @@ import Slide from '@material-ui/core/Slide';
 import {colourOptions} from "../../MainComponents/SideNav";
 import Select from 'react-select'
 import '../QuestionBankComponent/QuestionCss.css';
-const courses =[
+const course =[
+
     {id:1,title:'IIT Advanced',topic:45,subtitle:'Maths,Physics, Chemistry'},
+    {id:1,title:'medical exam',topic:45,subtitle:'Maths,Physics, Chemistry'},
+    {id:1,title:'ssctest',topic:45,subtitle:'Maths,Physics, Chemistry'},
+    {id:1,title:'bank po',topic:45,subtitle:'Maths,Physics, Chemistry'},
     {id:2,title:'JEE Mains',topic:405,subtitle:'Maths,Physics, Chemistry'},
     {id:3,title:'NEET',topic:125,subtitle:'Maths,Physics, Chemistry'},
     {id:4,title:'SSC',topic:35,subtitle:'Maths,Physics, Chemistry'},
@@ -38,7 +42,7 @@ export default function QuestionCreateCourse() {
     const [data, setData] = useState()
     const [anchorEl, setAnchorEl] = useState(null);
     const [courseData, setCourseData] = useState('');
-
+    const [courses,setCourses]=useState();
     function GetFormManage() {
         setOpen(true)
             setFormData({
@@ -66,8 +70,15 @@ export default function QuestionCreateCourse() {
                 courseName: data.title
             })
     }
+    async function getCourses()
+    {
+        setCourses(course)
+        const data= await crud.retrieve('/course/cat/')
+
+    }
     useEffect(() => {
         getClearAll();
+        getCourses();
     }, [])
     return (
         <>

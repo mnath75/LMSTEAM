@@ -1,13 +1,13 @@
 import {CrudRequest} from "@crud/core";
 import  { notify } from "react-notify-toast";
 export class CrudFactory extends CrudRequest {
-    baseUrl = "https://lmsoskill.herokuapp.com";
+    baseUrl = "https://lmsoskillupdated.herokuapp.com";
     getUrl = (...segments) => segments.reduce((url, segment) => url + segment, this.baseUrl);
 
     async retrieve(url, data= {}, requestOptions = {}) {
         return this.send({
             method: "GET",
-            url: "retrieve/" + url,
+            url: " " + url,
             data,
             ...requestOptions
         });
