@@ -43,6 +43,7 @@ export default function QuestionCreateCourse() {
     const [anchorEl, setAnchorEl] = useState(null);
     const [courseData, setCourseData] = useState('');
     const [courses,setCourses]=useState();
+    
     function GetFormManage() {
         setOpen(true)
             setFormData({
@@ -67,18 +68,28 @@ export default function QuestionCreateCourse() {
                 ButtonTitle: 'UPDATE'
             });
             setCourseData({
-                courseName: data.category_title
+                courseName: data.category_title,
+                courseShort:data.category_title
+
             })
     }
+   
+    //delete
+    async function deletecourse(){
+        crud.confirm();
+        await crud.delete('/categoryapi/'+data.category_id);
+       
+    }
+    
     async function getCourses()
     {
         const data= await crud.retrieve('/categoryapi/');
         setCourses(data);
-
     }
     useEffect(() => {
         getClearAll();
         getCourses();
+        
     }, [])
     return (
         <>
@@ -122,14 +133,17 @@ export default function QuestionCreateCourse() {
                                         setAnchorEl(false)
                                     }}>Edit<EditIcon className={classes.menuIcon}/></MenuItem>
                                     <MenuItem className={'d-flex justify-content-between text-danger'} onClick={() => {
-                                        setAnchorEl(false);
-                                        crud.confirm()
-                                    }}>
-                                        Delete <DeleteIcon className={classes.menuIcon}/></MenuItem>
+                                       deletecourse();
+                                       setAnchorEl(false);
+                                        
+                                        
+                                    }}  >
+                                      Delete <DeleteIcon className={classes.menuIcon}/></MenuItem>
                                     <MenuItem className={'text-success'} onClick={() => {setAnchorEl(false);}}>Enabled</MenuItem>
                                     <MenuItem onClick={() => {
                                         setAnchorEl(false);
                                         crud.confirm()
+                                        
                                     }}>Disabled</MenuItem>
                                 </Menu>
                                 <h6>{value?.topic} Topics</h6>
@@ -176,14 +190,25 @@ export default function QuestionCreateCourse() {
                 </div>
                 <DialogActions className={'mx-2'}>
                     <Button className={clsx(classes.Btn,)} variant={'contained'} onClick={async() => {
-                     if(formData.ButtonTitle==='Create Course'){
+                    if(formData.ButtonTitle==='Create Course'){
                           await crud.create('/categoryapi/',{
                                     category_short:courseData.courseName,      
                                     category_title:courseData.courseName,      
                          });
-                         getCourses();
+                        getCourses();
                      }
+                   
                         setOpen(false)
+
+                    if(formData.ButtonTitle==='UPDATE'){
+                           await crud.update('/categoryapi/'+data.category_id+'/',{
+                                    category_short:courseData.courseName,      
+                                    category_title:courseData.courseName,      
+                         });
+                        getCourses();
+                        }
+                       
+       
                     }} color="primary">
                         {formData.ButtonTitle}
                     </Button>

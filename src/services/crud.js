@@ -20,8 +20,6 @@ export class CrudFactory extends CrudRequest {
             data,
             ...requestOptions
         });
-
-
     }
 
     async update(url, data = {}, requestOptions= {}) {
@@ -34,13 +32,13 @@ export class CrudFactory extends CrudRequest {
     }
 
     async delete(url, data, requestOptions = {}) {
-    return this.send({
-    method: "DELETE",
-    url: "" + url,
-    data,
-    ...requestOptions
-});
-}
+        return this.send({
+            method: "delete",
+            url: "" + url,
+            data,
+            ...requestOptions
+        });
+    }
 
 async send(requestOptions = {}) {
     const {url, data, method = true} = requestOptions;
