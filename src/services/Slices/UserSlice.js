@@ -1,5 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {crud} from "../crud";
+
+import { Redirect, Route } from "react-router";
 export const UserSlice = createSlice({
     name: 'user',
     initialState: {
@@ -14,15 +16,18 @@ export const UserSlice = createSlice({
 
 export const {setUser} = UserSlice.actions;
 export const makeLogin = (params) => async (dispatch) => {
-    const {user ,token} = await crud.create("login/", params);
-    localStorage.setItem('/api/login_token',token);
+    const {user ,token} = await crud.create("/api/login/", params);
+    localStorage.setItem('login_token',token);
     dispatch(setUser(user));
 };
 
 export const makeLogout = (params) => async (dispatch) => {
-    await crud.delete("logout/");
+    const token =window.localStorage.getItem("login_token")
+    console.log("token===",token);
+    await crud.create("/api/logout/");
     localStorage.removeItem('theme');
-    localStorage.removeItem('login_token');
+   
+    localStorage.removeItem(token);
     dispatch(setUser({}));
 }
 
