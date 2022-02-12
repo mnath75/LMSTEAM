@@ -63,7 +63,11 @@ export default function QuestionSubject() {
             <div className={'container-fluid py-4 '}>
                 <div className={'row px-lg-5'}>
                     <div className={'col-12 py-2'}>
-                        <h5>{location.state?.course}</h5>
+                    <h5>Category : <span className='back-tag' onClick={() => {history.push('/question-bank')}}>{location.state?.category}</span>/
+                    <span className='back-tag' onClick={() => {history.push({pathname: '/question-course',
+                              state: {category:location.state?.category,course:location.state?.course}})}}>{location.state?.course}</span>
+                    </h5>
+                    <hr/>
                     </div>
                     <div className={'col-lg-3 col-12'}>
                         <h3 className={classes.title}>Subject(4)</h3>
@@ -76,9 +80,8 @@ export default function QuestionSubject() {
                     </div>
                     <div className={'col-lg-5 col-12 d-flex justify-content-lg-end my-3 mt-lg-0'}>
                         <Button startIcon={<ArrowBackIcon/>} className={'mx-lg-3 mx-1'} variant="contained"
-                                onClick={() => {
-                                    history.push('/question-bank')
-                                }}>Back</Button>
+                              onClick={()=>{history.push({pathname: '/question-course',
+                              state: {category:location.state?.category,course:location.state?.course}})}}>Back</Button>
                         <Button onClick={() => {
                             GetFormManage()
                         }} variant="contained" className={'mx-lg-3 mx-1'} startIcon={<AddIcon/>}
@@ -90,7 +93,7 @@ export default function QuestionSubject() {
                     {courses.map((value, index) => (
                         <div key={index} className={'col-xl-3 col-lg-4 col-md-6 col-12  mt-4'}>
                             <div className={clsx('card px-3 pt-2')}>
-                                <div onClick={() => {history.push({pathname:'/question-topic',state: {course: location.state.course,subject:value.title}})}} className={'QuestionRedirect'}/>
+                                <div onClick={() => {history.push({pathname:'/question-topic',state: {category:location.state?.category,course:location.state?.course,subject:value.title}})}} className={'QuestionRedirect'}/>
                                 <h5>{value.title}</h5>
                                 <p>{value.subtitle}</p>
                                 <IconButton onClick={(event) => {

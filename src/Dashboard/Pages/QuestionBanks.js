@@ -1,91 +1,71 @@
 import React, {useEffect, useState} from 'react'
-import {makeStyles,TextField,InputAdornment,Button,IconButton,Menu,MenuItem,Dialog,DialogActions,DialogTitle} from '@material-ui/core';
 import {useHistory} from  'react-router-dom'
-import SearchIcon from '@material-ui/icons/Search';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import AddIcon from '@material-ui/icons/Add';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import ClearIcon from '@material-ui/icons/Clear';
-import {Themes} from "../../Theme/theme";
 import clsx from "clsx";
+import {makeStyles,TextField,InputAdornment,Button,IconButton,Menu,MenuItem,Dialog,DialogActions,DialogTitle} from '@material-ui/core';
+import {Search ,FilterList,Add,MoreVert,Edit,Delete,Clear} from '@material-ui/icons';
+import Loader from '../../MainComponents/Loader';
+import {Themes} from "../../Theme/theme";
 import {crud} from "../../services/crud";
 import Slide from '@material-ui/core/Slide';
-import {colourOptions} from "../../MainComponents/SideNav";
-import Select from 'react-select'
 import '../QuestionBankComponent/QuestionCss.css';
-const course =[
-
-    {id:1,title:'IIT Advanced',topic:45,subtitle:'Maths,Physics, Chemistry'},
-    {id:1,title:'medical exam',topic:45,subtitle:'Maths,Physics, Chemistry'},
-    {id:1,title:'ssctest',topic:45,subtitle:'Maths,Physics, Chemistry'},
-    {id:1,title:'bank po',topic:45,subtitle:'Maths,Physics, Chemistry'},
-    {id:2,title:'JEE Mains',topic:405,subtitle:'Maths,Physics, Chemistry'},
-    {id:3,title:'NEET',topic:125,subtitle:'Maths,Physics, Chemistry'},
-    {id:4,title:'SSC',topic:35,subtitle:'Maths,Physics, Chemistry'},
-    {id:5,title:'Banking',topic:85,subtitle:'Maths,Physics, Chemistry'},
-]
-
 export default function QuestionCreateCourse() {
     const classes = useStyles();
     const history = useHistory();
-    const [state, setState] = useState({
-        courseCategory: null,
-        courseSubject: null
-    });
     const [formData, setFormData] = useState({
         formTitle: '',
         ButtonTitle: ''
-    })
-    const [open, setOpen] = useState(false)
+    });
+    const [loader,setLoader] = useState(false)
+    const [open, setOpen] = useState(false);
     const [data, setData] = useState()
     const [anchorEl, setAnchorEl] = useState(null);
     const [courseData, setCourseData] = useState('');
     const [courses,setCourses]=useState();
-    
     function GetFormManage() {
         setOpen(true)
             setFormData({
-                formTitle: 'Create New Course',
-                ButtonTitle: 'Create Course',
+                formTitle: 'Create New Category',
+                ButtonTitle: 'Create Category',
             });
     }
     function getClearAll() {
         setCourseData({
             courseName: '',
-        });
-        setState({
-            courseCategory: null,
-            courseSubject: null
+            course_subtitle:''
         });
     }
     //Edit
     function getEdit() {
         setOpen(true)
             setFormData({
-                formTitle: 'Edit Course',
+                formTitle: 'Edit Category',
                 ButtonTitle: 'UPDATE'
             });
             setCourseData({
                 courseName: data.category_title,
-                courseShort:data.category_title
-
+                course_subtitle:data.category_short
             })
     }
-   
     //delete
     async function deletecourse(){
-        crud.confirm();
-        await crud.delete('/categoryapi/'+data.category_id);
-       
+       await crud.confirm();
+        await crud.delete('/categoryapi/'+ data.category_id);
+        getCourses();
+
     }
-    
+    // getCourses
     async function getCourses()
     {
+        setLoader(true);
+        try{
         const data= await crud.retrieve('/categoryapi/');
         setCourses(data);
+        setLoader(false);
     }
+    catch(e){
+        setLoader(false);
+    }
+}
     useEffect(() => {
         getClearAll();
         getCourses();
@@ -96,33 +76,34 @@ export default function QuestionCreateCourse() {
             <div className={'container-fluid py-4 '}>
                 <div className={'row px-lg-5'}>
                     <div className={'col-lg-3 col-12'}>
-                        <h3 className={classes.title}>Courses({courses?.length})</h3>
+                        <h3 className={classes.title}>Category({courses?.length})</h3>
                     </div>
                     <div className={'col-lg-4 col-12 my-3 mt-lg-0'}>
                         <TextField fullWidth placeholder={'search here...'} InputProps={{
                             startAdornment: (<InputAdornment position="start">
-                                <SearchIcon/></InputAdornment>),}}/>
+                                <Search/></InputAdornment>),}}/>
                     </div>
                     <div className={'col-lg-5 col-12 d-flex justify-content-lg-end my-3 mt-lg-0'}>
-                        <Button className={'mx-lg-3 mx-1'} variant="contained" startIcon={<FilterListIcon/>}>
+                        <Button className={'mx-lg-3 mx-1'} variant="contained" startIcon={<FilterList/>}>
                             Sort
                         </Button>
-                        <Button onClick={() => {GetFormManage()}} variant="contained" className={'mx-lg-3 mx-1'} startIcon={<AddIcon/>}
+                        <Button onClick={() => {GetFormManage()}} variant="contained" className={'mx-lg-3 mx-1'} startIcon={<Add/>}
                                 style={{background: Themes.MainHeaderColor, color: Themes.WHITE}}>
-                            Create Courses
+                            Create Category
                         </Button>
                     </div>
                     <div className={'divider'}/>
-                    {courses?.map((value, index) => (
+                    {courses?.length?<>
+                        {courses?.map((value, index) => (
                         <div key={index} className={'col-xl-3 col-lg-4 col-md-6 col-12  mt-4'}>
                             <div className={clsx('px-3 pt-2 card')} >
-                                <div onClick={()=>{history.push({pathname: '/question-subject',
-                                    state: {course:value.category_title}})}} className={'QuestionRedirect'} />
+                                <div onClick={()=>{history.push({pathname: '/question-course',
+                                    state: {category:value.category_title}})}} className={'QuestionRedirect'} />
                                 <h5>{value?.category_title}</h5>
                                 <p>{value?.category_short}</p>
                                 <IconButton  onClick={(event) => {
                                     setAnchorEl(event.currentTarget);
-                                    setData(value)}} className={classes.menu}><MoreVertIcon/></IconButton>
+                                    setData(value)}} className={classes.menu}><MoreVert/></IconButton>
                                 <Menu key={index}
                                       id="simple-menu"
                                       anchorEl={anchorEl}
@@ -131,25 +112,22 @@ export default function QuestionCreateCourse() {
                                     <MenuItem className={'d-flex justify-content-between text-primary'} onClick={() => {
                                         getEdit();
                                         setAnchorEl(false)
-                                    }}>Edit<EditIcon className={classes.menuIcon}/></MenuItem>
+                                    }}>Edit<Edit className={classes.menuIcon}/></MenuItem>
                                     <MenuItem className={'d-flex justify-content-between text-danger'} onClick={() => {
                                        deletecourse();
-                                       setAnchorEl(false);
-                                        
-                                        
-                                    }}  >
-                                      Delete <DeleteIcon className={classes.menuIcon}/></MenuItem>
+                                       setAnchorEl(false);}}>
+                                      Delete <Delete className={classes.menuIcon}/></MenuItem>
                                     <MenuItem className={'text-success'} onClick={() => {setAnchorEl(false);}}>Enabled</MenuItem>
                                     <MenuItem onClick={() => {
                                         setAnchorEl(false);
                                         crud.confirm()
-                                        
                                     }}>Disabled</MenuItem>
                                 </Menu>
-                                <h6>{value?.topic} Topics</h6>
+                                <h6>{value?.topic} Courses</h6>
                             </div>
                         </div>
                     ))}
+                    </>:<><h2 className='text-center pt-5'>Category is Empty...</h2></>}
                 </div>
             </div>
             <Dialog maxWidth={'lg'} open={open} TransitionComponent={Transition} keepMounted>
@@ -159,12 +137,11 @@ export default function QuestionCreateCourse() {
                 <IconButton onClick={() => {
                     setOpen(false);
                     getClearAll()
-                }} className={classes.CloseBtn}><ClearIcon/></IconButton>
-                   
+                }} className={classes.CloseBtn}><Clear/></IconButton>
                 <div className={clsx('container-fluid mx-lg-4', classes.FormWidth)}>
                     <div className={'row pl-0 pr-0'}>
                         <div className={clsx('col-lg-3 col-12')}>
-                            <h6 className={classes.InputTitle}>Course Name</h6>
+                            <h6 className={classes.InputTitle}>Category Name</h6>
                         </div>
                         <div className={'col-lg-9 col-12'}>
                             <TextField value={courseData.courseName} onChange={(e)=>{
@@ -174,46 +151,38 @@ export default function QuestionCreateCourse() {
                     </div>
                         <div className={'row  my-4 pl-0 pr-0'}>
                             <div className={clsx('col-lg-3 col-12')}>
-                                <h6 className={classes.InputTitle}>Subjects</h6>
+                                <h6 className={classes.InputTitle}>Courses</h6>
                             </div>
                             <div className={'col-lg-9 col-12'}>
-                                <Select
-                                    value={state.courseSubject}
-                                    isMulti
-                                    onChange={(selected) => {setState({courseSubject: selected});}}
-                                    name="colors"
-                                    options={colourOptions}
-                                    className="basic-multi-select"
-                                    classNamePrefix="select"/>
-                            </div>
+                            <TextField value={courseData.course_subtitle} onChange={(e)=>{
+                                     setCourseData(
+                                         {...courseData,
+                                            course_subtitle:e.target.value})
+                            }} name='course_subtitle'  fullWidth variant="outlined" InputProps={{className: 'TextFieldHeight',}}/>
+                        </div>
                         </div>
                 </div>
                 <DialogActions className={'mx-2'}>
                     <Button className={clsx(classes.Btn,)} variant={'contained'} onClick={async() => {
-                    if(formData.ButtonTitle==='Create Course'){
-                          await crud.create('/categoryapi/',{
-                                    category_short:courseData.courseName,      
-                                    category_title:courseData.courseName,      
-                         });
+                    if(formData.ButtonTitle==='Create Category'){
+                          await crud.create('/categoryapi/',{category_short:courseData.course_subtitle,category_title:courseData.courseName,});
                         getCourses();
+                        getClearAll();
                      }
-                   
                         setOpen(false)
-
                     if(formData.ButtonTitle==='UPDATE'){
                            await crud.update('/categoryapi/'+data.category_id+'/',{
-                                    category_short:courseData.courseName,      
+                                    category_short:courseData.course_subtitle,      
                                     category_title:courseData.courseName,      
                          });
                         getCourses();
                         }
-                       
-       
                     }} color="primary">
                         {formData.ButtonTitle}
                     </Button>
                 </DialogActions>
             </Dialog>
+            {loader?<Loader/>:<></>}
         </>
     )
 }

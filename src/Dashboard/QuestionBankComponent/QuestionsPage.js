@@ -1,5 +1,5 @@
 import React from "react";
-import {useLocation} from "react-router-dom";
+import {useLocation,useHistory} from "react-router-dom";
 import {Button, makeStyles, Radio, RadioGroup, FormControlLabel , Dialog,Slide,DialogTitle,DialogActions,IconButton,TextField ,MenuItem} from "@material-ui/core";
 import clsx from "clsx";
 import {Themes} from "../../Theme/theme";
@@ -8,10 +8,9 @@ import CreateIcon from '@material-ui/icons/Create';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ClearIcon from '@material-ui/icons/Clear';
 import {crud} from "../../services/crud";
-
-
 export default function QuestionPage() {
     const location = useLocation();
+    const history = useHistory();
     const classes = styles();
     const [value, setValue] = React.useState('Agra');
     const [open, setOpen] = React.useState(false);
@@ -25,7 +24,18 @@ export default function QuestionPage() {
             <div className={'container-fluid px-lg-5 mt-3'}>
                 <div className={'row'}>
                     <div className={'col-12 col-lg-5 py-2'}>
-                        <h5>{location.state?.course + '>' + location.state?.subject + '>' + location.state?.topic + '>' + location.state?.type}</h5>
+                    <h5>Category : <span className='back-tag' onClick={() => {history.push('/question-bank')}}>{location.state?.category}</span>/
+                    <span className='back-tag' onClick={() => {history.push({pathname: '/question-course',
+                              state: {category:location.state?.category,course:location.state?.course}})}}>{location.state?.course}</span>/
+                               <span className='back-tag' onClick={() => {history.push({pathname: '/question-subject',
+                              state: {category:location.state?.category,course:location.state?.course,subject:location.state?.subject}})}}>
+                                  {location.state?.subject}</span>/  <span className='back-tag' onClick={() => {history.push({pathname: '/question-topic',
+                              state: {category:location.state?.category,course:location.state?.course,subject:location.state?.subject,topic:location.state?.topic}})}}>
+                                  {location.state?.topic}</span>/
+                                  <span className='back-tag' onClick={() => {history.push({pathname: '/question-type',
+                              state: {category:location.state?.category,course:location.state?.course,subject:location.state?.subject,topic:location.state?.topic}})}}>
+                                  {location.state?.question_type}</span>
+                    </h5>
                     </div>
                     <div className={'col-lg-7 col-12 d-lg-flex justify-content-lg-end'}>
                         <Button variant={'contained'} onClick={() => {setOpen(true);}} startIcon={<AddIcon/>} className={clsx(classes.Button)}>Create

@@ -72,7 +72,13 @@ export default function QuestionTopic() {
             <div className={'container-fluid py-4 '}>
                 <div className={'row px-lg-5'}>
                     <div className={'col-12 py-2'}>
-                        <h5>{location.state?.course + '>' + location.state?.subject}</h5>
+                    <h5>Category : <span className='back-tag' onClick={() => {history.push('/question-bank')}}>{location.state?.category}</span>/
+                    <span className='back-tag' onClick={() => {history.push({pathname: '/question-course',
+                              state: {category:location.state?.category,course:location.state?.course}})}}>{location.state?.course}</span>/
+                               <span className='back-tag' onClick={() => {history.push({pathname: '/question-subject',
+                              state: {category:location.state?.category,course:location.state?.course,subject:location.state?.subject}})}}>
+                                  {location.state?.subject}</span>
+                    </h5>
                     </div>
                     <div className={'col-lg-3 col-12'}>
                         <h3 className={classes.title}>Topics(04)</h3>
@@ -82,8 +88,9 @@ export default function QuestionTopic() {
                                 <SearchIcon/></InputAdornment>),}}/>
                     </div>
                     <div className={'col-lg-5 col-12 d-flex justify-content-lg-end my-3 mt-lg-0'}>
-                        <Button startIcon={<ArrowBackIcon/>} className={'mx-lg-3 mx-1'} variant="contained" onClick={()=>{history.push({pathname: '/question-subject',
-                            state: {course:location.state?.course}})}}>Back</Button>
+                        <Button startIcon={<ArrowBackIcon/>} className={'mx-lg-3 mx-1'} variant="contained" 
+                        onClick={()=>{history.push({pathname: '/question-subject',
+                        state: {category:location.state?.category,course:location.state?.course,subject:location.state?.subject}})}}>Back</Button>
                         <Button onClick={() => {GetFormManage()}} variant="contained" className={'mx-lg-3 mx-1'} startIcon={<AddIcon/>}
                                 style={{background: Themes.MainHeaderColor, color: Themes.WHITE}}>
                             Create Topics
@@ -93,7 +100,8 @@ export default function QuestionTopic() {
                     {courses.map((value, index) => (
                         <div key={index} className={'col-xl-3 col-lg-4 col-md-6 col-12  mt-4'}>
                             <div className={clsx('card px-3 pt-2')}>
-                                <div onClick={()=>{history.push({pathname:'/question-type',state:{course:location.state?.course,subject:location.state?.subject,topic:value.title}})}} className={'QuestionRedirect'} />
+                                <div onClick={()=>{history.push({pathname: '/question-type',
+                              state: {category:location.state?.category,course:location.state?.course,subject:location.state?.subject,topic:value?.title}})}} className={'QuestionRedirect'} />
                                 <h5>{value.title}</h5>
                                 <p>{value.subtitle}</p>
                                 <IconButton onClick={(event) => {

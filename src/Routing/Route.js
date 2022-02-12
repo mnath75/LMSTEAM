@@ -5,6 +5,7 @@ import Form from '../Sessions/Form';
 import Dashboard from "../Dashboard/Pages/Dashboard";
 import Courses from "../Dashboard/Pages/Courses";
 import QuestionBank from "../Dashboard/Pages/QuestionBanks";
+import QuestionCourse from '../Dashboard/QuestionBankComponent/QuestionCourse'
 import QuestionSubjects from "../Dashboard/QuestionBankComponent/QuestionSubjects";
 import QuestionTopic from "../Dashboard/QuestionBankComponent/QuestionTopic";
 import QuestionType from "../Dashboard/QuestionBankComponent/QuestionType";
@@ -20,6 +21,7 @@ export default function Routing() {
             <PrivateRouter Component={Dashboard} path={'/dashboard'} exact/>
             <PrivateRouter Component={Courses} path={'/courses'} exact/>
             <PrivateRouter Component={QuestionBank} path={'/question-bank'} exact/>
+            <PrivateRouter Component={QuestionCourse} path={'/question-course'} exact/>
             <PrivateRouter Component={QuestionSubjects} path={'/question-subject'} exact/>
             <PrivateRouter Component={QuestionTopic} path={'/question-topic'} exact/>
             <PrivateRouter Component={QuestionType} path={'/question-type'} exact/>
