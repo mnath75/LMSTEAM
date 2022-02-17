@@ -8,8 +8,10 @@ import {Themes} from "../../Theme/theme";
 import {crud} from "../../services/crud";
 import Slide from '@material-ui/core/Slide';
 import '../QuestionBankComponent/QuestionCss.css';
+import { useLocation } from "react-router-dom";
 export default function QuestionCreateCourse() {
     const classes = useStyles();
+    const location = useLocation();
     const history = useHistory();
     const [formData, setFormData] = useState({
         formTitle: '',
@@ -70,7 +72,7 @@ export default function QuestionCreateCourse() {
         getClearAll();
         getCourses();
         
-    }, [])
+    }, [location])
     return (
         <>
             <div className={'container-fluid py-4 '}>
@@ -97,7 +99,7 @@ export default function QuestionCreateCourse() {
                         {courses?.map((value, index) => (
                         <div key={index} className={'col-xl-3 col-lg-4 col-md-6 col-12  mt-4'}>
                             <div className={clsx('px-3 pt-2 card')} >
-                                <div onClick={()=>{history.push({pathname: '/question-course',
+                                <div onClick={()=>{history.push({pathname: '/question-course/'+value?.category_id,
                                     state: {category:value.category_title}})}} className={'QuestionRedirect'} />
                                 <h5>{value?.category_title}</h5>
                                 <p>{value?.category_short}</p>

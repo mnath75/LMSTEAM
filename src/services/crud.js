@@ -32,7 +32,7 @@ export class CrudFactory extends CrudRequest {
     });
   }
 
-  async delete(url, data, requestOptions = {}) {
+  async delete(url, data={}, requestOptions = {}) {
     return this.send({
       method: "delete",
       url: "" + url,
