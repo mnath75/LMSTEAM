@@ -122,7 +122,7 @@ export default function QuestionCourse() {
                     {courses.map((value, index) => (
                         <div key={index} className={'col-xl-3 col-lg-4 col-md-6 col-12  mt-4'}>
                             <div className={clsx('card px-3 pt-2')}>
-                                <div onClick={() => {history.push({pathname:'/question-subject',state: {category: location.state?.category,course:value.title}})}} className={'QuestionRedirect'}/>
+                                <div onClick={() => {history.push({pathname:'/question-subject/'+value?.cr_id,state: {category: location.state?.category,course:value.title}})}} className={'QuestionRedirect'}/>
                                 <h5>{value?.cr_title}</h5>
                                 <p>{value?.cr_slug}</p>
                                 <IconButton onClick={(event) => {
@@ -158,7 +158,7 @@ export default function QuestionCourse() {
                             </div>
                         </div>
                     ))}
-                    </>:<><h2 className='text-center pt-5'>course is Empty...</h2></>}
+                    </>:<><h2 className='text-center pt-5'>topic is Empty...</h2></>}
                 </div>
             </div>
             <Dialog maxWidth={'lg'} open={open} TransitionComponent={Transition} keepMounted>

@@ -14,13 +14,11 @@ import {crud} from "../../services/crud";
 import Slide from '@material-ui/core/Slide';
 import './QuestionCss.css';
 import { useLocation } from "react-router-dom";
-const courses = [
-    {id: 1, title: 'Maths', topic: 45, subtitle: 'IIT Advanced'},
-    {id: 2, title: 'English', topic: 405, subtitle: 'SSC'},
-    {id: 3, title: 'Science', topic: 125, subtitle: 'Banking'},
-    {id: 4, title: 'Physics', topic: 35, subtitle: 'NEET'},
-]
+import { useParams } from "react-router-dom";
+import Loader from '../../MainComponents/Loader';
+
 export default function QuestionSubject() {
+    const params = useParams();
     const classes = useStyles();
     const location = useLocation();
     const history = useHistory();
@@ -28,10 +26,12 @@ export default function QuestionSubject() {
         formTitle: '',
         ButtonTitle: ''
     })
+    const [loader,setLoader] = useState(false)
     const [open, setOpen] = useState(false)
     const [data, setData] = useState()
     const [anchorEl, setAnchorEl] = useState(null);
     const [courseData, setCourseData] = useState('');
+    const [courses,setCourses]=useState();
     function GetFormManage() {
         setOpen(true)
         setFormData({
@@ -41,7 +41,10 @@ export default function QuestionSubject() {
     }
     function getClearAll() {
         setCourseData({
-            courseName: '',
+            
+            subjectName: '',
+            subjectSlug:'',
+            subjectCat:'',
         });
     }
     //Edit
@@ -52,10 +55,38 @@ export default function QuestionSubject() {
             ButtonTitle: 'UPDATE'
         });
         setCourseData({
-            courseName: data.title
+            subjectName: data.sub_title,
+            subjectSlug:data.sub_slug,
+            subjectCat:data.sub_course
         })
     }
+    async function getSubject()
+    {
+       
+        setLoader(true);
+        try{
+            const data1= await crud.retrieve('/subjectapi/?sub_course='+params.id+'&&')
+            setCourses(data1);
+            setLoader(false);
+            }
+        
+        catch(e){
+        setLoader(false);
+        }
+    }
+    async function deletesubject(){
+        
+        await crud.confirm()
+        
+        await crud.delete('/subjectapi/'+ data.sub_id)
+        .then((response) => {
+            if(response==null){
+                getSubject();
+            }
+        });
+    }
     useEffect(() => {
+        getSubject();
         getClearAll();
     }, [location]);
     return (
@@ -70,7 +101,7 @@ export default function QuestionSubject() {
                     <hr/>
                     </div>
                     <div className={'col-lg-3 col-12'}>
-                        <h3 className={classes.title}>Subject(4)</h3>
+                        <h3 className={classes.title}>Subject({courses?.length})</h3>
                     </div>
                     <div className={'col-lg-4 col-12 my-3 mt-lg-0'}>
                         <TextField fullWidth placeholder={'search here...'} InputProps={{
@@ -90,12 +121,13 @@ export default function QuestionSubject() {
                         </Button>
                     </div>
                     <div className={'divider'}/>
+                    {courses?.length? <>
                     {courses.map((value, index) => (
                         <div key={index} className={'col-xl-3 col-lg-4 col-md-6 col-12  mt-4'}>
                             <div className={clsx('card px-3 pt-2')}>
-                                <div onClick={() => {history.push({pathname:'/question-topic',state: {category:location.state?.category,course:location.state?.course,subject:value.title}})}} className={'QuestionRedirect'}/>
-                                <h5>{value.title}</h5>
-                                <p>{value.subtitle}</p>
+                                <div onClick={() => {history.push({pathname:'/question-topic/'+value?.sub_id,state: {category:location.state?.category,course:location.state?.course,subject:value.title}})}} className={'QuestionRedirect'}/>
+                                <h5>{value?.sub_title}</h5>
+                                <p>{value?.sub_slug}</p>
                                 <IconButton onClick={(event) => {
                                     setAnchorEl(event.currentTarget);
                                     setData(value);
@@ -112,6 +144,7 @@ export default function QuestionSubject() {
                                         setAnchorEl(false)
                                     }}>Edit<EditIcon className={classes.menuIcon}/></MenuItem>
                                     <MenuItem className={'d-flex justify-content-between text-danger'} onClick={() => {
+                                        deletesubject();
                                         setAnchorEl(false);
                                         crud.confirm()
                                     }}>
@@ -128,6 +161,7 @@ export default function QuestionSubject() {
                             </div>
                         </div>
                     ))}
+                    </>:<><h2 className='text-center pt-5'>topic is Empty...</h2></>}
                 </div>
             </div>
             <Dialog maxWidth={'lg'} open={open} TransitionComponent={Transition} keepMounted>
@@ -150,13 +184,31 @@ export default function QuestionSubject() {
                     </div>
                 </div>
                 <DialogActions className={'mx-2'}>
-                    <Button className={clsx(classes.Btn,)} variant={'contained'} onClick={() => {
+                    <Button className={clsx(classes.Btn,)} variant={'contained'} onClick={async() => {
+                    if(formData.ButtonTitle==='Create Subject'){
+                          await crud.create('/subjectapi/',{
+                              sub_title:courseData.courseName,
+                              sub_slug:courseData.courseSlug,
+                              sub_course:params.id
+                            });
+                        getSubject();
+                        getClearAll();
+                     }
                         setOpen(false)
+                    if(formData.ButtonTitle==='UPDATE'){
+                        await crud.update('/subjectapi/'+data.sub_id+'/',{
+                                        sub_title:courseData.subjectName,  
+                                        sub_slug:courseData.subjectSlug, 
+                                        sub_course:courseData.subjectCat 
+                         });
+                        getSubject();
+                        }
                     }} color="primary">
                         {formData.ButtonTitle}
                     </Button>
                 </DialogActions>
             </Dialog>
+            {loader?<Loader/>:<></>}
         </>
     )
 }

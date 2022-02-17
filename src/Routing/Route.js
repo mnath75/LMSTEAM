@@ -22,7 +22,7 @@ export default function Routing() {
             <PrivateRouter Component={Courses} path={'/courses'} exact/>
             <PrivateRouter Component={QuestionBank} path={'/question-bank'} exact/>
             <PrivateRouter Component={QuestionCourse} path={'/question-course/:id'} exact/>
-            <PrivateRouter Component={QuestionSubjects} path={'/question-subject'} exact/>
+            <PrivateRouter Component={QuestionSubjects} path={'/question-subject/:id'} exact/>
             <PrivateRouter Component={QuestionTopic} path={'/question-topic'} exact/>
             <PrivateRouter Component={QuestionType} path={'/question-type'} exact/>
             <PrivateRouter Component={QuestionPage} path={'/question-page'} exact/>
