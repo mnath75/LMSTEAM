@@ -15,6 +15,7 @@ import { useParams } from "react-router-dom";
 
 export default function QuestionCourse() {
     const params = useParams();
+    const p =[params.id];
     const classes = useStyles();
     const location = useLocation();
     const history = useHistory();
@@ -36,25 +37,25 @@ export default function QuestionCourse() {
             });
     }
     function getClearAll() {
+        
         setCourseData({
             courseName: '',
-            courseSlug:'',
-            courseCat:'',
-           
-
+            courseCat:p
         });
     }
     //Edit
     function getEdit() {
         setOpen(true)
+        
         setFormData({
             formTitle: 'Edit Course',
             ButtonTitle: 'UPDATE'
         });
         setCourseData({
+            
             courseName: data.cr_title,
-            courseSlug:data.cr_slug,
             courseCat:data.cr_categ
+           
         })
     }
 
@@ -124,7 +125,7 @@ export default function QuestionCourse() {
                             <div className={clsx('card px-3 pt-2')}>
                                 <div onClick={() => {history.push({pathname:'/question-subject/'+value?.cr_id,state: {category: location.state?.category,course:value.title}})}} className={'QuestionRedirect'}/>
                                 <h5>{value?.cr_title}</h5>
-                                <p>{value?.cr_slug}</p>
+                                
                                 <IconButton onClick={(event) => {
                                     setAnchorEl(event.currentTarget);
                                     setData(value);
@@ -154,11 +155,11 @@ export default function QuestionCourse() {
                                         crud.confirm()
                                     }}>Disabled</MenuItem>
                                 </Menu>
-                                <h6>{value.topic} Topics</h6>
+                                <h6>{value.topic} </h6>
                             </div>
                         </div>
                     ))}
-                    </>:<><h2 className='text-center pt-5'>topic is Empty...</h2></>}
+                    </>:<><h2 className='text-center pt-5'>course is Empty...</h2></>}
                 </div>
             </div>
             <Dialog maxWidth={'lg'} open={open} TransitionComponent={Transition} keepMounted>
@@ -180,36 +181,28 @@ export default function QuestionCourse() {
                             }} name='courseName'  fullWidth variant="outlined" InputProps={{className: 'TextFieldHeight',}}/>   
                         </div>
                     </div>
-                    <div className={'row  my-4 pl-0 pr-0'}>
-                            <div className={clsx('col-lg-3 col-12')}>
-                                <h6 className={classes.InputTitle}>course slug</h6>
-                            </div>
-                            <div className={'col-lg-9 col-12'}>
-                            <TextField value={courseData.courseSlug } onChange={(e)=>{
-                                     setCourseData(
-                                         {...courseData,
-                                            courseSlug :e.target.value})
-                            }} name='courseSlug'  fullWidth variant="outlined" InputProps={{className: 'TextFieldHeight',}}/>
-                        </div>
-                    </div>    
                 </div>
                 <DialogActions className={'mx-2'}>
                     <Button className={clsx(classes.Btn,)} variant={'contained'} onClick={async() => {
                     if(formData.ButtonTitle==='Create Course'){
                           await crud.create('/courseapi/',{
+                            
                               cr_title:courseData.courseName,
-                              cr_slug:courseData.courseSlug,
-                              cr_categ:params.id
+                              cr_categ:courseData.courseCat
+                              
+                             
                             });
+                            console.log("nniii",courseData.courseCat)
                         getCourses();
                         getClearAll();
                      }
                         setOpen(false)
                     if(formData.ButtonTitle==='UPDATE'){
                         await crud.update('/courseapi/'+data.cr_id+'/',{
+                                        
                                         cr_title:courseData.courseName,  
-                                        cr_slug:courseData.courseSlug, 
-                                        cr_categ:courseData.courseCat 
+                                        cr_categ:courseData.courseCat
+                                        
                          });
                         getCourses();
                         }

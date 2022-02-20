@@ -167,7 +167,10 @@ export default function QuestionCreateCourse() {
                 <DialogActions className={'mx-2'}>
                     <Button className={clsx(classes.Btn,)} variant={'contained'} onClick={async() => {
                     if(formData.ButtonTitle==='Create Category'){
-                          await crud.create('/categoryapi/',{category_short:courseData.course_subtitle,category_title:courseData.courseName,});
+                          await crud.create('/categoryapi/',{
+                              category_short:courseData.course_subtitle,
+                              category_title:courseData.courseName,
+                            });
                         getCourses();
                         getClearAll();
                      }

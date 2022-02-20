@@ -19,6 +19,7 @@ import Loader from '../../MainComponents/Loader';
 
 export default function QuestionSubject() {
     const params = useParams();
+    const p =[params.id];
     const classes = useStyles();
     const location = useLocation();
     const history = useHistory();
@@ -43,8 +44,7 @@ export default function QuestionSubject() {
         setCourseData({
             
             subjectName: '',
-            subjectSlug:'',
-            subjectCat:'',
+            subjectCat:p
         });
     }
     //Edit
@@ -56,7 +56,6 @@ export default function QuestionSubject() {
         });
         setCourseData({
             subjectName: data.sub_title,
-            subjectSlug:data.sub_slug,
             subjectCat:data.sub_course
         })
     }
@@ -74,7 +73,7 @@ export default function QuestionSubject() {
         setLoader(false);
         }
     }
-    async function deletesubject(){
+    async function deleteSubject(){
         
         await crud.confirm()
         
@@ -94,7 +93,7 @@ export default function QuestionSubject() {
             <div className={'container-fluid py-4 '}>
                 <div className={'row px-lg-5'}>
                     <div className={'col-12 py-2'}>
-                    <h5>Category : <span className='back-tag' onClick={() => {history.push('/question-bank')}}>{location.state?.category}</span>/
+                    <h5>Category : <span className='back-tag' onClick={() => {history.push('/question-bank')}}>{location.state?.category}</span>
                     <span className='back-tag' onClick={() => {history.push({pathname: '/question-course',
                               state: {category:location.state?.category,course:location.state?.course}})}}>{location.state?.course}</span>
                     </h5>
@@ -111,8 +110,7 @@ export default function QuestionSubject() {
                     </div>
                     <div className={'col-lg-5 col-12 d-flex justify-content-lg-end my-3 mt-lg-0'}>
                         <Button startIcon={<ArrowBackIcon/>} className={'mx-lg-3 mx-1'} variant="contained"
-                              onClick={()=>{history.push({pathname: '/question-course',
-                              state: {category:location.state?.category,course:location.state?.course}})}}>Back</Button>
+                              onClick={history.goBack}>Back</Button>
                         <Button onClick={() => {
                             GetFormManage()
                         }} variant="contained" className={'mx-lg-3 mx-1'} startIcon={<AddIcon/>}
@@ -127,7 +125,7 @@ export default function QuestionSubject() {
                             <div className={clsx('card px-3 pt-2')}>
                                 <div onClick={() => {history.push({pathname:'/question-topic/'+value?.sub_id,state: {category:location.state?.category,course:location.state?.course,subject:value.title}})}} className={'QuestionRedirect'}/>
                                 <h5>{value?.sub_title}</h5>
-                                <p>{value?.sub_slug}</p>
+                                
                                 <IconButton onClick={(event) => {
                                     setAnchorEl(event.currentTarget);
                                     setData(value);
@@ -144,9 +142,9 @@ export default function QuestionSubject() {
                                         setAnchorEl(false)
                                     }}>Edit<EditIcon className={classes.menuIcon}/></MenuItem>
                                     <MenuItem className={'d-flex justify-content-between text-danger'} onClick={() => {
-                                        deletesubject();
+                                        deleteSubject();
                                         setAnchorEl(false);
-                                        crud.confirm()
+                                       
                                     }}>
                                         Delete <DeleteIcon className={classes.menuIcon}/></MenuItem>
                                     <MenuItem className={'text-success'} onClick={() => {
@@ -157,11 +155,11 @@ export default function QuestionSubject() {
                                         crud.confirm()
                                     }}>Disabled</MenuItem>
                                 </Menu>
-                                <h6>{value.topic} Topics</h6>
+                                <h6>{value.topic} </h6>
                             </div>
                         </div>
                     ))}
-                    </>:<><h2 className='text-center pt-5'>topic is Empty...</h2></>}
+                    </>:<><h2 className='text-center pt-5'>subject is Empty...</h2></>}
                 </div>
             </div>
             <Dialog maxWidth={'lg'} open={open} TransitionComponent={Transition} keepMounted>
@@ -172,14 +170,16 @@ export default function QuestionSubject() {
                     setOpen(false);
                     getClearAll()
                 }} className={classes.CloseBtn}><ClearIcon/></IconButton>
-                <div className={clsx('container-fluid mx-lg-4', classes.FormWidth)}>
+               
+               <div className={clsx('container-fluid mx-lg-4', classes.FormWidth)}>
                     <div className={'row pl-0 pr-0 mt-2'}>
                         <div className={clsx('col-lg-3 col-12')}>
                             <h6 className={classes.InputTitle}>Subject Name</h6>
                         </div>
                         <div className={'col-lg-9 col-12'}>
-                            <TextField value={courseData.courseName} fullWidth variant="outlined"
-                                       InputProps={{className: 'TextFieldHeight',}}/>
+                            <TextField value={courseData.subjectName} onChange={(e)=>{
+                                setCourseData({...courseData,subjectName:e.target.value})
+                            }} name='subjectName'  fullWidth variant="outlined" InputProps={{className: 'TextFieldHeight',}}/>   
                         </div>
                     </div>
                 </div>
@@ -187,9 +187,8 @@ export default function QuestionSubject() {
                     <Button className={clsx(classes.Btn,)} variant={'contained'} onClick={async() => {
                     if(formData.ButtonTitle==='Create Subject'){
                           await crud.create('/subjectapi/',{
-                              sub_title:courseData.courseName,
-                              sub_slug:courseData.courseSlug,
-                              sub_course:params.id
+                              sub_title:courseData.subjectName,
+                              sub_course:courseData.subjectCat
                             });
                         getSubject();
                         getClearAll();
@@ -198,7 +197,6 @@ export default function QuestionSubject() {
                     if(formData.ButtonTitle==='UPDATE'){
                         await crud.update('/subjectapi/'+data.sub_id+'/',{
                                         sub_title:courseData.subjectName,  
-                                        sub_slug:courseData.subjectSlug, 
                                         sub_course:courseData.subjectCat 
                          });
                         getSubject();
