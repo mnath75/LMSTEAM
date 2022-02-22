@@ -16,6 +16,7 @@ import Select from 'react-select'
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import './QuestionCss.css';
 import { useParams } from "react-router-dom";
+import Loader from '../../MainComponents/Loader'
 const courses =[
     {id:1,title:'Kinetic',topic:45,subtitle:'Physics'},
     {id:2,title:'Motion',topic:405,subtitle:'Physics'},
@@ -198,7 +199,7 @@ export default function QuestionTopic() {
                               
                              
                             });
-                            console.log("nniii",courseData.topicCat)
+                            
                         getTopics();
                         getClearAll();
                      }
@@ -217,6 +218,7 @@ export default function QuestionTopic() {
                     </Button>
                 </DialogActions>
             </Dialog>
+            {loader?<Loader/>:<></>}
         </>
     )
 }

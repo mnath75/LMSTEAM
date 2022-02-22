@@ -14,6 +14,7 @@ import {crud} from "../../services/crud";
 import Slide from '@material-ui/core/Slide';
 import './QuestionCss.css';
 import { useLocation } from "react-router-dom";
+import Loader from '../../MainComponents/Loader'
 const courses = [
     {id: 1, title: 'Single_Multi Choice', topic: 45, subtitle: 'NEET'},
     {id: 2, title: 'Comprehension Type', topic: 405, subtitle: 'NEET'},
@@ -34,20 +35,22 @@ export default function QuestionType() {
         formTitle: '',
         ButtonTitle: ''
     })
+    const [loader,setLoader] = useState(false)
     const [open, setOpen] = useState(false)
     const [data, setData] = useState()
     const [anchorEl, setAnchorEl] = useState(null);
     const [courseData, setCourseData] = useState('');
+    const [courses,setCourses]=useState();
     function GetFormManage() {
         setOpen(true)
         setFormData({
             formTitle: 'Create New Type',
-            ButtonTitle: 'Create Subject',
+            ButtonTitle: 'Create Type',
         });
     }
     function getClearAll() {
         setCourseData({
-            courseName: '',
+            typeName: '',
         });
     }
     //Edit
@@ -58,11 +61,37 @@ export default function QuestionType() {
             ButtonTitle: 'UPDATE'
         });
         setCourseData({
-            courseName: data.title
+            typeName: data.qt_title,
         })
+    }
+    async function getType()
+    {
+       
+        setLoader(true);
+        try{
+            const data1= await crud.retrieve('/Qtype/')
+            setCourses(data1);
+            setLoader(false);
+            }
+        
+        catch(e){
+        setLoader(false);
+        }
+    }
+    async function deleteType(){
+        
+        await crud.confirm()
+        
+        await crud.delete('/Qtype/'+ data.qt_id)
+        .then((response) => {
+            if(response==null){
+                getType();
+            }
+        });
     }
     useEffect(() => {
         getClearAll();
+        getType();
     }, [location]);
     return (
         <>
@@ -81,7 +110,7 @@ export default function QuestionType() {
                     <hr/>
                     </div>
                     <div className={'col-lg-3 col-12'}>
-                        <h3 className={classes.title}>Questions Type(10)</h3>
+                        <h3 className={classes.title}>Questions Type({courses?.length})</h3>
                     </div>
                     <div className={'col-lg-4 col-12 my-3 mt-lg-0'}>
                         <TextField fullWidth placeholder={'search here...'} InputProps={{
@@ -89,23 +118,24 @@ export default function QuestionType() {
                                 <SearchIcon/></InputAdornment>),}}/>
                     </div>
                     <div className={'col-lg-5 col-12 d-flex justify-content-lg-end my-3 mt-lg-0'}>
-                        <Button startIcon={<ArrowBackIcon/>} className={'mx-lg-3 mx-1'} variant="contained" onClick={() => {history.push({pathname: '/question-topic',
-                              state: {category:location.state?.category,course:location.state?.course,subject:location.state?.subject,topic:location.state?.topic}})}}>Back</Button>
+                        <Button startIcon={<ArrowBackIcon/>} className={'mx-lg-3 mx-1'} variant="contained" onClick={history.goBack}>Back</Button>
                         <Button onClick={() => {
                             GetFormManage()
                         }} variant="contained" className={'mx-lg-3 mx-1'} startIcon={<AddIcon/>}
                                 style={{background: Themes.MainHeaderColor, color: Themes.WHITE}}>
-                            Create New Type
+                            Create New Type 
                         </Button>
                     </div>
                     <div className={'divider'}/>
+                    {courses?.length?<>
                     {courses.map((value, index) => (
                         <div key={index} className={'col-xl-3 col-lg-4 col-md-6 col-12  mt-4'}>
                             <div className={clsx('card px-3 pt-2')}>
                                 <div onClick={() => {history.push({pathname: '/question-page',
                               state: {category:location.state?.category,course:location.state?.course,subject:location.state?.subject,topic:location.state?.topic,question_type:value?.title}})}} className={'QuestionRedirect'}/>
-                                <h5>{value.title}</h5>
-                                <p>{value.subtitle}</p>
+                                <h5>{value?.qt_title}</h5>
+                                
+                                
                                 <IconButton onClick={(event) => {
                                     setAnchorEl(event.currentTarget);
                                     setData(value);
@@ -122,22 +152,20 @@ export default function QuestionType() {
                                         setAnchorEl(false)
                                     }}>Edit<EditIcon className={classes.menuIcon}/></MenuItem>
                                     <MenuItem className={'d-flex justify-content-between text-danger'} onClick={() => {
-                                        setAnchorEl(false);
-                                        crud.confirm()
+                                       
+                                       deleteType();
+                                       setAnchorEl(false);
                                     }}>
-                                        Delete <DeleteIcon className={classes.menuIcon}/></MenuItem>
-                                    <MenuItem className={'text-success'} onClick={() => {
-                                        setAnchorEl(false);
-                                    }}>Enabled</MenuItem>
-                                    <MenuItem onClick={() => {
-                                        setAnchorEl(false);
-                                        crud.confirm()
-                                    }}>Disabled</MenuItem>
+                                    Delete <DeleteIcon className={classes.menuIcon}/></MenuItem>
+                                   
+                              
                                 </Menu>
-                                <h6>{value.topic} Questions</h6>
+                                <h6>{value.topic} </h6>
                             </div>
                         </div>
                     ))}
+                    </>:<><h2 className='text-center pt-5'>type is Empty...</h2></>}
+
                 </div>
             </div>
             <Dialog maxWidth={'lg'} open={open} TransitionComponent={Transition} keepMounted>
@@ -154,19 +182,42 @@ export default function QuestionType() {
                             <h6 className={classes.InputTitle}>Question Type</h6>
                         </div>
                         <div className={'col-lg-9 col-12'}>
-                            <TextField value={courseData.courseName} fullWidth variant="outlined"
-                                       InputProps={{className: 'TextFieldHeight',}}/>
+                            <TextField value={courseData.typeName} onChange={(e)=>{
+                                setCourseData({...courseData,typeName:e.target.value})
+                            }} name='typeName'  fullWidth variant="outlined" InputProps={{className: 'TextFieldHeight',}}/>   
                         </div>
                     </div>
                 </div>
                 <DialogActions className={'mx-2'}>
-                    <Button className={clsx(classes.Btn,)} variant={'contained'} onClick={() => {
+                <Button className={clsx(classes.Btn,)} variant={'contained'} onClick={async() => {
+                    if(formData.ButtonTitle==='Create Type'){
+                          await crud.create('/Qtype/',{
+                            
+                              qt_title:courseData.typeName,
+                              
+                             
+                            });
+                            console.log("miku",courseData.typeName)
+                            
+                        getType();
+                        getClearAll();
+                     }
                         setOpen(false)
+                    if(formData.ButtonTitle==='UPDATE'){
+                        await crud.update('/Qtype/'+data.qt_id+'/',{
+                                        
+                                        qt_title:courseData.typeName,  
+                                        
+                                        
+                         });
+                         getType();
+                        }
                     }} color="primary">
                         {formData.ButtonTitle}
                     </Button>
                 </DialogActions>
             </Dialog>
+            {loader?<Loader/>:<></>}
         </>
     )
 }
