@@ -12,3 +12,11 @@
 .back-tag{
     cursor:pointer;
 }
+
+.bars{
+    font-size: 35px;
+    font-weight: bolder;
+    color: grey;
+    line-height: 25px;
+    padding: 0 10px;
+}

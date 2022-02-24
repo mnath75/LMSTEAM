@@ -132,7 +132,7 @@ export default function QuestionType() {
                         <div key={index} className={'col-xl-3 col-lg-4 col-md-6 col-12  mt-4'}>
                             <div className={clsx('card px-3 pt-2')}>
                                 <div onClick={() => {history.push({pathname: '/question-page',
-                              state: {category:location.state?.category,course:location.state?.course,subject:location.state?.subject,topic:location.state?.topic,question_type:value?.title}})}} className={'QuestionRedirect'}/>
+                              state: {category:location.state?.category,course:location.state?.course,subject:location.state?.subject,topic:location.state?.topic,question_type:value?.qt_title}})}} className={'QuestionRedirect'}/>
                                 <h5>{value?.qt_title}</h5>
                                 
                                 
