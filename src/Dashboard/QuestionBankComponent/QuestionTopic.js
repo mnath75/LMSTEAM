@@ -104,10 +104,10 @@ export default function QuestionTopic() {
             <div className={'container-fluid py-4 '}>
                 <div className={'row px-lg-5'}>
                     <div className={'col-12 py-2'}>
-                    <h5>Category : <span className='back-tag' onClick={() => {history.push('/question-bank')}}>{location.state?.category}</span>/
+                    <h5>Category : <span className='back-tag' onClick={() => {history.push('/question-bank')}}>{location.state?.category}</span>&gt;
                     <span className='back-tag' onClick={() => {history.push({pathname: '/question-course',
                               state: {category:location.state?.category,course:location.state?.course}})}}>{location.state?.course}</span>
-                               /<span className='back-tag' onClick={() => {history.push({pathname: '/question-subject',
+                               &gt;<span className='back-tag' onClick={() => {history.push({pathname: '/question-subject',
                               state: {category:location.state?.category,course:location.state?.course,subject:location.state?.subject}})}}>
                                   {location.state?.subject}</span>
                     </h5>
