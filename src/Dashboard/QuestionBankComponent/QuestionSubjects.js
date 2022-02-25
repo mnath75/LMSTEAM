@@ -94,7 +94,7 @@ export default function QuestionSubject() {
                 <div className={'row px-lg-5'}>
                     <div className={'col-12 py-2'}>
                     <h5>Category : <span className='back-tag' onClick={() => {history.push({pathname: '/question-bank',
-                        state: {category:location.state?.category,course:location.state?.course}})}}>{location.state?.category}</span>/
+                        state: {category:location.state?.category,course:location.state?.course}})}}>{location.state?.category}</span>&gt;
                     <span className='back-tag' onClick={() => {history.push({pathname: '/question-course',
                               state: {category:location.state?.category,course:location.state?.course}})}}>{location.state?.course}</span>
                     </h5>
