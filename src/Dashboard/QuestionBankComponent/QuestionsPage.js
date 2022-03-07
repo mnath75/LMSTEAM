@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState,useEffect} from "react";
 import {useLocation,useHistory} from "react-router-dom";
 import {Button, makeStyles, Radio, RadioGroup, FormControlLabel , Dialog,Slide,DialogTitle,DialogActions,IconButton,TextField ,MenuItem, Grid} from "@material-ui/core";
 import clsx from "clsx";
@@ -9,10 +9,18 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import ClearIcon from '@material-ui/icons/Clear';
 import {crud} from "../../services/crud";
 import ChipInput from 'material-ui-chip-input'
+import Loader from '../../MainComponents/Loader';
+import { useParams } from "react-router-dom";
 
 export default function QuestionPage() {
+
+    const params = useParams();
+    const p =[params.id];
+    const [loader,setLoader] = useState(false)
+    const [courseData, setCourseData] = useState('');
     const location = useLocation();
     const history = useHistory();
+    const [Question,setCourses]=useState();
     const classes = styles();
     const [value, setValue] = React.useState('Agra');
     const [open, setOpen] = React.useState(false);
@@ -44,7 +52,29 @@ export default function QuestionPage() {
     const removeOption = (option) => {
         setOptions(options.filter(s => s != option));
     }
-
+    function getClearAll() {
+        setCourseData({
+        });
+    }
+    async function getQuestion()
+    {
+       
+        setLoader(true);
+        try{
+            const data1= await crud.retrieve('/questions/?qtype='+params.id+'&&')
+            setCourses(data1);
+            setLoader(false);
+            console.log(data1.title)
+            }
+        
+        catch(e){
+        setLoader(false);
+        }
+    }
+    useEffect(() => {
+        getClearAll();
+        getQuestion();
+    }, [location]);
     // const optionValueChange = (e, option) => {
     //     setOptions(prev => {
     //         let old = [...prev];
@@ -54,10 +84,10 @@ export default function QuestionPage() {
     //     })
     // }
 
-    const Question=[
-        {id:1,title:'Where is Taj?',option:[{value1:'Agra',},{value1:'Jaipur'},{value1:'Delhi'},{value1:'Pune'}]},
-        {id:2,title:'10 is Divided by?',option:[{value1:'5',},{value1:'7'},{value1:'9'},{value1:'6'}]},
-        {id:3,title:'40 is Divided by?',option:[{value1:'54',},{value1:'7'},{value1:'9'},{value1:'8'}]},
+const Question2=[
+      {id:1,title:'Where is Taj?',option:[{value1:'Agra',},{value1:'Jaipur'},{value1:'Delhi'},{value1:'Pune'}]},
+      {id:2,title:'10 is Divided by?',option:[{value1:'5',},{value1:'7'},{value1:'9'},{value1:'6'}]},
+      {id:3,title:'40 is Divided by?',option:[{value1:'54',},{value1:'7'},{value1:'9'},{value1:'8'}]},
     ]
     return (
         <>
@@ -102,17 +132,19 @@ export default function QuestionPage() {
 
                     </div>
                     <hr className={'my-3'}/>
+                    {Question?.length?<>
                     {Question.map((question,index)=>(
                         <>
+                        
                             <div key={index} className={'col-12'}>
-                                <h4>{index+1}. {question.title}</h4>
-                                {question.option.map((option,index)=>(
-                                    <RadioGroup key={index} aria-label="gender" name="gender1" value={value} onChange={(event) => {
-                                        setValue(event.target.value);
-                                    }}>
-                                        <FormControlLabel value={option.value} control={<Radio/>} label={option.value1}/>
-                                    </RadioGroup>
-                                ))}
+                                <h4>{index+1}. {question?.title}</h4>
+                                {question?.answer_set.map((option,index)=>(
+                                 <RadioGroup key={index} aria-label="gender" name="gender1" value={question?.answer_set.answer_text} onChange={(event) => {
+                                    setValue(event.target.value);
+                                }}>
+                                    <FormControlLabel value={option.answer_text} control={<Radio/>} label={option.answer_text}/>
+                                </RadioGroup>
+                                 ))}
                                 <div className={'my-2'}>
                                     <Button onClick={() => {setOpen(true);}} size={'small'} color={'primary'}><CreateIcon/> Edit</Button>
                                     <Button size={'small'} className={'mx-3'} color={'secondary'} onClick={()=>{crud.confirm();}}><DeleteIcon/> Delete</Button>
@@ -121,17 +153,22 @@ export default function QuestionPage() {
                             <hr/>
                         </>
                     ))}
+                    </>:<><h2 className='text-center pt-5'>no question...</h2></>}
 
                 </div>
             </div>
             <Dialog maxWidth={'lg'}
+             
                     open={open}
                     TransitionComponent={Transition}>
+                {Question?.length?<>       
+                {Question.map((question,index)=>(        
                 <div className={'container-fluid'}>
                     <div className={'row'}>
                         <div className={'col-12 pl-0 pr-0'}>
                             <DialogTitle>{location.state?.question_type} Q.1</DialogTitle>
                             <div style={{position:'absolute',top:15,right:90}}>
+
                                 <Button variant={'contained'} className={clsx(classes.Button)}>Previous</Button>
                                 <Button variant={'contained'} className={clsx(classes.Button,"mx-3")}>Save</Button>
                                 <Button variant={'contained'} className={clsx(classes.Button)}>Next</Button>
@@ -141,19 +178,15 @@ export default function QuestionPage() {
                         </div>
                         <div className={'col-lg-8 offset-lg-4 col-12  px-lg-3 d-lg-flex justify-content-lg-end'}>
                             <div>
-                                <label className={'pb-2'}>Add Difficulty Level</label>
+                                <label className={'pb-2'}>Choose Difficulty Level</label>
                             <TextField variant={'outlined'} fullWidth size={"small"} select label="">
-                                <MenuItem value={'english'}>Easy</MenuItem>
-                                <MenuItem value={'hindi'}>Medium</MenuItem>
-                                <MenuItem value={'both'}>Hard</MenuItem>
+                                <MenuItem value={question?.language.dl_title}>{question?.difficulty.dl_title}</MenuItem>
                             </TextField>
                             </div>
                             <div className={'mx-lg-2 px-lg-2'}>
                                 <label className={'pb-2'}>Select Language</label>
                             <TextField size={"small"} value={language} variant={'outlined'} onChange={(e) => {setLanguage(e.target.value)}} fullWidth  select>
-                                <MenuItem value={'hindi'}>Hindi</MenuItem>
-                                <MenuItem value={'english'}>English</MenuItem>
-                                <MenuItem value={'both'}>Both</MenuItem>
+                                <MenuItem value={question?.language.lg_title}>{question?.language.lg_title}</MenuItem>
                             </TextField>
                             </div>
                         </div>
@@ -320,7 +353,6 @@ export default function QuestionPage() {
                         </Grid>
                         <div className={'col-5 mt-3'}>
                             <label className={'pb-2'}>Referance</label>
-
                             <div>
                                 <ChipInput
                                     fullWidth
@@ -352,11 +384,16 @@ export default function QuestionPage() {
                                 <Button variant={'contained'} className={classes.Button}>Save</Button>
                             </DialogActions>
                         </div>
-
                     </div>
                 </div>
+                ))}
+                </>:<><h2 className='text-center pt-5'></h2></>}
             </Dialog>
+             
+            {loader?<Loader/>:<></>}
+            
         </>
+        
     )
 }
 const styles = makeStyles((theme) => ({

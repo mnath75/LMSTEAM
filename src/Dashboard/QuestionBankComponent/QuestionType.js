@@ -15,18 +15,7 @@ import Slide from '@material-ui/core/Slide';
 import './QuestionCss.css';
 import { useLocation } from "react-router-dom";
 import Loader from '../../MainComponents/Loader'
-const courses = [
-    {id: 1, title: 'Single_Multi Choice', topic: 45, subtitle: 'NEET'},
-    {id: 2, title: 'Comprehension Type', topic: 405, subtitle: 'NEET'},
-    {id: 3, title: 'Subjective', topic: 125, subtitle: 'NEET'},
-    {id: 4, title: 'True/False', topic: 35, subtitle: 'NEET'},
-    {id: 5, title: 'Fill in the blanks', topic: 35, subtitle: 'NEET'},
-    {id: 6, title: 'Integer Type', topic: 35, subtitle: 'NEET'},
-    {id: 7, title: 'Math Matrix_following', topic: 35, subtitle: 'NEET'},
-    {id: 8, title: 'Re_arrange Type', topic: 35, subtitle: 'NEET'},
-    {id: 9, title: 'Multiple Marking', topic: 35, subtitle: 'NEET'},
-    {id: 10, title: 'Typing Paragraph', topic: 35, subtitle: 'NEET'},
-]
+
 export default function QuestionType() {
     const classes = useStyles();
     const location = useLocation();
@@ -131,7 +120,7 @@ export default function QuestionType() {
                     {courses.map((value, index) => (
                         <div key={index} className={'col-xl-3 col-lg-4 col-md-6 col-12  mt-4'}>
                             <div className={clsx('card px-3 pt-2')}>
-                                <div onClick={() => {history.push({pathname: '/question-page',
+                                <div onClick={() => {history.push({pathname: '/question-page/'+value?.qt_id,
                               state: {category:location.state?.category,course:location.state?.course,subject:location.state?.subject,topic:location.state?.topic,question_type:value?.qt_title}})}} className={'QuestionRedirect'}/>
                                 <h5>{value?.qt_title}</h5>
                                 

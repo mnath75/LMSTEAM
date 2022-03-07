@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@chakra-ui/react": "^1.8.1",
+    "@ckeditor/ckeditor5-build-classic": "^32.0.0",
     "@crud/core": "^2.1.4",
     "@crud/jquery": "^1.0.3",
     "@crud/react": "^1.1.1",
