@@ -108,12 +108,7 @@ export default function QuestionType() {
                     </div>
                     <div className={'col-lg-5 col-12 d-flex justify-content-lg-end my-3 mt-lg-0'}>
                         <Button startIcon={<ArrowBackIcon/>} className={'mx-lg-3 mx-1'} variant="contained" onClick={history.goBack}>Back</Button>
-                        <Button onClick={() => {
-                            GetFormManage()
-                        }} variant="contained" className={'mx-lg-3 mx-1'} startIcon={<AddIcon/>}
-                                style={{background: Themes.MainHeaderColor, color: Themes.WHITE}}>
-                            Create New Type 
-                        </Button>
+                        
                     </div>
                     <div className={'divider'}/>
                     {courses?.length?<>

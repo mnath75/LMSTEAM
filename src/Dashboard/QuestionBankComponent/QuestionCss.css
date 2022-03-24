@@ -10,14 +10,17 @@
     height: 1px;
     background: #eee;
     margin-top: 10px
+    
 }
 .card{
-    width: 100%;
-    min-height: 140px;
-    border: 1px solid grey;
+    max-width: 100%;
+    min-height: 100px;
+    border: 1px solid gray;
     border-radius: 15px;
     position: relative;
     cursor:pointer;
+    padding: 15px;
+    margin-bottom: 10px;
 }
 
 .justifyContentForm{
@@ -25,7 +28,7 @@
     justify-content: space-between;
 }
 .TextFieldHeight{
-    height: 35px;
+    min-height: 35px;
     width: 100%
 }
 @media(min-width: 1000px){
@@ -33,4 +36,39 @@
         width: 95%;
 
     }
+}
+
+#hat {
+    width: 30px;
+    min-height: 40px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translate(50% 50%);
+    z-index: 100;
+  }
+
+  .bBorder{
+      border-bottom: 1px solid gray;
+
+  }
+
+  .bdr{
+      border: 1px solid black;
+      background-color: blueviolet;
+      width: 100%;
+      min-height: 200px;
+      
+  }
+
+  .bdr1{
+    border: 1px solid red;
+    background-color: blueviolet;
+    width: 100%;
+    min-height: 100px;
+    
+}
+
+.row1{
+    margin-right:  0px;
 }

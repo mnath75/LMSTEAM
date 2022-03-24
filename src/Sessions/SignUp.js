@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {Button} from "@material-ui/core";
+import React, {useState,useEffect} from "react";
+import {Button,Box,Typography} from "@material-ui/core";
 import OtpInput from 'react-otp-input';
 import './FormStyle.css';
 import SocialLogin from "./SocialLogin";
@@ -10,24 +10,53 @@ import {notify} from "react-notify-toast";
 import Loader from "../MainComponents/Loader";
 import {useSelector} from "react-redux";
 import {selectUser} from "../services/Slices/UserSlice";
+import {createMuiTheme,ThemeProvider } from "@material-ui/core/styles";
+
+
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            main: "#FF0000",
+            contrastText: "#ffffff",
+        },
+        secondary: {
+            main: "#00FF00",
+            contrastText: "#ffffff",
+        },
+    },
+});
 
 export default function SignUp() {
+   
     const history = useHistory();
     let error = [];
     const  isAuthenticated = useSelector(selectUser);
     const [state, setState] = useState(true);
     const [loader, setLoader] = useState(false);
     const [otp, setOtp] = useState();
+    const [counter, setCounter] = useState(90);
     const [hide, setHide] = useState({
         phoneHide: true,
         formHIde: false,
         ButtonText: 'Send Otp'
+      
+    })
+    const [hide1, setHide1] = useState({
+        phoneHide: true,
+        formHIde: false,
+        ButtonText: 'Resent Otp'
     })
     const [params, setParams] = useState({
         phone: '',
         password: '',
         confirmPassword: ''
     });
+
+    useEffect(() => {
+        const timer =
+        counter > 0 && setInterval(() => setCounter(counter - 1), 1000);
+        return () => clearInterval(timer);
+    }, [counter]);
 
     async function Register() {
         const mobileRegex = /^[0]?[789]\d{9}$/;
@@ -78,7 +107,28 @@ export default function SignUp() {
             }
         }
     }
+    async function otpsend(){
+        const mobileRegex = /^[0]?[789]\d{9}$/;
+        if (hide1.ButtonText === 'Resent Otp') {
+            if (!params.phone) error.push("The Phone Number is required");
+            if (params.phone && !mobileRegex.test(params.phone)) error.push("Invalid  Mobile Number");
+            if (!_.isEmpty(error)) {
+                notify.show(error[0], "error", 1000);
+            } else {
+                setLoader(true);
+                var formdata = new FormData();
+                formdata.append("phone", params.phone);
+                try {
+                    const {status} = await crud.create('/api/validate_phone/', formdata);
+                    setLoader(false);
+                    setState(false);
+                } catch (e) {
+                    setLoader(false);
+                }
 
+            }
+        }
+    }
     //Otp-Verify
     async function OtpVerify() {
         try {
@@ -158,7 +208,17 @@ export default function SignUp() {
                             separator={<span>-</span>}
                             isInputNum={true}
                         />
-                        <p>Resend OTP</p>
+                        <Box mt={3} ><Typography fontWeight={500} align="center" color='textSecondary'> Resend OTP in <span style={{color:"green",fontWeight:"bold"}}> 00:{counter}</span> </Typography></Box>
+                        <Typography align="center"> 
+                        <ThemeProvider theme={theme}>
+                        <Button 
+                        onClick={() => { otpsend(); }} 
+                        color={counter>0 ? 'secondary' : 'primary'}
+                        disabled={counter>0}
+                        >Resend OTP
+                        </Button> 
+                        </ThemeProvider>
+                        </Typography> 
                         <p className={'my-0'}>Create a new account? <span onClick={() => {
                             setState(true)
                         }} style={{cursor: 'pointer'}} className={'text-primary'}> Sign Up</span></p>

@@ -75,20 +75,8 @@ export default function QuestionPage() {
         getClearAll();
         getQuestion();
     }, [location]);
-    // const optionValueChange = (e, option) => {
-    //     setOptions(prev => {
-    //         let old = [...prev];
-    //         let selectedOption = old.find(s => s === option);
-    //         selectedOption.value = e.target.value;
-    //         return [old];
-    //     })
-    // }
+  
 
-const Question2=[
-      {id:1,title:'Where is Taj?',option:[{value1:'Agra',},{value1:'Jaipur'},{value1:'Delhi'},{value1:'Pune'}]},
-      {id:2,title:'10 is Divided by?',option:[{value1:'5',},{value1:'7'},{value1:'9'},{value1:'6'}]},
-      {id:3,title:'40 is Divided by?',option:[{value1:'54',},{value1:'7'},{value1:'9'},{value1:'8'}]},
-    ]
     return (
         <>
             <div className={'container-fluid px-lg-5 mt-3'}>
@@ -356,7 +344,6 @@ const Question2=[
                             <div>
                                 <ChipInput
                                     fullWidth
-                                    // value={["2016 year","2020 years"]}
                                     variant={'outlined'}
                                     placeholder={'referance years'}
                                     size={'small'}

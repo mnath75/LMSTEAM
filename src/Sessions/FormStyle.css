@@ -2,6 +2,8 @@
 *{
     box-sizing: border-box;
 }
+
+  
 .container{
     width: 320px;
     max-width: 100%;
@@ -18,7 +20,7 @@
     left: 0;
     height: 100%;
     transition: all 0.6s ease-in-out;
-    backdrop-color:'#fff'
+    backdrop-color:'#fff';
 }
 .sign-up{
     width: 100%;
@@ -79,6 +81,9 @@ button{
     text-transform: uppercase;
     transition: transform 80ms ease-in;
     cursor: pointer;
+}
+button{
+    
 }
 button:active{
     transform: scale(0.90);

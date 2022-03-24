@@ -25,7 +25,7 @@ import AirplayIcon from '@material-ui/icons/Airplay';
 //Admin-Header
 export const DashboadNav = [
     {id: 1,title: "Dashboard",icon: <DashboardIcon/>,page: "/dashboard",},
-    {id: 2,title: "Courses",icon: <DescriptionIcon/>,page: "/courses",},
+    {id: 2,title: "Courses",icon: <DescriptionIcon/>,page: "/course-category",},
     {id: 3,title: "Question Bank",icon: <ViewListIcon/>,page: "/question-bank",},
     {id: 11,title: "Events",icon: <EventIcon/>,page: "/events",},
     {id: 4, title: "Enquiry", icon: <BallotIcon/>, page: "/enquiry",},

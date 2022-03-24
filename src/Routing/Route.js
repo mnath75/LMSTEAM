@@ -5,11 +5,17 @@ import Form from '../Sessions/Form';
 import Dashboard from "../Dashboard/Pages/Dashboard";
 import Courses from "../Dashboard/Pages/Courses";
 import QuestionBank from "../Dashboard/Pages/QuestionBanks";
+import CourseCategory from "../Dashboard/Pages/CourseCategory";
 import QuestionCourse from '../Dashboard/QuestionBankComponent/QuestionCourse'
 import QuestionSubjects from "../Dashboard/QuestionBankComponent/QuestionSubjects";
 import QuestionTopic from "../Dashboard/QuestionBankComponent/QuestionTopic";
 import QuestionType from "../Dashboard/QuestionBankComponent/QuestionType";
 import QuestionPage from "../Dashboard/QuestionBankComponent/QuestionsPage";
+import CourseCourse from "../Dashboard/CoursesComponent/CourseCourse";
+import CourseSubject from "../Dashboard/CoursesComponent/CourseSubject";
+import CourseTopic from "../Dashboard/CoursesComponent/CourseTopic";
+import CourseType from "../Dashboard/CoursesComponent/CourseType";
+import Profile from "../Dashboard/ProfileComponent/Profile";
 export default function Routing() {
     return(
 <>
@@ -19,7 +25,13 @@ export default function Routing() {
             <Route path="/login" exact  component={Form}/>
             <Route path="/sign-up" exact  component={Form}/>
             <PrivateRouter Component={Dashboard} path={'/dashboard'} exact/>
-            <PrivateRouter Component={Courses} path={'/courses'} exact/>
+            <PrivateRouter Component={Profile} path={'/profile'} exact/>
+            <PrivateRouter Component={CourseCategory} path={'/course-category'} exact/>
+            <PrivateRouter Component={CourseCourse} path={'/course-course'} exact/>
+            <PrivateRouter Component={CourseSubject} path={'/course-subject'} exact/>
+            <PrivateRouter Component={CourseTopic} path={'/course-topic'} exact/>
+            <PrivateRouter Component={CourseType} path={'/course-type'} exact/>
+
             <PrivateRouter Component={QuestionBank} path={'/question-bank'} exact/>
             <PrivateRouter Component={QuestionCourse} path={'/question-course/:id'} exact/>
             <PrivateRouter Component={QuestionSubjects} path={'/question-subject/:id'} exact/>
