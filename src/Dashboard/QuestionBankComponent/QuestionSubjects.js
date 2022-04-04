@@ -170,7 +170,8 @@ export default function QuestionSubject() {
                 <IconButton onClick={() => {
                     setOpen(false);
                     getClearAll()
-                }} className={classes.CloseBtn}><ClearIcon/></IconButton>
+                }} className={classes.CloseBtn}><ClearIcon/>
+                </IconButton>
                
                <div className={clsx('container-fluid mx-lg-4', classes.FormWidth)}>
                     <div className={'row pl-0 pr-0 mt-2'}>

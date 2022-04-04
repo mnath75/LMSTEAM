@@ -8,6 +8,7 @@
     height: 70px;
     z-index: 99;
 }
+
 nav ul li a{
     color:#fff !important;
 }
@@ -29,5 +30,12 @@ ul{
         position: absolute;
         right: 10px;
     }
+}
+.text{
+    text-emphasis-color: white;
+}
+
+div ul li a{
+    color:#fff !important;
 }
 

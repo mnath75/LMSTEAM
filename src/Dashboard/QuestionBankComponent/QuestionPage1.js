@@ -39,19 +39,15 @@ const MenuProps = {
     },
   };  
 export default function QuestionPage() {
-    const [radiovalue, setRadiovalue] = useState(null);
     const [Qdiff, setQdiff] = useState('');
     const [Qtype, setQtype] = useState('');
-  
     const params = useParams();
     const p =[params.id];
-    const [data, setData] = useState()
     const [loader,setLoader] = useState(false)
     const [courseData, setCourseData] = useState('');
     const location = useLocation();
     const history = useHistory();
-    const [Question,setQuestion]=useState();
-    const[AnswerRadio,setAnswerRadio]=useState();
+    const [Question,setCourses]=useState();
     const [QuestionData,setQuestionData]=useState();
     const classes = styles();
     const [value, setValue] = useState('Agra');
@@ -61,51 +57,13 @@ export default function QuestionPage() {
     const [chip,setChip] = useState()
     const [text, setText] = useState("")
     const [personName, setPersonName] = useState([]);
-    const[adQuestions,setadQuestions]=useState([]);
-    const [options, setOptions] =  useState([
-        {
-
-        },
-        {
-           
-        },
-        {
-            
-        },
-        {
-            
-        }
-    ]);
-    const [formData, setFormData] = useState({
-        formTitle: '',
-        ButtonTitle: ''
-    })
-    // post questions
-    const [PostQuestions, setPostQuestions] = useState('');
-
-    function GetFormManage() {
-        setOpen(true)
-        setFormData({
-            formTitle: 'Create New Question',
-            ButtonTitle: 'Add Question',
-        });
-    }
-    function AddQuestion(){
-        setOpen(true)
-        setFormData({
-            formTitle: 'Create New Question',
-            ButtonTitle: 'Save',
-        });
-    }
-    function handleChangeR (option) {
-        setRadiovalue(option);
-        console.log('radiovalue', radiovalue);
-        }
-    function handleChangeQ(option)   {
-        setAnswerRadio(option);
-        console.log('radiovalue', Question);
-    }
-   
+    const [options, setOptions] =  useState([]);
+ 
+   const handleC=(event)=>{
+       setOptions(event.target.value)
+       console.log("value",event.target.value)
+   }
+  
  
     const handleChange = (event) => {
         setQdiff(event.target.value);
@@ -125,41 +83,22 @@ export default function QuestionPage() {
       };  
     const addOption = () => {
         setOptions([...options, {checked: false, value: ""}]);
-      
     }
-    const addQuestion=()=>{
-        console.log("hhhellop")
-        setadQuestions([...adQuestions,{value:""}]);
-    }
+
     const removeOption = (option) => {
         setOptions(options.filter(s => s != option));
     }
     function getClearAll() {
-        setPostQuestions({
-            QParagraph: '',
-            QText:''
-
+        setCourseData({
         });
     }
-
-    function getEdit() {
-        setOpen(true)
-        setFormData({
-            formTitle: 'Edit Question',
-            ButtonTitle: 'UPDATE'
-        });
-        setPostQuestions({
-            QParagraph: data.question_para,
-            QText:data.question_text
-        })
-    }
-
     async function getQuestion()
     {
+       
         setLoader(true);
         try{
             const data1= await crud.retrieve('/questions/?qtype='+params.id+'&&')
-            setQuestion(data1);
+            setCourses(data1);
             setLoader(false);
             console.log(data1.title)
             }
@@ -209,13 +148,8 @@ export default function QuestionPage() {
                     </div>
                     <div className={'col-lg-7 col-12 d-lg-flex justify-content-lg-end'}>
                         <label htmlFor="contained-button-file">
-                            <Button
-                            onClick={() => {
-                                GetFormManage()
-                            }}
-                            variant={'contained'}  startIcon={<AddIcon/>} className={clsx(classes.Button)}>
-                                Create Question
-                            </Button>
+                            <Button variant={'contained'} onClick={() => {setOpen(true);}} startIcon={<AddIcon/>} className={clsx(classes.Button)}>Create
+                                Question</Button>
                         </label>
                         <input
                             accept="image/*"
@@ -244,10 +178,10 @@ export default function QuestionPage() {
                             <div key={index} className={'col-12'}>
                                 <h4>{index+1}. {question?.title}</h4>
                                 {question?.answer_set.map((option,index)=>(
-                                 <RadioGroup key={index} aria-label="gender" name="gender1" value={question?.answer_set.answer_text}  
-                                 onClick={() => {handleChangeQ(option)}}
-                                > 
-                                <FormControlLabel value={option.answer_text} checked={AnswerRadio==option} control={<Radio/>} label={option.answer_text}/>
+                                 <RadioGroup key={index} aria-label="gender" name="gender1" value={question?.answer_set.answer_text} onChange={(event) => {
+                                    setValue(event.target.value);
+                                }}>
+                                    <FormControlLabel value={option.answer_text} control={<Radio color={"primary"} />}  label={option.answer_text}/>
                                 </RadioGroup>
                                  ))}
                                 <div className={'my-2'}>
@@ -281,39 +215,7 @@ export default function QuestionPage() {
                             <IconButton onClick={() => {setOpen(false);}}  className={classes.menu}><ClearIcon/></IconButton>
                             <hr/>
                         </div>
-                    <div className={'col-12 mt-3'}>
-                         
-                         <CKEditor editor={ClassicEditor} datapara={PostQuestions.QText} 
-                                            onChange={(event, editor) => { const datapara = editor.getData()
-                                            setText(datapara)
-                                            }}
-                                              config={{
-                                              headers: { 'Content-Type': 'application/json'},
-                                              placeholder:'paragraph type something',
-                                              ckfinder: {
-                                              uploadUrl: '/uploads',
-                                              withCredentials: true,
-                                              headers: {
-                                               'X-CSRF-TOKEN': 'CSFR-Token',
-                                                Authorization: 'Bearer <JSON Web Token>'
-                                            },
-                            },
-                            }}/>
-                        <Grid container className="mt-3">
-                            <Grid item xs={12}>
-                                <Button
-                                    fullWidth
-                                    variant={"outlined"}
-                                    color={"primary"}
-                                    onClick={() => addQuestion()}
-                                    startIcon={<AddIcon />}
-                                >
-                                    Add Questions
-                                </Button>
-                            </Grid>
-                        </Grid>
-                        </div>  
-
+                             
                         <div className={'col-lg-8 offset-lg-4 col-12  px-lg-3 d-lg-flex justify-content-lg-end'}>
                             <div className={'mx-lg-2 px-lg-2'}>
                             <FormControl sx={{ m: 1, minWidth: 200 }}>
@@ -336,10 +238,31 @@ export default function QuestionPage() {
                             </TextField>
                             </div>
                         </div>
+                   
+                       <div className={'col-12 mt-3'}>
+                       <CKEditor editor={ClassicEditor} datapara={text} 
+                                            onChange={(event, editor) => { const datapara = editor.getData()
+                                            setText(datapara)
+                                            }}
+                                            config={{
+                                            headers: { 'Content-Type': 'application/json'},
+                                            placeholder:'paragraph type something',
+                                            ckfinder: {
+                                            uploadUrl: '/uploads',
+                                            withCredentials: true,
+                                            headers: {
+                                             'X-CSRF-TOKEN': 'CSFR-Token',
+                                              Authorization: 'Bearer <JSON Web Token>'
+                                    },
+                            },
+                            }}/>
+                            
+                       </div>
+
                        
                         <div className={'col-12 mt-3'}>
                             {language==='both'?<>
-                            <CKEditor editor={ClassicEditor} data1={PostQuestions.QText} 
+                            <CKEditor editor={ClassicEditor} data1={text} 
                                             onChange={(event, editor) => { const data1 = editor.getData()
                                             setText(data1)
                                             }}
@@ -355,7 +278,7 @@ export default function QuestionPage() {
                                     },
                             },
                             }}/>
-                              <CKEditor editor={ClassicEditor}  data2={PostQuestions.QText} 
+                              <CKEditor editor={ClassicEditor} data2={text} 
                                             onChange={(event, editor) => { const data2 = editor.getData()
                                             setText(data2)
                                             }}
@@ -373,7 +296,7 @@ export default function QuestionPage() {
                             }}/>
                             </>:<></>}
                             {language==='english'?<>
-                            <CKEditor editor={ClassicEditor} data3={PostQuestions.QText} 
+                            <CKEditor editor={ClassicEditor} data3={text} 
                                             onChange={(event, editor) => { const data3 = editor.getData()
                                             setText(data3)
                                             }}
@@ -392,7 +315,7 @@ export default function QuestionPage() {
                                 
                             </>:<></>}
                             {language==='hindi'?<>
-                            <CKEditor editor={ClassicEditor} data4={PostQuestions.QText} 
+                            <CKEditor editor={ClassicEditor} data4={text} 
                                             onChange={(event, editor) => { const data4 = editor.getData()
                                             setText(data4)
                                             }}
@@ -427,26 +350,28 @@ export default function QuestionPage() {
                         </div>
                         
                         <Grid container spacing={2} justifyContent={"space-between"}>
-                            {
+                            
+                                <FormControl> 
+                                <RadioGroup name="language" aria-label="language" onChange={handleC} value={options}>
+                                {
                                 options.map((option, index) => <>
                                     {
                                         language === "both" ? <>
-                                            <Grid item xs={1}>
+                                            {/* <Grid item xs={1}>
                                                 <Grid container justifyContent={"flex-end"} alignItems={"center"}>
                                                     <Grid item>
                                                         <span className="bars">=</span>
                                                     </Grid>
                                                     <Grid item>
-                                                    <RadioGroup  name="english" onClick={() => {handleChangeR(option)}} >   
-                                                        <FormControlLabel  
-                                                         key={index} checked={radiovalue==option} control={<Radio color="primary"/>} />
-                                                    </RadioGroup>
+                                                        
+                                                    <FormControlLabel key={option.id} value={option.id} control={<Radio  color={"primary"}   />}  />
+                                                 
                                                     </Grid>
                                                 </Grid>
-                                            </Grid>
+                                            </Grid> */}
 
-                                            <Grid item xs={10}>
-                                            <CKEditor editor={ClassicEditor} data5={PostQuestions.QText} 
+                                            {/* <Grid item xs={10}>
+                                            <CKEditor editor={ClassicEditor} data5={text} 
                                             onChange={(event, editor) => { const data5 = editor.getData()
                                             setText(data5)
                                             }}
@@ -461,9 +386,9 @@ export default function QuestionPage() {
                                               Authorization: 'Bearer <JSON Web Token>'
                                     },
                             },
-                            }}/></Grid>
+                            }}/></Grid> */}
 
-                                            <Grid item xs={1}>
+                                            {/* <Grid item xs={1}>
                                                 <Grid container justifyContent={"flex-end"}>
                                                     <Grid item xs={12}>
                                                         <Button
@@ -474,23 +399,23 @@ export default function QuestionPage() {
                                                         </Button>
                                                     </Grid>
                                                 </Grid>
-                                            </Grid>
+                                            </Grid> */}
 
-                                                <Grid item xs={1}>
+                                                {/* <Grid item xs={1}>
                                                     <Grid container justifyContent={"flex-end"} alignItems={"center"}>
                                                         <Grid item>
                                                             <span className="bars">=</span>
                                                         </Grid>
                                                         <Grid item>
-                                                        <RadioGroup key={index} name="english">     
-                                                            <FormControlLabel value="apple" onClick={() => {handleChangeR(option)}}  control={<Radio checked={radiovalue===option}  color={"primary"}/>} />
-                                                        </RadioGroup>  
+                                                           
+                                                            <FormControlLabel value="apple"  control={<Radio checked={options.value===value}  color={"primary"}/>} />
+                                                      
                                                         </Grid>
                                                     </Grid>
-                                                </Grid>
+                                                </Grid> */}
 
-                                                <Grid item xs={10}>
-                                                <CKEditor editor={ClassicEditor} data6={PostQuestions.QText} 
+                                                {/* <Grid item xs={10}>
+                                                <CKEditor editor={ClassicEditor} data6={text} 
                                             onChange={(event, editor) => { const data6 = editor.getData()
                                             setText(data6)
                                             }}
@@ -505,9 +430,9 @@ export default function QuestionPage() {
                                               Authorization: 'Bearer <JSON Web Token>'
                                     }, },
                                 }}/>
-                                            </Grid>
+                                            </Grid> */}
 
-                                                <Grid item xs={1}>
+                                                {/* <Grid item xs={1}>
                                                     <Grid container justifyContent={"flex-end"}>
                                                         <Grid item xs={12}>
                                                             <Button
@@ -518,31 +443,31 @@ export default function QuestionPage() {
                                                             </Button>
                                                         </Grid>
                                                     </Grid>
-                                                </Grid>
+                                                </Grid> */}
                                         </> :
                                              language === "hindi" ? <>
                                                      <>
-                                                         <Grid item xs={1}>
+                                                         {/* <Grid item xs={1}>
                                                              <Grid container justifyContent={"flex-end"} alignItems={"center"}>
                                                                  <Grid item>
                                                                      <span className="bars">=</span>
                                                                  </Grid>
                                                                  <Grid item>
-                                                                 <RadioGroup key={index} onClick={() => {handleChangeR(option)}} name="hindi">      
-                                                                     <FormControlLabel value="option1"  name="value" control={<Radio checked={radiovalue==option} color={"primary"}/>} />
-                                                                 </RadioGroup>
+                                                                      
+                                                                     <FormControlLabel key={option.id} value={option.id} control={<Radio checked={option.checked==index ?true:false} color={"primary"}/>} />
+                                                               
                                                                  </Grid>
                                                              </Grid>
-                                                         </Grid>
+                                                         </Grid> */}
 
-                                                         <Grid item xs={10}>
-                                                         <CKEditor editor={ClassicEditor} data7={PostQuestions.QText} 
+                                                         {/* <Grid item xs={10}>
+                                                         <CKEditor editor={ClassicEditor} data7={text} 
                                             onChange={(event, editor) => { const data7 = editor.getData()
                                             setText(data7)
                                             }}
                                             config={{
                                             headers: { 'Content-Type': 'application/json'},
-                                            placeholder: 'option'+'  '+ (index+1) +'  '+'Hindi' ,
+                                            placeholder: 'option'+'  '+ (index+1) +'  '+'Hindi(only)' ,
                                             ckfinder: {
                                             uploadUrl: '/uploads',
                                             withCredentials: true,
@@ -551,9 +476,9 @@ export default function QuestionPage() {
                                               Authorization: 'Bearer <JSON Web Token>'
                                     }, },
                                 }}/>
-                                            </Grid>
+                                            </Grid> */}
 
-                                                         <Grid item xs={1}>
+                                                         {/* <Grid item xs={1}>
                                                              <Grid container justifyContent={"flex-end"}>
                                                                  <Grid item xs={12}>
                                                                      <Button
@@ -564,30 +489,23 @@ export default function QuestionPage() {
                                                                      </Button>
                                                                  </Grid>
                                                              </Grid>
-                                                         </Grid>
+                                                         </Grid> */}
                                                      </>
                                                  </> :
                                             <>
-                                                <Grid item xs={1}>
-                                                    <Grid container justifyContent={"flex-end"} alignItems={"center"}>
-                                                        <Grid item>
-                                                            <span className="bars">=</span>
-                                                        </Grid>
-                                                        <Grid item>
-                                                        <RadioGroup key={index}  name="radio-buttons-group"   onClick={() => {handleChangeR(option)}}>  
-                                                            <FormControlLabel key={index} control={<Radio  color={"primary"}/>}  checked={radiovalue==option}/>
-                                                        </RadioGroup>
-                                                        </Grid>
-                                                    </Grid>
-                                                </Grid>
+                                               
+                                                        
+                                                            <FormControlLabel key={index} value={option} checked={options===option} control={<Radio  color={"primary"}/>}  />
+                                                       
+                                             
 
-                                                <Grid item xs={10}>
-                                            <CKEditor editor={ClassicEditor} data8={PostQuestions.QText} 
+                                              
+                                                <CKEditor editor={ClassicEditor} data8={text} 
                                             onChange={(event, editor) => { const data8 = editor.getData()
                                             setText(data8)
                                             }}
                                             config={{
-                                               placeholder:'option'+'  '+ (index+1)+'  '+'english1',
+                                               placeholder:'option'+'  '+ (index+1)+'  '+'english(only)',
                                                headers: { 'Content-Type': 'application/json'},
                                                ckfinder: {
                                                uploadUrl: '/uploads',
@@ -597,24 +515,23 @@ export default function QuestionPage() {
                                                   Authorization: 'Bearer <JSON Web Token>'
                                                 },},
                                             }}/>
-                                                </Grid>
+                                                
 
-                                                <Grid item xs={1}>
-                                                    <Grid container justifyContent={"flex-end"}>
-                                                        <Grid item xs={12}>
                                                             <Button
                                                                 startIcon={<DeleteIcon />}
                                                                 onClick={() => {removeOption(option)}}
                                                             >
                                                                 Delete
                                                             </Button>
-                                                        </Grid>
-                                                    </Grid>
-                                                </Grid>
+                                                        
+                                                  
                                             </>
                                     }
                                 </>)
-                            }
+                                }
+                                </RadioGroup>
+                                </FormControl> 
+                            
                         </Grid>
                        
                         <Grid container className="mt-3">
@@ -663,55 +580,57 @@ export default function QuestionPage() {
                        headers: {
                          'X-CSRF-TOKEN': 'CSFR-Token',
                           Authorization: 'Bearer <JSON Web Token>'
-                        }, }, }}/>
-                        <Button  endIcon={<AddCircleIcon />} variant="outlined">
+                }, }, }}/>
+                <Button  endIcon={<AddCircleIcon />} variant="outlined">
                             ADD Video Solution 
-                        </Button>
-                        </>:<></>}
-                        {language==='english'?<>
-                       <CKEditor editor={ClassicEditor} data11={text} 
-                        onChange={(event, editor) => { const data11 = editor.getData()
-                        setText(data11)
-                        }}
-                        config={{
-                        headers: { 'Content-Type': 'application/json'},
-                        placeholder:'Type solution in english',
-                        ckfinder: {
-                        uploadUrl: '/uploads',
-                        withCredentials: true,
-                        headers: {
-                           'X-CSRF-TOKEN': 'CSFR-Token',
-                            Authorization: 'Bearer <JSON Web Token>'
+                </Button>
+</>:<></>}
+{language==='english'?<>
+<CKEditor editor={ClassicEditor} data11={text} 
+                onChange={(event, editor) => { const data11 = editor.getData()
+                setText(data11)
+                }}
+                config={{
+                headers: { 'Content-Type': 'application/json'},
+                placeholder:'Type solution in english',
+                ckfinder: {
+                uploadUrl: '/uploads',
+                withCredentials: true,
+                headers: {
+                 'X-CSRF-TOKEN': 'CSFR-Token',
+                  Authorization: 'Bearer <JSON Web Token>'
         },
-    },
+},
 }}/>
-                        <Button  endIcon={<AddCircleIcon />} variant="outlined">
+<Button  endIcon={<AddCircleIcon />} variant="outlined">
                             ADD Video Solution 
-                        </Button>   
-                        </>:<></>}
-                        {language==='hindi'?<>
-                        <CKEditor editor={ClassicEditor} data12={text} 
-                        onChange={(event, editor) => { const data12 = editor.getData()
-                        setText(data12)
-                        }}
-                        config={{
-                        headers: { 'Content-Type': 'application/json'},
-                        placeholder:'Type solution in Hindi',
-                        ckfinder: {
-                        uploadUrl: '/uploads',
-                        withCredentials: true,
-                        headers: {
-                           'X-CSRF-TOKEN': 'CSFR-Token',
-                           Authorization: 'Bearer <JSON Web Token>'
-               },
-              },
-            }}/>
-                        <Button  endIcon={<AddCircleIcon />} variant="outlined">
+</Button>   
+</>:<></>}
+{language==='hindi'?<>
+<CKEditor editor={ClassicEditor} data12={text} 
+                onChange={(event, editor) => { const data12 = editor.getData()
+                setText(data12)
+                }}
+                config={{
+                headers: { 'Content-Type': 'application/json'},
+                placeholder:'Type solution in Hindi',
+                ckfinder: {
+                uploadUrl: '/uploads',
+                withCredentials: true,
+                headers: {
+                 'X-CSRF-TOKEN': 'CSFR-Token',
+                  Authorization: 'Bearer <JSON Web Token>'
+        },
+},
+}}/>
+<Button  endIcon={<AddCircleIcon />} variant="outlined">
                             ADD Video Solution 
-                        </Button>
-            </>:<></>}
-                        </div>
+</Button>
+</>:<></>}
+</div>
 
+
+                       
                         <div className={'col-5 mt-3'}>
                             <label className={'pb-2'}>Referance</label>
                             <div>
@@ -738,40 +657,18 @@ export default function QuestionPage() {
                                 />
                             </div>
                         </div>
-                   
                         <div className={'col-12'}>
                             <DialogActions>
                                 <Button onClick={() => {setOpen(false);}} color="secondary" variant={'contained'}>Cancel</Button>
-                                <Button className={clsx(classes.Btn,)} variant={'contained'} onClick={async() => {
-                                    if(formData.ButtonTitle==='Save'){
-                                          await crud.create('/testquestionsapi/',{
-                                            question_para:PostQuestions.QParagraph,
-                                            question_text:PostQuestions.QText
-                                            
-                                         });
-                                    getQuestion();
-                                    getClearAll();
-                                       }
-                                    if(formData.ButtonTitle==='UPDATE'){
-                                        await crud.update('/questionsapi/'+data.sub_id+'/',{
-                                                        question_para:PostQuestions.QParagraph,  
-                                                        question_text:PostQuestions.QText 
-                                         });
-                                    getQuestion();
-                                    }
-                                    setOpen(false)
-                                    }} color="primary">
-                                    {formData.ButtonTitle}
-
-                                    
-                                </Button>
+                                <Button variant={'contained'} className={classes.Button}>Save</Button>
                             </DialogActions>
                         </div>
-            </div>
-    </div>            
-
+                       
+                    </div>
+                     
+                </div>
                 
-              
+                
             </Dialog>
              
             {loader?<Loader/>:<></>}
@@ -801,3 +698,17 @@ const styles = makeStyles((theme) => ({
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
 });
+
+
+
+
+<div>
+{
+ adQuestions.map((option, index) => <>
+ { 
+
+
+
+}
+</>)
+}  

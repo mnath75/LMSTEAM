@@ -10,10 +10,9 @@ import {
   Dialog,
   DialogActions,
   DialogTitle,
+  Badge,
+  Slide,
 } from "@material-ui/core";
-import { useHistory } from "react-router-dom";
-import SearchIcon from "@material-ui/icons/Search";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import {
   Search,
   YouTube,
@@ -24,31 +23,31 @@ import {
   Delete,
   Clear,
   FileCopyRounded,
+
 } from "@material-ui/icons";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+import LiveTvIcon from '@mui/icons-material/LiveTv';
 import { Checkbox } from '@mui/material';
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
-import ClearIcon from "@material-ui/icons/Clear";
+import { pink } from '@mui/material/colors';
 import { Themes } from "../../Theme/theme";
 import clsx from "clsx";
 import { crud } from "../../services/crud";
-import Slide from "@material-ui/core/Slide";
 import "../QuestionBankComponent/QuestionCss.css";
-import { useLocation } from "react-router-dom";
 import Loader from "../../MainComponents/Loader";
-//import Button from '@mui/material/Button';
+import {BatchSidebar} from "../../MainComponents/SideNav";
+import { NavLink,useHistory,useLocation} from 'react-router-dom';
+import '../../Website/Component/headerCss.css';
+import MultipleSelectChip from './SubjectsSelector.js'
 
 const courses = [
-    {id: 1, title: 'IIT mains', topic: 45, subtitle: 'NEET'},
-    {id: 2, title: 'IIT JEE', topic: 405, subtitle: 'NEET'},
-    {id: 3, title: 'NEET', topic: 125, subtitle: 'NEET'},
-    {id: 4, title: 'IIT advance', topic: 35, subtitle: 'NEET'},
+    {id: 1, title: 'BATCH 01', topic:65, subtitle: 'Maths, Physics, Chemistry'},
+    {id: 2, title: 'BATCH 02', topic:40, subtitle: 'Maths, Physics, Chemistry'},
+    {id: 3, title: 'BATCH 03', topic:125, subtitle: 'Maths, Physics, Chemistry'},
+    {id: 4, title: 'BATCH 04', topic:35, subtitle: 'Maths, Physics, Chemistry'},
   
     
 ]
 
-export default function CourseCourse() {
+export default function CourseBatches() {
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
   const classes = useStyles();
   const location = useLocation();
@@ -77,8 +76,8 @@ export default function CourseCourse() {
   function GetFormManage() {
     setOpen(true);
     setFormData({
-      formTitle: "Create New Category",
-      ButtonTitle: "Create Category",
+      formTitle: "Create New Batch",
+      ButtonTitle: "Create Batch",
     });
   }
     
@@ -153,14 +152,22 @@ export default function CourseCourse() {
   return (
     <>
       <div className="container-fluid" style={{textSize: 8}}>
-        <div className="row px-lg-2">
+        <div className="row px-lg-0 py-0">
+          <div className="col-lg-1 text" style={{background: Themes.MainHeaderColor}}><ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                            {BatchSidebar.map((value => (
+                                <li className="nav-item dropdown" style={{color: Themes.WHITE}} key={value.id}>
+                                   {/*{value.page === '/course-batch' ? <><Badge className={classes.Badge}
+                                                                                 color="secondary"
+                                                                                 badgeContent={'Free'}/></> : <></>}*/}
+                                    {!(value.title === 'Log Out') ?
+                                        <NavLink to={value.page} activeClassName={'active_link'}
+                                                 className="nav-link">{value.icons}  {value.title}</NavLink> : <></>}
+                                </li>
+                            )))}</ul> </div>
           <div className="col-lg-8 py-4">
             <div className="row px-lg-0">
-            <div className={'col-lg-2 col-12'}>
-                        <h6 className={classes.title}>COURSES({courses?.length})</h6>
-                    </div>
-                    <div className={'col-lg-3 col-12 my-3 mt-lg-0'}>
-                        <TextField fullWidth placeholder={'search for courses'} InputProps={{
+                    <div className={'col-lg-6 col-12 my-3 mt-lg-0'}>
+                        <TextField fullWidth placeholder={'Search for Batches'} InputProps={{
                             startAdornment: (<InputAdornment position="start">
                                 <Search/></InputAdornment>),}}/>
                     </div>
@@ -170,7 +177,7 @@ export default function CourseCourse() {
                         </Button>
                         <Button onClick={() => {GetFormManage()}} variant="contained" className={'mx-lg-3 mx-1'} startIcon={<Add/>}
                                 style={{background: Themes.MainHeaderColor, color: Themes.WHITE}}>
-                            Create Course
+                            Create Batches
                         </Button>
                     </div>
                     <div className={'divider'}/>
@@ -179,7 +186,7 @@ export default function CourseCourse() {
                         {courses?.map((value, index) => (
                         <div key={index} className={'col-xl-4 col-lg-4 col-md-6 col-12  mt-4'}>
                             <div className={clsx('px-3 pt-2 card')} >
-                                <div onClick={()=>{history.push({pathname: '/course-batch/',
+                                <div onClick={()=>{history.push({pathname: '/batch-detail/',
                                     state: {category:value.title}})}} className={'QuestionRedirect'} />
                                 <h5>{value?.title}</h5>
                                 <p>{value?.subtitle}</p>
@@ -204,8 +211,9 @@ export default function CourseCourse() {
                                        setAnchorEl(false);}}>
                                       Delete <Delete className={classes.menuIcon}/></MenuItem>
                                 </Menu>
-                                <h6>{value?.topic} Courses</h6>
+                                <p>{value?.topic} students <span>Starting on Jan 05,2022</span></p>
                             </div>
+
                         </div>
                     ))}
                     </>:<><h2 className='text-center pt-5'>Course is Empty...</h2></>} 
@@ -213,7 +221,7 @@ export default function CourseCourse() {
             </div>
            </div>
 
-          <div className="col-lg-4 px-2">
+          <div className="col-lg-3 px-2">
             <div className="row">
               <div className="card" style={{minHeight: 250}}>
                 <div className="row bBorder">
@@ -226,7 +234,7 @@ export default function CourseCourse() {
                   </p>
                   <Button variant="outlined">
                     <IconButton>
-                      <YouTube   color='secondary' />
+                    <LiveTvIcon sx={{ color: pink[500] }}  />
                     </IconButton>
                     Go Live Now
                   </Button>
@@ -336,6 +344,29 @@ export default function CourseCourse() {
           </div>
         </div>
       </div>
+      {/*
+        <dialog  maxWidth={'lg'} open={open} TransitionComponent={Transition} keepMounted>
+        <label >Batch Name</label>
+        <input type="text" id="fname" name="fname"/><br/><br/>
+        <label for="lname">Batch Start From</label>
+        <input type="date" id="lname" name="lname"/><br/><br/>
+        <label for="fname">Batch Code</label>
+        <input type="text" id="fname" name="fname"/><br/><br/>
+        <label for="lname">Batch Code</label>
+        <input type="text" id="lname" name="lname"/><br/><br/>
+        <label for="fname">Subject:</label>
+        <select name="Subject" id="subject_id">
+        <option value="rigatoni">Select Subject</option>
+    
+        <option value="rigatoni">Physics</option>
+        <option value="dave">Chemistry</option>
+        <option value="pumpernickel">Mathematics</option>
+        <option value="reeses">Biology</option>
+        </select><br/><br/>
+        <button type="button"> Create Batch </button>
+        </dialog>*/}
+      
+        
       <Dialog maxWidth={'lg'} open={open} TransitionComponent={Transition} keepMounted>
                 <DialogTitle id="alert-dialog-slide-title">{formData.formTitle}
                     <hr/>
@@ -347,7 +378,7 @@ export default function CourseCourse() {
                 <div className={clsx('container-fluid mx-lg-4', classes.FormWidth)}>
                     <div className={'row pl-0 pr-0'}>
                         <div className={clsx('col-lg-3 col-12')}>
-                            <h6 className={classes.InputTitle}>Category Name</h6>
+                            <h6 className={classes.InputTitle}>Batch Name</h6>
                         </div>
                         <div className={'col-lg-9 col-12'}>
                             <TextField value={courseData.courseName} onChange={(e)=>{
@@ -355,9 +386,17 @@ export default function CourseCourse() {
                             }} name='courseName'  fullWidth variant="outlined" InputProps={{className: 'TextFieldHeight',}}/>
                         </div>
                     </div>
+                    <div className={'row  my-4 pl-0 pr-0'}>
+                            <div className={clsx('col-lg-3 col-12')}>
+                                <h6 className={classes.InputTitle}>Batch Start from</h6>
+                            </div>
+                            <div className={'col-lg-9 col-12'}>
+                            <TextField value={courseData.course_subtitle} type="date" name='course_subtitle'  fullWidth variant="outlined" InputProps={{className: 'TextFieldHeight',}}/>
+                        </div>
+                        </div>
                         <div className={'row  my-4 pl-0 pr-0'}>
                             <div className={clsx('col-lg-3 col-12')}>
-                                <h6 className={classes.InputTitle}>Courses</h6>
+                                <h6 className={classes.InputTitle}>Batch Code</h6>
                             </div>
                             <div className={'col-lg-9 col-12'}>
                             <TextField value={courseData.course_subtitle} onChange={(e)=>{
@@ -365,6 +404,23 @@ export default function CourseCourse() {
                                          {...courseData,
                                             course_subtitle:e.target.value})
                             }} name='course_subtitle'  fullWidth variant="outlined" InputProps={{className: 'TextFieldHeight',}}/>
+                        </div>
+                        </div>
+                        <div className={'row  my-4 pl-0 pr-0'}>
+                            <div className={clsx('col-lg-3 col-12')}>
+                                <h6 className={classes.InputTitle}>Subjects</h6>
+                            </div>
+                            <div className={'col-lg-9 col-12'}>
+                              <MultipleSelectChip/>
+                           {/* <select name="Subject" id="subject_id">
+        <option value="rigatoni">Select Subject</option>
+    
+        <option value="rigatoni">Physics</option>
+        <option value="dave">Chemistry</option>
+        <option value="pumpernickel">Mathematics</option>
+        <option value="reeses">Biology</option>
+        </select>
+                            {/*<TextField value={courseData.course_subtitle}  name='course_subtitle'  fullWidth variant="outlined" InputProps={{className: 'TextFieldHeight',}}/>*/}
                         </div>
                         </div>
                 </div>

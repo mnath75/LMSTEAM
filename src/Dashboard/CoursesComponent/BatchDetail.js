@@ -10,10 +10,9 @@ import {
   Dialog,
   DialogActions,
   DialogTitle,
+  Badge,
+  Slide,
 } from "@material-ui/core";
-import { useHistory } from "react-router-dom";
-import SearchIcon from "@material-ui/icons/Search";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import {
   Search,
   YouTube,
@@ -24,31 +23,30 @@ import {
   Delete,
   Clear,
   FileCopyRounded,
+
 } from "@material-ui/icons";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { Checkbox } from '@mui/material';
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
-import ClearIcon from "@material-ui/icons/Clear";
+import { Checkbox,Box,Paper,Stack,Radio,FormControl,RadioGroup,FormControlLabel } from '@mui/material';
 import { Themes } from "../../Theme/theme";
 import clsx from "clsx";
 import { crud } from "../../services/crud";
-import Slide from "@material-ui/core/Slide";
 import "../QuestionBankComponent/QuestionCss.css";
-import { useLocation } from "react-router-dom";
 import Loader from "../../MainComponents/Loader";
-//import Button from '@mui/material/Button';
+import {BatchSidebar} from "../../MainComponents/SideNav";
+import { NavLink,useHistory,useLocation} from 'react-router-dom';
+import '../../Website/Component/headerCss.css';
+import LiveTvIcon from '@mui/icons-material/LiveTv';
+import { pink } from '@mui/material/colors';
 
 const courses = [
-    {id: 1, title: 'IIT mains', topic: 45, subtitle: 'NEET'},
-    {id: 2, title: 'IIT JEE', topic: 405, subtitle: 'NEET'},
-    {id: 3, title: 'NEET', topic: 125, subtitle: 'NEET'},
-    {id: 4, title: 'IIT advance', topic: 35, subtitle: 'NEET'},
+    {id: 1, title: 'BATCH 01', topic:65, subtitle: 'Maths, Physics, Chemistry'},
+    {id: 2, title: 'BATCH 02', topic:40, subtitle: 'Maths, Physics, Chemistry'},
+    {id: 3, title: 'BATCH 03', topic:125, subtitle: 'Maths, Physics, Chemistry'},
+    {id: 4, title: 'BATCH 04', topic:35, subtitle: 'Maths, Physics, Chemistry'},
   
     
 ]
 
-export default function CourseCourse() {
+export default function BatchDetail() {
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
   const classes = useStyles();
   const location = useLocation();
@@ -74,14 +72,21 @@ export default function CourseCourse() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [courseData, setCourseData] = useState("");
   //const [courses, setCourses] = useState();
-  function GetFormManage() {
+  function CreateNewSubject() {
     setOpen(true);
     setFormData({
-      formTitle: "Create New Category",
-      ButtonTitle: "Create Category",
+      formTitle: "Create New Subject",
+      ButtonTitle: "Create Subject",
     });
   }
     
+  function CreateNewTopic() {
+    setOpen1(true);
+    setFormData({
+      formTitle: "Create New Topic",
+      ButtonTitle: "Create Tope",
+    });
+  }
   function getClearAll() {
     setCourseData({
       courseName: "",
@@ -153,67 +158,108 @@ export default function CourseCourse() {
   return (
     <>
       <div className="container-fluid" style={{textSize: 8}}>
-        <div className="row px-lg-2">
+        <div className="row px-lg-0 py-0">
+          <div className="col-lg-1 text" style={{background: Themes.MainHeaderColor}}><ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                            {BatchSidebar.map((value => (
+                                <li className="nav-item dropdown" style={{color: Themes.WHITE}} key={value.id}>
+                                   {/*{value.page === '/course-batch' ? <><Badge className={classes.Badge}
+                                                                                 color="secondary"
+                                                                                 badgeContent={'Free'}/></> : <></>}*/}
+                                    {!(value.title === 'Log Out') ?
+                                        <NavLink to={value.page} activeClassName={'active_link'}
+                                                 className="nav-link">{value.icons}  {value.title}</NavLink> : <></>}
+                                </li>
+                            )))}</ul> </div>
           <div className="col-lg-8 py-4">
             <div className="row px-lg-0">
-            <div className={'col-lg-2 col-12'}>
-                        <h6 className={classes.title}>COURSES({courses?.length})</h6>
+            <Box
+      sx={{
+        display: 'flex',
+        '& > :not(style)': {
+          m: 2,
+          p: 2,
+          mt:-1,
+          width: 900,
+          height: 300,
+          borderColor: 'text.primary',
+        },
+      }}
+    >
+      <Paper variant="outlined" >
+        <div className="row px-lg-0"><div className="col-lg-11 col-12"><h6>Batch 02</h6><p>code:XYZcode</p></div><div className="col-lg-1 col-12"><MoreVert/></div></div>
+        <div className="row"><div className="col-lg-9"><h6>subject</h6><p>Maths,Physics,Chemistry</p></div><div className="col-lg-3 "> <Stack spacing={1} direction="column" sx={{p: -2}}>
+    
+        <Button variant="outlined" size="small" className={'mx-lg-3 mx-1'} onClick={() => {CreateNewSubject()}} startIcon={<Add/>}>Add Subject</Button>
+        <Button variant="outlined" size="small"className={'mx-lg-3 mx-1'}  onClick={() => {CreateNewTopic()}} startIcon={<Add/>}>Add Topic</Button>
+        </Stack></div></div>
+        <div className="row"><h6>Educator</h6><p>Nikhil,Tanisha,Mandeep</p></div>
+      </Paper>
+    </Box>
+    <Box
+      sx={{
+        display: 'flex',
+        '& > :not(style)': {
+          m: 2,
+          p: 2,
+          width: 900,
+          height: 300,
+          borderColor: 'text.primary',
+        },
+      }}
+    >
+      <Paper variant="outlined" >
+        <div className="row bBorder"><div className="col-lg-10"><h6>Live Sessions</h6></div><div className="col-lg-2"><Button variant="outlined" size="small"className={'mx-lg-2  mb-3'} startIcon={<Add/>}>Add</Button></div></div>
+        <div className="row"><div className="col-lg-2"><h6>Monday</h6></div><div className="col-lg-2"><h6>Tuesday</h6></div><div className="col-lg-2"><h6>Wednesday</h6></div><div className="col-lg-2"><h6>Thursday</h6></div><div className="col-lg-2"><h6>Friday</h6></div><div className="col-lg-2"><h6>Saturday</h6></div></div>
+      </Paper>
+    </Box>
+    <Box
+      sx={{
+        display: 'flex',
+        '& > :not(style)': {
+          m: 2,
+          p: 2,
+          width: 900,
+          height: 300,  borderColor: 'text.primary',
+        },
+      }}
+    >
+      <Paper variant="outlined" >
+       <div className="row bBorder"> <div className={'col-lg-4 col-12'}>
+                        <h6 className={classes.title}>Students({courses?.length})</h6>
                     </div>
-                    <div className={'col-lg-3 col-12 my-3 mt-lg-0'}>
-                        <TextField fullWidth placeholder={'search for courses'} InputProps={{
+                    <div className={'col-lg-4 col-12 my-3 mt-lg-0'}>
+                        <TextField fullWidth placeholder={'search for Students'} InputProps={{
                             startAdornment: (<InputAdornment position="start">
                                 <Search/></InputAdornment>),}}/>
                     </div>
-                    <div className={'col-lg-6 col-12 d-flex justify-content-lg-end my-3 mt-lg-0'}>
+                    <div className={'col-lg-4 col-12 d-flex justify-content-lg-end my-3 mt-lg-0'}>
                         <Button className={'mx-lg-3 mx-1'} variant="contained" startIcon={<FilterList/>}>
                             Sort
                         </Button>
-                        <Button onClick={() => {GetFormManage()}} variant="contained" className={'mx-lg-3 mx-1'} startIcon={<Add/>}
+                        <Button onClick={() => {CreateNewSubject()}} variant="contained" className={'mx-lg-3 mx-1'} startIcon={<Add/>}
                                 style={{background: Themes.MainHeaderColor, color: Themes.WHITE}}>
-                            Create Course
+                            Add
                         </Button>
-                    </div>
-                    <div className={'divider'}/>
-                    
-                    {courses?.length?<>
-                        {courses?.map((value, index) => (
-                        <div key={index} className={'col-xl-4 col-lg-4 col-md-6 col-12  mt-4'}>
-                            <div className={clsx('px-3 pt-2 card')} >
-                                <div onClick={()=>{history.push({pathname: '/course-batch/',
-                                    state: {category:value.title}})}} className={'QuestionRedirect'} />
-                                <h5>{value?.title}</h5>
-                                <p>{value?.subtitle}</p>
-                                <IconButton  onClick={(event) => {
-                                    setAnchorEl(event.currentTarget);
-                                    setData(value)}} className={classes.menu}><MoreVert/></IconButton>
-                                <Menu key={index}
-                                      id="simple-menu"
-                                      anchorEl={anchorEl}
-                                      open={anchorEl}
-                                      onClose={() => {setAnchorEl(null);}}>
-                                    <MenuItem className={'d-flex justify-content-between text-primary'} onClick={() => {
-                                        getEdit();
-                                        setAnchorEl(false)
-                                    }}>Edit<Edit className={classes.menuIcon}/></MenuItem>
-                                     <MenuItem onClick={() => {
-                                       getDuplicateCourse();
-                                        setAnchorEl(false);                                       
-                                    }}>Duplicate<FileCopyRounded className={classes.menuIcon} /></MenuItem>
-                                    <MenuItem className={'d-flex justify-content-between text-danger'} onClick={() => {
-                                       deletecourse();
-                                       setAnchorEl(false);}}>
-                                      Delete <Delete className={classes.menuIcon}/></MenuItem>
-                                </Menu>
-                                <h6>{value?.topic} Courses</h6>
-                            </div>
-                        </div>
-                    ))}
-                    </>:<><h2 className='text-center pt-5'>Course is Empty...</h2></>} 
-
+                    </div></div>
+                    <div className="row">
+                       <FormControl>
+         <RadioGroup
+        aria-labelledby="demo-radio-buttons-group-label"
+        defaultValue="female"
+        name="radio-buttons-group"
+      >
+        <FormControlLabel value="female" control={<Radio />} label="" />
+        <FormControlLabel value="male" control={<Radio />} label="" />
+        <FormControlLabel value="other" control={<Radio />} label="" />
+      </RadioGroup>
+    </FormControl></div>
+      </Paper>
+    </Box>
+                   
             </div>
            </div>
 
-          <div className="col-lg-4 px-2">
+          <div className="col-lg-3 px-2">
             <div className="row">
               <div className="card" style={{minHeight: 250}}>
                 <div className="row bBorder">
@@ -226,12 +272,14 @@ export default function CourseCourse() {
                   </p>
                   <Button variant="outlined">
                     <IconButton>
-                      <YouTube   color='secondary' />
+                    <LiveTvIcon sx={{ color: pink[500] }} />
                     </IconButton>
                     Go Live Now
                   </Button>
                 </div>
-                <div className="row bBorder px-lg-0">
+                <div className="row bBorder <IconButton  onClick={(event) => {
+                                    setAnchorEl(event.currentTarget);
+                                    setData(value)}} className={classes.menu}><MoreVert/></IconButton>">
                   <div className="col-lg-6">
                     <p> Motivational Lecture by Director Sir</p>
                   </div>
@@ -336,7 +384,7 @@ export default function CourseCourse() {
           </div>
         </div>
       </div>
-      <Dialog maxWidth={'lg'} open={open} TransitionComponent={Transition} keepMounted>
+   <Dialog maxWidth={'lg'} open={open} TransitionComponent={Transition} keepMounted>
                 <DialogTitle id="alert-dialog-slide-title">{formData.formTitle}
                     <hr/>
                 </DialogTitle>
@@ -347,7 +395,7 @@ export default function CourseCourse() {
                 <div className={clsx('container-fluid mx-lg-4', classes.FormWidth)}>
                     <div className={'row pl-0 pr-0'}>
                         <div className={clsx('col-lg-3 col-12')}>
-                            <h6 className={classes.InputTitle}>Category Name</h6>
+                            <h6 className={classes.InputTitle}>Subject Name</h6>
                         </div>
                         <div className={'col-lg-9 col-12'}>
                             <TextField value={courseData.courseName} onChange={(e)=>{
@@ -357,7 +405,7 @@ export default function CourseCourse() {
                     </div>
                         <div className={'row  my-4 pl-0 pr-0'}>
                             <div className={clsx('col-lg-3 col-12')}>
-                                <h6 className={classes.InputTitle}>Courses</h6>
+                                <h6 className={classes.InputTitle}>Topic Name</h6>
                             </div>
                             <div className={'col-lg-9 col-12'}>
                             <TextField value={courseData.course_subtitle} onChange={(e)=>{
@@ -391,129 +439,44 @@ export default function CourseCourse() {
                     </Button>
                 </DialogActions>
             </Dialog>
+      
+   
  {/*Vikash24change1........................................................................................*/}
-            <Dialog maxWidth={'lg'} open={open1} TransitionComponent={Transition} keepMounted>
-                <DialogTitle id="alert-dialog-slide-title">{formaData.formaTitle0}
+ <Dialog maxWidth={'lg'} open={open1} TransitionComponent={Transition} keepMounted>
+                <DialogTitle id="alert-dialog-slide-title">{formData.formTitle}
                     <hr/>
                 </DialogTitle>
                 <IconButton onClick={() => {
                     setOpen1(false);
                     getClearAll()
                 }} className={classes.CloseBtn}><Clear/></IconButton>
-            
-                <div className={'row px-lg-4 '}>
-                        <div className={clsx('col-lg-3 col-12 d-flex align-items-center')}>
-                            <h6 className={classes.InputTitle}>{formaData.formaTitle1}</h6>
-                        </div>
-                        <div className="col-lg-8 col-12 my-3">  <TextField value={courseData.courseName} onChange={(e)=>{
-                                     setCourseData({...courseData,courseName:e.target.value})
-                            }} name='courseName'  fullWidth variant="outlined" InputProps={{className: 'TextFieldHeight',}}/> </div>
-                        
-                        <hr/>
-                    </div>
-                  
-             
-                <div className={"row px-lg-4"}>
-                   <div className="col-lg-4 col-12"><h6>{formaData.formaTitle2}-1/3</h6></div>
-                   <div className="col-lg-5 col-12   my-3 mt-lg-0">
-                     <TextField fullWidth placeholder={'search for Batch'}
-                      InputProps={{startAdornment: (<InputAdornment position="start">
-                                <Search/></InputAdornment>),}}/>
-                    </div>
-                    <div className={'col-lg-3 col-12 d-flex justify-content-lg-end my-3 mt-lg-0'}>
-                        <Button className={'mx-lg-3 mx-1'} variant="contained" startIcon={<FilterList/>}>
-                            Sort
-                        </Button>
-                        
-                    </div>
-                    <hr/>
-                </div>
-                
                 <div className={clsx('container-fluid mx-lg-4', classes.FormWidth)}>
                     <div className={'row pl-0 pr-0'}>
-                    <div className="col-lg-5 "><p>Batch1</p></div>
-                    <div className="col-lg-5"><p>100 students</p></div>
-                    <div className="col-lg-2"><Checkbox {...label} defaultChecked /></div>
-                    </div>
-                    <div className={'row pl-0 pr-0'}>
-                    <div className="col-lg-5"><p>Batch2</p></div>
-                    <div className="col-lg-5"><p>500 students</p></div>
-                    <div className="col-lg-2"><Checkbox {...label} /></div>
-                    </div>
-                    <div className={'row pl-0 pr-0'}>
-                    <div className="col-lg-5"><p>Batch3</p></div>
-                    <div className="col-lg-5"><p>800 students</p></div>
-                    <div className="col-lg-2"><Checkbox {...label} /></div>
-                    </div>
-                       
-                </div>
-                <DialogActions className={'mx-2'}>
-                    <Button className={clsx(classes.Btn,)} variant={'contained'} onClick={() => 
-                    { getDuplicateBatch();}
-                  }>
-                        {formaData.ButtonTitle}
-                    </Button>
-                </DialogActions>
-            </Dialog>
-     {/*Vikash25change2........................................................................................*/}
-             <Dialog maxWidth={'lg'} open={open2} TransitionComponent={Transition} keepMounted>
-                <DialogTitle id="alert-dialog-slide-title">{formaData.formaTitle0}
-                    <hr/>
-                </DialogTitle>
-                <IconButton onClick={() => {
-                    setOpen2(false);
-                    getClearAll()
-                }} className={classes.CloseBtn}><Clear/></IconButton>
-            
-                <div className={'row px-lg-4 '}>
-                        <div className={clsx('col-lg-3 col-12 d-flex align-items-center')}>
-                            <h6 className={classes.InputTitle}>{formaData.formaTitle1}</h6>
+                        <div className={clsx('col-lg-3 col-12')}>
+                            <h6 className={classes.InputTitle}>Topic Name</h6>
                         </div>
-                        <div className="col-lg-8 col-12 my-3">  <TextField value={courseData.courseName} onChange={(e)=>{
+                        <div className={'col-lg-9 col-12'}>
+                            <TextField value={courseData.courseName} onChange={(e)=>{
                                      setCourseData({...courseData,courseName:e.target.value})
-                            }} name='courseName'  fullWidth variant="outlined" InputProps={{className: 'TextFieldHeight',}}/> </div>
-                        
-                        <hr/>
+                            }} name='courseName'  fullWidth variant="outlined" InputProps={{className: 'TextFieldHeight',}}/>
+                        </div>
                     </div>
-                  
-             
-                <div className={"row px-lg-4"}>
-                   <div className="col-lg-4 col-12"><h6>{formaData.formaTitle2}-1/30</h6></div>
-                   <div className="col-lg-5 col-12   my-3 mt-lg-0">
-                     <TextField fullWidth placeholder={'search for Batch'}
-                      InputProps={{startAdornment: (<InputAdornment position="start">
-                                <Search/></InputAdornment>),}}/>
-                    </div>
-                    <div className={'col-lg-3 col-12 d-flex justify-content-lg-end my-3 mt-lg-0'}>
-                        <Button className={'mx-lg-3 mx-1'} variant="contained" startIcon={<FilterList/>}>
-                            Sort
-                        </Button>
-                        
-                    </div>
-                    <hr/>
-                </div>
-                
-                <div className={clsx('container-fluid mx-lg-4', classes.FormWidth)}>
-                    <div className={'row pl-0 pr-0'}>
-                    <div className="col-lg-5 "><p>student 1</p></div>
-                    <div className="col-lg-5"><p>100 students</p></div>
-                    <div className="col-lg-2"><Checkbox {...label} defaultChecked /></div>
-                    </div>
-                    <div className={'row pl-0 pr-0'}>
-                    <div className="col-lg-5"><p>Student 2</p></div>
-                    <div className="col-lg-5"><p>500 students</p></div>
-                    <div className="col-lg-2"><Checkbox {...label} /></div>
-                    </div>
-                    <div className={'row pl-0 pr-0'}>
-                    <div className="col-lg-5"><p>Student3</p></div>
-                    <div className="col-lg-5"><p>800 students</p></div>
-                    <div className="col-lg-2"><Checkbox {...label} /></div>
-                    </div>
-                       
+                        <div className={'row  my-4 pl-0 pr-0'}>
+                            <div className={clsx('col-lg-3 col-12')}>
+                                <h6 className={classes.InputTitle}>Tags</h6>
+                            </div>
+                            <div className={'col-lg-9 col-12'}>
+                            <TextField value={courseData.course_subtitle} onChange={(e)=>{
+                                     setCourseData(
+                                         {...courseData,
+                                            course_subtitle:e.target.value})
+                            }} name='course_subtitle'  fullWidth variant="outlined" InputProps={{className: 'TextFieldHeight',}}/>
+                        </div>
+                        </div>
                 </div>
                 <DialogActions className={'mx-2'}>
                     <Button className={clsx(classes.Btn,)} variant={'contained'} onClick={async() => {
-                    if(formaData.ButtonTitle==='Create Category'){
+                    if(formData.ButtonTitle==='Create Category'){
                           await crud.create('/categoryapi/',{
                               category_short:courseData.course_subtitle,
                               category_title:courseData.courseName,
@@ -522,7 +485,7 @@ export default function CourseCourse() {
                         getClearAll();
                      }
                         setOpen(false)
-                    if(formaData.ButtonTitle==='UPDATE'){
+                    if(formData.ButtonTitle==='UPDATE'){
                            await crud.update('/categoryapi/'+data.category_id+'/',{
                                     category_short:courseData.course_subtitle,      
                                     category_title:courseData.courseName,      
@@ -530,10 +493,12 @@ export default function CourseCourse() {
                         getCourses();
                         }
                     }} color="primary">
-                        {formaData.ButtonTitle}
+                        {formData.ButtonTitle}
                     </Button>
                 </DialogActions>
             </Dialog>
+   
+   
             {loader?<Loader/>:<></>}
     </>
   );

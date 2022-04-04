@@ -22,6 +22,15 @@ import ReceiptIcon from '@material-ui/icons/Receipt';
 import TableChartIcon from '@material-ui/icons/TableChart';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import AirplayIcon from '@material-ui/icons/Airplay';
+import ContentPasteIcon from '@mui/icons-material/ContentPaste';
+import AnalyticsIcon from '@mui/icons-material/Analytics';
+import LiveTvIcon from '@mui/icons-material/LiveTv';
+import CampaignIcon from '@mui/icons-material/Campaign';
+import CoPresentIcon from '@mui/icons-material/CoPresent';
+import GroupIcon from '@mui/icons-material/Group';
+import SubjectIcon from '@mui/icons-material/Subject';
+import GroupsIcon from '@mui/icons-material/Groups';
+
 //Admin-Header
 export const DashboadNav = [
     {id: 1,title: "Dashboard",icon: <DashboardIcon/>,page: "/dashboard",},
@@ -34,7 +43,18 @@ export const DashboadNav = [
     {id: 5, title: "Study Material", icon: <MenuBookIcon/>, page: "/study-material"},
     {id: 6, title: "Reports", icon: <PollIcon/>, page: "/reports"},
     {id: 7,title: "Site & App Manager",icon: <DvrIcon/>,page: "/site-&-app-manager",},
-    {id: 8,title: "Setting",icon: <SettingsIcon/>,page: "/setting",},
+    {id: 8,title: "Settings",icon: <SettingsIcon/>,page: "/setting",},
+];
+export const BatchSidebar = [
+    {id: 1, title: "Overview",icons: <DashboardIcon/>,page: "/Overview",},
+    {id: 2, title: "Batches",icons: <GroupsIcon/>,page: "/course-batchs",},
+    {id: 3, title: "Subjects",icons: <SubjectIcon/>,page: "/subjects",},
+    {id: 4, title: "Educators",icons: <CoPresentIcon/>,page: "/educators",},
+    {id: 5, title: "Contents",icons: < ContentPasteIcon/>,page: "/contents",},
+    {id: 6, title: "Students",icons: <GroupIcon/>,page: "/students",},
+    {id: 7, title: "Analytics",icons: <AnalyticsIcon/>,page: "/analytics",},
+    {id: 8, title: "Live Sessions",icons: <LiveTvIcon/>,page: "/live-sessions",},
+    {id: 9, title: "Announcements",icons: <CampaignIcon/>,page: "/announcements",},
 ];
 //Website-header
 export const WebsiteNav = [
@@ -63,5 +83,6 @@ export const colourOptions = [
     { value: "purple", label: "Hindi"},
 
 ];
+
 
 
