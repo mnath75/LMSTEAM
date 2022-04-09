@@ -133,7 +133,7 @@ export default function QuestionTopic() {
                         <div key={index} className={'col-xl-3 col-lg-4 col-md-6 col-12  mt-4'}>
                             <div className={clsx('card px-3 pt-2')}>
                                 <div onClick={()=>{history.push({pathname: '/question-type',
-                              state: {category:location.state?.category,course:location.state?.course,subject:location.state?.subject,topic:value?.top_title}})}} className={'QuestionRedirect'} />
+                              state: {category:location.state?.category,course:location.state?.course,subject:location.state?.subject,topic:value?.top_title,topic1:value?.top_id}})}} className={'QuestionRedirect'} />
                                 <h5>{value?.top_title}</h5>
                                 
                                 <IconButton onClick={(event) => {

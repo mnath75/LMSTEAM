@@ -28,17 +28,7 @@ const names = [
     'Gujrati',
     
   ];
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250,
-      },
-    },
-  };  
-export default function QuestionPage() {
+export default function QuestionPageD() {  
     const [radiovalue, setRadiovalue] = useState(null);
     const [Qdiff, setQdiff] = useState('');
     const [Qtype, setQtype] = useState('');
@@ -62,6 +52,7 @@ export default function QuestionPage() {
     const [text, setText] = useState("")
     const [personName, setPersonName] = useState([]);
     const[adQuestions,setadQuestions]=useState([]);
+
     const [options, setOptions] =  useState([
         {
 
@@ -82,20 +73,51 @@ export default function QuestionPage() {
     })
     // post questions
     const [PostQuestions, setPostQuestions] = useState('');
-
+    const [AddFinalQuestions, setAddFinalQuestions] = useState('');
     function GetFormManage() {
         setOpen(true)
         setFormData({
             formTitle: 'Create New Question',
-            ButtonTitle: 'Add Question',
+            ButtonTitle: 'SAVE',
         });
     }
     function AddQuestion(){
+        console.log("hhhhbb")
+        setadQuestions([...adQuestions,{value:""}]);
+        setOpen(true)
+        setFormData({
+            formTitle: 'Create Questions',
+            ButtonTitle: 'AddQ',
+        });
+        setPostQuestions({
+            
+            QDifficulty: '',
+            QLanguage: '',
+            QType: '',
+            QUser: 'hhh',
+            QTopic: 'ttt',
+           
+        });
+    }
+    function getClearAll() {
+        
+    }
+    function AddFinalQuestion(){
         setOpen(true)
         setFormData({
             formTitle: 'Create New Question',
-            ButtonTitle: 'Save',
+            ButtonTitle: 'SAVE',
         });
+        setAddFinalQuestions({
+            Queid: '',
+            QPara:'',
+            QText:'',
+            QLanguage: '',
+            QDes:'',
+            QSol: '',
+            Qis_active: '',
+            QChoices:'',
+        })
     }
     function handleChangeR (option) {
         setRadiovalue(option);
@@ -114,6 +136,10 @@ export default function QuestionPage() {
     const handleChangeType = (event) => {
         setQtype(event.target.value);
       };  
+    const handleChangeLang= (event) => {
+            setLanguage(event.target.value);
+          };  
+    
     const handleChangeLanguage = (event) => {
         const {
           target: { value },
@@ -134,13 +160,7 @@ export default function QuestionPage() {
     const removeOption = (option) => {
         setOptions(options.filter(s => s != option));
     }
-    function getClearAll() {
-        setPostQuestions({
-            QParagraph: '',
-            QText:''
-
-        });
-    }
+   
 
     function getEdit() {
         setOpen(true)
@@ -161,7 +181,7 @@ export default function QuestionPage() {
             const data1= await crud.retrieve('/questions/?qtype='+params.id+'&&')
             setQuestion(data1);
             setLoader(false);
-            console.log(data1.title)
+            
             }
         
         catch(e){
@@ -170,7 +190,6 @@ export default function QuestionPage() {
     }
     async function getAll()
     {
-       
         setLoader(true);
         try{
             const data1= await crud.retrieve('/questions/')
@@ -188,6 +207,8 @@ export default function QuestionPage() {
         getAll();
     }, [location]);
   
+    
+
 
     return (
         <>
@@ -211,7 +232,7 @@ export default function QuestionPage() {
                         <label htmlFor="contained-button-file">
                             <Button
                             onClick={() => {
-                                GetFormManage()
+                                GetFormManage();
                             }}
                             variant={'contained'}  startIcon={<AddIcon/>} className={clsx(classes.Button)}>
                                 Create Question
@@ -261,16 +282,15 @@ export default function QuestionPage() {
                     </>:<><h2 className='text-center pt-5'>no question...</h2></>}
 
                 </div>
-            </div>
+            </div> 
+
             <Dialog maxWidth={'lg'}
              
-                    open={open}
-                    TransitionComponent={Transition}>
-                     
-                <div className={'container-fluid'}>
-                    <div className={'row'}>
-                    
-                        <div className={'col-12 pl-0 pr-0'}>
+             open={open}
+             TransitionComponent={Transition}>
+               <div className={'container-fluid'}>
+                <div className={'row'}>
+                <div className={'col-12 pl-0 pr-0'}>
                             <DialogTitle>{location.state?.question_type} </DialogTitle>
                             <div style={{position:'absolute',top:15,right:90}}>
 
@@ -280,13 +300,14 @@ export default function QuestionPage() {
                             </div>
                             <IconButton onClick={() => {setOpen(false);}}  className={classes.menu}><ClearIcon/></IconButton>
                             <hr/>
-                        </div>
-                    <div className={'col-12 mt-3'}>
+                </div>
+                <div className={'col-12 mt-3'}>
                          
-                         <CKEditor editor={ClassicEditor} datapara={PostQuestions.QText} 
+                         <CKEditor editor={ClassicEditor} datapara={AddFinalQuestions.QPara} 
                                             onChange={(event, editor) => { const datapara = editor.getData()
                                             setText(datapara)
                                             }}
+                                              value={AddFinalQuestions.QPara}
                                               config={{
                                               headers: { 'Content-Type': 'application/json'},
                                               placeholder:'paragraph type something',
@@ -299,138 +320,147 @@ export default function QuestionPage() {
                                             },
                             },
                             }}/>
-                        <Grid container className="mt-3">
-                            <Grid item xs={12}>
-                                <Button
-                                    fullWidth
-                                    variant={"outlined"}
-                                    color={"primary"}
-                                    onClick={() => addQuestion()}
-                                    startIcon={<AddIcon />}
-                                >
-                                    Add Questions
-                                </Button>
-                            </Grid>
-                        </Grid>
-                        </div>  
-
                         <div className={'col-lg-8 offset-lg-4 col-12  px-lg-3 d-lg-flex justify-content-lg-end'}>
                             <div className={'mx-lg-2 px-lg-2'}>
-                            <FormControl sx={{ m: 1, minWidth: 200 }}>
-                            <InputLabel id="demo-simple-select-helper-label">Choose Difficulty Level</InputLabel>    
-                            <Select value={Qdiff} input={<OutlinedInput label="Choose Difficulty Level" />}  labelId="demo-simple-select-autowidth-label"
-                             id="demo-simple-select-autowidth" onChange={handleChange} autoWidth >
-                            <MenuItem value="Difficult">Difficult</MenuItem>
-                            <MenuItem value="Moderate">Moderate</MenuItem>
-                            <MenuItem value="Easy">Easy</MenuItem>
-                            </Select>
-                            </FormControl> 
-                             
+                            <label className={'pb-2'}>Select Level</label>
+                            <TextField  size={"small"} value={PostQuestions.QDifficulty} variant={'outlined'}
+                            onChange={(e) => {setPostQuestions({...PostQuestions,QDifficulty:e.target.value})}} 
+                            name='QDifficulty'fullWidth  select>
+                                <MenuItem value={'Difficult'}>Difficult</MenuItem>
+                                <MenuItem value={'Moderate'}>Moderate</MenuItem>
+                                <MenuItem value={'Easy'}>Easy</MenuItem>
+                            </TextField>   
                             </div>
                             <div className={'mx-lg-2 px-lg-2'}>
-                                <label className={'pb-2'}>Select Language</label>
-                            <TextField size={"small"} value={language} variant={'outlined'} onChange={(e) => {setLanguage(e.target.value)}} fullWidth  select>
+                            <label className={'pb-2'}>Select Language</label>
+                            <TextField size={"small"} value={PostQuestions.QLanguage} variant={'outlined'}
+                             onChange={(e) => {setPostQuestions({...PostQuestions,QLanguage:e.target.value})}}  
+                             name='QLanguage'  fullWidth  select>
                                 <MenuItem value={'hindi'}>Hindi</MenuItem>
                                 <MenuItem value={'english'}>English</MenuItem>
                                 <MenuItem value={'both'}>Bilingual</MenuItem>
                             </TextField>
                             </div>
-                        </div>
+                        </div>    
                        
-                        <div className={'col-12 mt-3'}>
-                            {language==='both'?<>
-                            <CKEditor editor={ClassicEditor} data1={PostQuestions.QText} 
-                                            onChange={(event, editor) => { const data1 = editor.getData()
-                                            setText(data1)
-                                            }}
-                                            config={{
-                                            headers: { 'Content-Type': 'application/json'},
-                                            placeholder:'Type MCQ Questions both english',
-                                            ckfinder: {
-                                            uploadUrl: '/uploads',
-                                            withCredentials: true,
-                                            headers: {
-                                             'X-CSRF-TOKEN': 'CSFR-Token',
-                                              Authorization: 'Bearer <JSON Web Token>'
-                                    },
-                            },
-                            }}/>
-                              <CKEditor editor={ClassicEditor}  data2={PostQuestions.QText} 
-                                            onChange={(event, editor) => { const data2 = editor.getData()
-                                            setText(data2)
-                                            }}
-                                            config={{
-                                            headers: { 'Content-Type': 'application/json'},
-                                            placeholder:'Type MCQ Questions both hindi',
-                                            ckfinder: {
-                                            uploadUrl: '/uploads',
-                                            withCredentials: true,
-                                            headers: {
-                                             'X-CSRF-TOKEN': 'CSFR-Token',
-                                              Authorization: 'Bearer <JSON Web Token>'
-                                    },
-                            },
-                            }}/>
-                            </>:<></>}
-                            {language==='english'?<>
-                            <CKEditor editor={ClassicEditor} data3={PostQuestions.QText} 
-                                            onChange={(event, editor) => { const data3 = editor.getData()
-                                            setText(data3)
-                                            }}
-                                            config={{
-                                            headers: { 'Content-Type': 'application/json'},
-                                            placeholder:'Type MCQ Questions only english',
-                                            ckfinder: {
-                                            uploadUrl: '/uploads',
-                                            withCredentials: true,
-                                            headers: {
-                                              'X-CSRF-TOKEN': 'CSFR-Token',
-                                              Authorization: 'Bearer <JSON Web Token>'
-                                    },
-                            },
-                            }}/>
-                                
-                            </>:<></>}
-                            {language==='hindi'?<>
-                            <CKEditor editor={ClassicEditor} data4={PostQuestions.QText} 
-                                            onChange={(event, editor) => { const data4 = editor.getData()
-                                            setText(data4)
-                                            }}
-                                            config={{
-                                            headers: { 'Content-Type': 'application/json'},
-                                            placeholder:'Type MCQ Questions only Hindi',
-                                            ckfinder: {
-                                            uploadUrl: '/uploads',
-                                            withCredentials: true,
-                                            headers: {
-                                             'X-CSRF-TOKEN': 'CSFR-Token',
-                                              Authorization: 'Bearer <JSON Web Token>'
-                                    },
-                            },
-                            }}/>
-                            </>:<></>}
-                        </div>
                         <div className={'col-12 d-flex justify-content-between'}>
-                            <h4 className={'py-3'}>Answers</h4>
-                            <div className={'mx-lg-2 px-lg-2'}>
-                            <FormControl sx={{ m: 1, minWidth: 200 }}>
-                            <InputLabel id="demo-simple-select-helper-label">Question Type</InputLabel>    
-                            <Select value={Qtype} input={<OutlinedInput label="Question Type" />}  labelId="demo-simple-select-autowidth-label"
-                             id="demo-simple-select-autowidth" onChange={handleChangeType} autoWidth >
-                            <MenuItem value="Single_Multi Choice">Single_Multi Choice</MenuItem>
-                            <MenuItem value="Comprehension Type">Comprehension Type</MenuItem>
-                            <MenuItem value="True/False">True/False</MenuItem>
-                            <MenuItem value="Fill in the blanks">Fill in the blanks</MenuItem>
-                            </Select>
-                            </FormControl>    
+                            <div className={'mx-lg-2 px-lg-2'}>  
+                            <label className={'pb-2'}>Question Type</label>
+                            <TextField  size={"small"} value={PostQuestions.QType} variant={'outlined'} 
+                             onChange={(e) => {setPostQuestions({...PostQuestions,QType:e.target.value})}} 
+                             name="QType" fullWidth  select>
+                               <MenuItem value={'Single_Multi Choice'}>Single_Multi Choice</MenuItem>
+                               <MenuItem value={'Comprehension Type'}>Comprehension Type</MenuItem>
+                               <MenuItem value={'True/False'}>True/False</MenuItem>
+                               <MenuItem value={'Fill in the blanks'}>Fill in the blanks</MenuItem>
+                            </TextField>
                             </div>
-                        </div>
-                        
+                        </div>   
+
+                        <Grid container className="mt-3">
+                            <Grid item xs={12}>
+                            <IconButton onClick={() => {
+                                setOpen(false);
+                                getClearAll()
+                               }} className={classes.CloseBtn}><ClearIcon/>
+                            </IconButton>
+                                <Button
+                                    fullWidth
+                                    variant={"outlined"}
+                                    color={"primary"}
+                                    onClick={() => 
+                                        AddQuestion()
+                                    }
+                                    startIcon={<AddIcon />}
+                                >
+                                    Add Questions
+                                </Button>
+                            </Grid>
+                        </Grid> 
+                       
+                        <div>
+                        {
+                        adQuestions.map((option, index) => <>
+                        { 
                         <Grid container spacing={2} justifyContent={"space-between"}>
-                            {
+                            <div className={'col-12 mt-3'}>Question.{index+1}</div>
+                            <div className={'col-12 mt-3'}>
+                                  {PostQuestions.QLanguage==='both'?<>
+                                  <CKEditor editor={ClassicEditor} data1={PostQuestions.QText} 
+                                                  onChange={(event, editor) => { const data1 = editor.getData()
+                                                  setText(data1)
+                                                  }}
+                                                  config={{
+                                                  headers: { 'Content-Type': 'application/json'},
+                                                  placeholder:'Type MCQ Questions both english',
+                                                  ckfinder: {
+                                                  uploadUrl: '/uploads',
+                                                  withCredentials: true,
+                                                  headers: {
+                                                   'X-CSRF-TOKEN': 'CSFR-Token',
+                                                    Authorization: 'Bearer <JSON Web Token>'
+                                          },
+                                  },
+                                  }}/>
+                                    <CKEditor editor={ClassicEditor}  data2={PostQuestions.QText} 
+                                                  onChange={(event, editor) => { const data2 = editor.getData()
+                                                  setText(data2)
+                                                  }}
+                                                  config={{
+                                                  headers: { 'Content-Type': 'application/json'},
+                                                  placeholder:'Type MCQ Questions both hindi',
+                                                  ckfinder: {
+                                                  uploadUrl: '/uploads',
+                                                  withCredentials: true,
+                                                  headers: {
+                                                   'X-CSRF-TOKEN': 'CSFR-Token',
+                                                    Authorization: 'Bearer <JSON Web Token>'
+                                          },
+                                  },
+                                  }}/>
+                                  </>:<></>}
+                                  {PostQuestions.QLanguage==='english'?<>
+                                  <CKEditor editor={ClassicEditor} data3={PostQuestions.QText} 
+                                                  onChange={(event, editor) => { const data3 = editor.getData()
+                                                  setText(data3)
+                                                  }}
+                                                  config={{
+                                                  headers: { 'Content-Type': 'application/json'},
+                                                  placeholder:'Type MCQ Questions only english',
+                                                  ckfinder: {
+                                                  uploadUrl: '/uploads',
+                                                  withCredentials: true,
+                                                  headers: {
+                                                    'X-CSRF-TOKEN': 'CSFR-Token',
+                                                    Authorization: 'Bearer <JSON Web Token>'
+                                          },
+                                  },
+                                  }}/>
+                                      
+                                  </>:<></>}
+                                  {PostQuestions.QLanguage==='hindi'?<>
+                                  <CKEditor editor={ClassicEditor} data4={PostQuestions.QText} 
+                                                  onChange={(event, editor) => { const data4 = editor.getData()
+                                                  setText(data4)
+                                                  }}
+                                                  config={{
+                                                  headers: { 'Content-Type': 'application/json'},
+                                                  placeholder:'Type MCQ Questions only Hindi',
+                                                  ckfinder: {
+                                                  uploadUrl: '/uploads',
+                                                  withCredentials: true,
+                                                  headers: {
+                                                   'X-CSRF-TOKEN': 'CSFR-Token',
+                                                    Authorization: 'Bearer <JSON Web Token>'
+                                          },
+                                  },
+                                  }}/>
+                                  </>:<></>}
+                              </div>
+                              {
                                 options.map((option, index) => <>
                                     {
-                                        language === "both" ? <>
+                                        PostQuestions.QLanguage === "both" ? <>
                                             <Grid item xs={1}>
                                                 <Grid container justifyContent={"flex-end"} alignItems={"center"}>
                                                     <Grid item>
@@ -461,7 +491,7 @@ export default function QuestionPage() {
                                               Authorization: 'Bearer <JSON Web Token>'
                                     },
                             },
-                            }}/></Grid>
+                                             }}/></Grid>
 
                                             <Grid item xs={1}>
                                                 <Grid container justifyContent={"flex-end"}>
@@ -505,7 +535,7 @@ export default function QuestionPage() {
                                               Authorization: 'Bearer <JSON Web Token>'
                                     }, },
                                 }}/>
-                                            </Grid>
+                                                </Grid>
 
                                                 <Grid item xs={1}>
                                                     <Grid container justifyContent={"flex-end"}>
@@ -520,7 +550,7 @@ export default function QuestionPage() {
                                                     </Grid>
                                                 </Grid>
                                         </> :
-                                             language === "hindi" ? <>
+                                             PostQuestions.QLanguage === "hindi" ? <>
                                                      <>
                                                          <Grid item xs={1}>
                                                              <Grid container justifyContent={"flex-end"} alignItems={"center"}>
@@ -581,7 +611,7 @@ export default function QuestionPage() {
                                                     </Grid>
                                                 </Grid>
 
-                                                <Grid item xs={10}>
+                                        <Grid item xs={10}>
                                             <CKEditor editor={ClassicEditor} data8={PostQuestions.QText} 
                                             onChange={(event, editor) => { const data8 = editor.getData()
                                             setText(data8)
@@ -597,7 +627,7 @@ export default function QuestionPage() {
                                                   Authorization: 'Bearer <JSON Web Token>'
                                                 },},
                                             }}/>
-                                                </Grid>
+                                        </Grid>
 
                                                 <Grid item xs={1}>
                                                     <Grid container justifyContent={"flex-end"}>
@@ -615,8 +645,7 @@ export default function QuestionPage() {
                                     }
                                 </>)
                             }
-                        </Grid>
-                       
+
                         <Grid container className="mt-3">
                             <Grid item xs={12}>
                                 <Button
@@ -629,46 +658,44 @@ export default function QuestionPage() {
                                     Add new option
                                 </Button>
                             </Grid>
-                        </Grid>
-                        
-                        
+                        </Grid>  
                         <div className={'col-12 mt-3'}>
                         <h4 className={'pt-3'}>Solution</h4>
-                        {language==='both'?<>
-                        <CKEditor editor={ClassicEditor} data9={text} 
-                        onChange={(event, editor) => { const data9 = editor.getData()
-                        setText(data9)}}
-                        config={{
-                        headers: { 'Content-Type': 'application/json'},
-                        placeholder:'Type solution in english',
-                        ckfinder: {
-                        uploadUrl: '/uploads',
-                        withCredentials: true,
-                        headers: {
+                              {PostQuestions.QLanguage==='both'?<>
+                              <CKEditor editor={ClassicEditor} data9={text} 
+                              onChange={(event, editor) => { const data9 = editor.getData()
+                              setText(data9)}}
+                              config={{
+                              headers: { 'Content-Type': 'application/json'},
+                              placeholder:'Type solution in english',
+                              ckfinder: {
+                              uploadUrl: '/uploads',
+                              withCredentials: true,
+                              headers: {
+                                'X-CSRF-TOKEN': 'CSFR-Token',
+                                Authorization: 'Bearer <JSON Web Token>'
+                              }, }, }}/>
+                            <Button  endIcon={<AddCircleIcon />} variant="outlined">
+                            ADD Video Solution 
+                            </Button>
+                           <CKEditor editor={ClassicEditor} data10={text} 
+                           onChange={(event, editor) => { const data10 = editor.getData()
+                           setText(data10) }}
+                           config={{
+                           headers: { 'Content-Type': 'application/json'},
+                           placeholder:'Type solution in hindi',
+                           ckfinder: {
+                           uploadUrl: '/uploads',
+                           withCredentials: true,
+                           headers: {
                              'X-CSRF-TOKEN': 'CSFR-Token',
                               Authorization: 'Bearer <JSON Web Token>'
-                        }, }, }}/>
-                        <Button  endIcon={<AddCircleIcon />} variant="outlined">
-                            ADD Video Solution 
-                        </Button>
-                      <CKEditor editor={ClassicEditor} data10={text} 
-                       onChange={(event, editor) => { const data10 = editor.getData()
-                       setText(data10) }}
-                       config={{
-                       headers: { 'Content-Type': 'application/json'},
-                       placeholder:'Type solution in hindi',
-                       ckfinder: {
-                       uploadUrl: '/uploads',
-                       withCredentials: true,
-                       headers: {
-                         'X-CSRF-TOKEN': 'CSFR-Token',
-                          Authorization: 'Bearer <JSON Web Token>'
-                        }, }, }}/>
-                        <Button  endIcon={<AddCircleIcon />} variant="outlined">
-                            ADD Video Solution 
-                        </Button>
+                            }, }, }}/>
+                            <Button  endIcon={<AddCircleIcon />} variant="outlined">
+                              ADD Video Solution 
+                            </Button>
                         </>:<></>}
-                        {language==='english'?<>
+                        {PostQuestions.QLanguage==='english'?<>
                        <CKEditor editor={ClassicEditor} data11={text} 
                         onChange={(event, editor) => { const data11 = editor.getData()
                         setText(data11)
@@ -689,7 +716,7 @@ export default function QuestionPage() {
                             ADD Video Solution 
                         </Button>   
                         </>:<></>}
-                        {language==='hindi'?<>
+                        {PostQuestions.QLanguage==='hindi'?<>
                         <CKEditor editor={ClassicEditor} data12={text} 
                         onChange={(event, editor) => { const data12 = editor.getData()
                         setText(data12)
@@ -737,27 +764,43 @@ export default function QuestionPage() {
                                     onDelete={(chip, index) => setChip(chip, index)}
                                 />
                             </div>
+                        </div> 
+                        </Grid>
+                      
+
+                        }
+                        </>)
+                        } 
                         </div>
-                   
-                        <div className={'col-12'}>
-                            <DialogActions>
+
+                </div> 
+                        <DialogActions>
                                 <Button onClick={() => {setOpen(false);}} color="secondary" variant={'contained'}>Cancel</Button>
                                 <Button className={clsx(classes.Btn,)} variant={'contained'} onClick={async() => {
-                                    if(formData.ButtonTitle==='Save'){
-                                          await crud.create('/testquestionsapi/',{
-                                            question_para:PostQuestions.QParagraph,
-                                            question_text:PostQuestions.QText
-                                            
-                                         });
-                                    getQuestion();
-                                    getClearAll();
+                                    if(formData.ButtonTitle==='SAVE'){
+                                        await crud.create('/testquestionsapi/',{
+                                            qid:AddFinalQuestions.Queid,
+                                            question_para:AddFinalQuestions.QPara,
+                                            question_text:AddFinalQuestions.QText,
+                                            ques_lang:AddFinalQuestions.QLanguage,
+                                            description:AddFinalQuestions.QDes,
+                                            solution:AddFinalQuestions.QSol,
+                                            is_active:AddFinalQuestions.Qis_active,
+                                            choices:AddFinalQuestions.QChoices
+                                        });
+                               
+                                 
                                        }
-                                    if(formData.ButtonTitle==='UPDATE'){
-                                        await crud.update('/questionsapi/'+data.sub_id+'/',{
-                                                        question_para:PostQuestions.QParagraph,  
-                                                        question_text:PostQuestions.QText 
-                                         });
-                                    getQuestion();
+                                    if(formData.ButtonTitle==='AddQ'){
+                                        await crud.create('/questionsapi/',{
+                                            qtype:PostQuestions.QType,
+                                            difficulty:PostQuestions.QDiffifulty,
+                                            language:PostQuestions.QLanguage,
+                                            user:'ooo',
+                                            topic:'kkkk'
+                                        });
+                                        console.log("under",PostQuestions.QType)
+                                    getClearAll();
                                     }
                                     setOpen(false)
                                     }} color="primary">
@@ -766,20 +809,17 @@ export default function QuestionPage() {
                                     
                                 </Button>
                             </DialogActions>
-                        </div>
-            </div>
-    </div>            
-
-                
               
-            </Dialog>
-             
+                </div>
+                </div>
+
+            </Dialog>    
             {loader?<Loader/>:<></>}
-            
-        </>
-        
-    )
+</>
+)            
 }
+
+
 const styles = makeStyles((theme) => ({
     Button: {
         background: Themes.MainHeaderColor,
@@ -801,3 +841,4 @@ const styles = makeStyles((theme) => ({
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
 });
+
