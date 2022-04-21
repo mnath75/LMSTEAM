@@ -22,6 +22,8 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
+
+
 const names = [
     'English',
     'Hindi',
@@ -29,7 +31,8 @@ const names = [
     
   ];
 export default function QuestionPageD() {  
-    const [radiovalue, setRadiovalue] = useState(null);
+    const i=1
+    const [radiovalue, setRadiovalue] = useState();
     const [Qdiff, setQdiff] = useState('');
     const [Qtype, setQtype] = useState('');
   
@@ -37,98 +40,100 @@ export default function QuestionPageD() {
     const p =[params.id];
     const [data, setData] = useState()
     const [loader,setLoader] = useState(false)
-    const [courseData, setCourseData] = useState('');
+  
     const location = useLocation();
     const history = useHistory();
     const [Question,setQuestion]=useState();
+
+    const [Type,setType]=useState();
+    const [Diff,setDiff]=useState();
+    const [Lang,setLang]=useState();  
+
     const[AnswerRadio,setAnswerRadio]=useState();
     const [QuestionData,setQuestionData]=useState();
     const classes = styles();
-    const [value, setValue] = useState('Agra');
+
     const [open, setOpen] = useState(false);
-    const [language, setLanguage] = useState("english");
-    const [difficulty, setDifficulty] = useState("Difficulty");
     const [chip,setChip] = useState()
+
+    const [textpara, setTextpara] = useState("")
+    const [textque, settextque] = useState("")
+    const [textsol, settextsol] = useState("")
+    const [textqdes, settextqdes] = useState("")
+    const [optionData, setoptionData] = useState([])
+  
+    const R=[];
+    const S=0;
+   
     const [text, setText] = useState("")
     const [personName, setPersonName] = useState([]);
     const[adQuestions,setadQuestions]=useState([]);
-
+    
     const [options, setOptions] =  useState([
         {
-
+        
         },
         {
-           
+        
         },
         {
-            
+         
         },
         {
-            
+         
         }
     ]);
+    
+    const inputHandler = (event, editor, index) => {
+       
+        let optionsValue = [...optionData]
+        optionsValue[index] = editor.getData()
+        setoptionData(optionsValue);
+        
+        let Rvalue=[...Tquestion]
+        Rvalue[index]=event.target.checked===true
+        setTquestion(Rvalue)
+
+    };
     const [formData, setFormData] = useState({
+        formTitle: '',
+        ButtonTitle: ''
+    })
+    const [formData2, setFormData2] = useState({
         formTitle: '',
         ButtonTitle: ''
     })
     // post questions
     const [PostQuestions, setPostQuestions] = useState('');
     const [AddFinalQuestions, setAddFinalQuestions] = useState('');
+    const[Tquestion,setTquestion]=useState([false]);
     function GetFormManage() {
         setOpen(true)
         setFormData({
             formTitle: 'Create New Question',
-            ButtonTitle: 'SAVE',
+            ButtonTitle: 'Add Details',
         });
     }
-    function AddQuestion(){
-        console.log("hhhhbb")
+
+    function questionList(){
         setadQuestions([...adQuestions,{value:""}]);
-        setOpen(true)
-        setFormData({
-            formTitle: 'Create Questions',
-            ButtonTitle: 'AddQ',
-        });
-        setPostQuestions({
-            
-            QDifficulty: '',
-            QLanguage: '',
-            QType: '',
-            QUser: 'hhh',
-            QTopic: 'ttt',
-           
-        });
     }
-    function getClearAll() {
-        
-    }
+    
     function AddFinalQuestion(){
         setOpen(true)
-        setFormData({
-            formTitle: 'Create New Question',
+        setFormData2({
+            formTitle: 'Create Final Question',
             ButtonTitle: 'SAVE',
         });
-        setAddFinalQuestions({
-            Queid: '',
-            QPara:'',
-            QText:'',
-            QLanguage: '',
-            QDes:'',
-            QSol: '',
-            Qis_active: '',
-            QChoices:'',
-        })
     }
+
     function handleChangeR (option) {
         setRadiovalue(option);
-        console.log('radiovalue', radiovalue);
-        }
+         }
     function handleChangeQ(option)   {
         setAnswerRadio(option);
-        console.log('radiovalue', Question);
+        
     }
-   
- 
     const handleChange = (event) => {
         setQdiff(event.target.value);
       };
@@ -136,9 +141,7 @@ export default function QuestionPageD() {
     const handleChangeType = (event) => {
         setQtype(event.target.value);
       };  
-    const handleChangeLang= (event) => {
-            setLanguage(event.target.value);
-          };  
+   
     
     const handleChangeLanguage = (event) => {
         const {
@@ -160,8 +163,6 @@ export default function QuestionPageD() {
     const removeOption = (option) => {
         setOptions(options.filter(s => s != option));
     }
-   
-
     function getEdit() {
         setOpen(true)
         setFormData({
@@ -181,7 +182,6 @@ export default function QuestionPageD() {
             const data1= await crud.retrieve('/questions/?qtype='+params.id+'&&')
             setQuestion(data1);
             setLoader(false);
-            
             }
         
         catch(e){
@@ -201,10 +201,71 @@ export default function QuestionPageD() {
         setLoader(false);
         }
     }
+    const[Qid,setQid]=useState();
+    const qid=0;
+ 
+    async function getQid()
+    {
+        setLoader(true);
+        try{
+            const data1= await crud.retrieve('/questionsapi/')
+            setQid(data1);
+            setLoader(false);
+           }
+        catch(e){
+        setLoader(false);
+        }
+    }
+
+    async function getType()
+    {
+        setLoader(true);
+        try{
+            const data1= await crud.retrieve('/Qtype/')
+            setType(data1);
+            setLoader(false);
+           }
+        
+        catch(e){
+        setLoader(false);
+        }
+    }
+    async function getDifficulty()
+    {
+        setLoader(true);
+        try{
+            const data1= await crud.retrieve('/DLevel/')
+            setDiff(data1);
+            setLoader(false);
+           }
+        
+        catch(e){
+        setLoader(false);
+        }
+    }
+    async function getLanguage()
+    {
+        setLoader(true);
+        try{
+            const data1= await crud.retrieve('/Language/')
+            setLang(data1);
+            setLoader(false);
+           }
+        
+        catch(e){
+        setLoader(false);
+        }
+    }
+ 
     useEffect(() => {
-        getClearAll();
+        
         getQuestion();
         getAll();
+        getType();
+        getDifficulty();
+        getLanguage();
+        getQid();
+       
     }, [location]);
   
     
@@ -221,10 +282,10 @@ export default function QuestionPageD() {
                             <span className='back-tag' onClick={() => {history.push({pathname: '/question-subject',
                                 state: {category:location.state?.category,course:location.state?.course,subject:location.state?.subject}})}}>
                                   {location.state?.subject}</span>&gt; <span className='back-tag' onClick={() => {history.push({pathname: '/question-topic',
-                                state: {category:location.state?.category,course:location.state?.course,subject:location.state?.subject,topic:location.state?.topic}})}}>
+                                state: {category:location.state?.category,course:location.state?.course,subject:location.state?.subject,topic:location.state?.topic,topic1:location.state?.topic1}})}}>
                                   {location.state?.topic}</span>&gt;
                             <span className='back-tag' onClick={() => {history.push({pathname: '/question-type',
-                                state: {category:location.state?.category,course:location.state?.course,subject:location.state?.subject,topic:location.state?.topic}})}}>
+                                state: {category:location.state?.category,course:location.state?.course,subject:location.state?.subject,topic:location.state?.topic,topic1:location.state?.topic1}})}}>
                                   {location.state?.question_type}</span>
                         </h5>
                     </div>
@@ -233,6 +294,7 @@ export default function QuestionPageD() {
                             <Button
                             onClick={() => {
                                 GetFormManage();
+                                AddFinalQuestion();
                             }}
                             variant={'contained'}  startIcon={<AddIcon/>} className={clsx(classes.Button)}>
                                 Create Question
@@ -255,9 +317,10 @@ export default function QuestionPageD() {
                             <Button variant={'contained'} startIcon={<AddIcon/>} className={clsx(classes.Button)}>Export
                                 Question</Button>
                         </label>
-
+                     
                     </div>
                     <hr className={'my-3'}/>
+                 
                     {Question?.length?<>
                     {Question.map((question,index)=>(
                         <>
@@ -303,9 +366,9 @@ export default function QuestionPageD() {
                 </div>
                 <div className={'col-12 mt-3'}>
                          
-                         <CKEditor editor={ClassicEditor} datapara={AddFinalQuestions.QPara} 
+                         <CKEditor editor={ClassicEditor} datapara={textpara} 
                                             onChange={(event, editor) => { const datapara = editor.getData()
-                                            setText(datapara)
+                                            setTextpara(datapara)
                                             }}
                                               value={AddFinalQuestions.QPara}
                                               config={{
@@ -323,58 +386,71 @@ export default function QuestionPageD() {
                         <div className={'col-lg-8 offset-lg-4 col-12  px-lg-3 d-lg-flex justify-content-lg-end'}>
                             <div className={'mx-lg-2 px-lg-2'}>
                             <label className={'pb-2'}>Select Level</label>
+                            {Diff?.length?<>
                             <TextField  size={"small"} value={PostQuestions.QDifficulty} variant={'outlined'}
                             onChange={(e) => {setPostQuestions({...PostQuestions,QDifficulty:e.target.value})}} 
                             name='QDifficulty'fullWidth  select>
-                                <MenuItem value={'Difficult'}>Difficult</MenuItem>
-                                <MenuItem value={'Moderate'}>Moderate</MenuItem>
-                                <MenuItem value={'Easy'}>Easy</MenuItem>
-                            </TextField>   
+                                {Diff.map((diff,index)=>(
+                                <MenuItem value={diff.dl_id}>{diff.dl_title}</MenuItem>
+                                ))}
+                            </TextField>  
+                            </>:<><h2 className='text-center pt-5'></h2></>}   
                             </div>
                             <div className={'mx-lg-2 px-lg-2'}>
                             <label className={'pb-2'}>Select Language</label>
+                            {Lang?.length?<>
                             <TextField size={"small"} value={PostQuestions.QLanguage} variant={'outlined'}
                              onChange={(e) => {setPostQuestions({...PostQuestions,QLanguage:e.target.value})}}  
                              name='QLanguage'  fullWidth  select>
-                                <MenuItem value={'hindi'}>Hindi</MenuItem>
-                                <MenuItem value={'english'}>English</MenuItem>
-                                <MenuItem value={'both'}>Bilingual</MenuItem>
+                            {Lang.map((lang,index)=>(   
+                                <MenuItem value={lang.lg_id}>{lang.lg_title}</MenuItem>
+                            ))}
                             </TextField>
+                            </>:<><h2 className='text-center pt-5'></h2></>}  
                             </div>
                         </div>    
                        
                         <div className={'col-12 d-flex justify-content-between'}>
                             <div className={'mx-lg-2 px-lg-2'}>  
                             <label className={'pb-2'}>Question Type</label>
+                            {Type?.length?<>
                             <TextField  size={"small"} value={PostQuestions.QType} variant={'outlined'} 
                              onChange={(e) => {setPostQuestions({...PostQuestions,QType:e.target.value})}} 
                              name="QType" fullWidth  select>
-                               <MenuItem value={'Single_Multi Choice'}>Single_Multi Choice</MenuItem>
-                               <MenuItem value={'Comprehension Type'}>Comprehension Type</MenuItem>
-                               <MenuItem value={'True/False'}>True/False</MenuItem>
-                               <MenuItem value={'Fill in the blanks'}>Fill in the blanks</MenuItem>
+                             {Type.map((type,index)=>(     
+                               <MenuItem value={type.qt_id}>{type.qt_title}</MenuItem>
+                            ))}
                             </TextField>
+                            </>:<><h2 className='text-center pt-5'></h2></>}   
                             </div>
                         </div>   
 
                         <Grid container className="mt-3">
                             <Grid item xs={12}>
-                            <IconButton onClick={() => {
-                                setOpen(false);
-                                getClearAll()
-                               }} className={classes.CloseBtn}><ClearIcon/>
-                            </IconButton>
-                                <Button
-                                    fullWidth
-                                    variant={"outlined"}
-                                    color={"primary"}
-                                    onClick={() => 
-                                        AddQuestion()
+                            <DialogActions>
+                            <Button className={clsx(classes.Btn,)} startIcon={<AddIcon />} variant={'contained'} onClick={async() => {
+                                    if(formData.ButtonTitle==='Add Details'){
+                                        await crud.create('/questionsapi/',{
+                                            qtype:PostQuestions.QType,
+                                            difficulty:PostQuestions.QDifficulty,
+                                            language:PostQuestions.QLanguage,
+                                            user:1,
+                                            topic:location.state?.topic1
+                                        });
+                                    console.log("under",)
+                                    
                                     }
-                                    startIcon={<AddIcon />}
-                                >
-                                    Add Questions
-                                </Button>
+                                    
+                                    }} color="primary">
+                                    {formData.ButtonTitle}
+                                   
+
+                            </Button>
+                            <Button className={clsx(classes.Btn,)} startIcon={<AddIcon />} variant={'contained'}
+                            onClick={async() => { questionList() }} color="primary" >
+                              ADD Questions
+                            </Button>
+                            </DialogActions>
                             </Grid>
                         </Grid> 
                        
@@ -385,10 +461,10 @@ export default function QuestionPageD() {
                         <Grid container spacing={2} justifyContent={"space-between"}>
                             <div className={'col-12 mt-3'}>Question.{index+1}</div>
                             <div className={'col-12 mt-3'}>
-                                  {PostQuestions.QLanguage==='both'?<>
-                                  <CKEditor editor={ClassicEditor} data1={PostQuestions.QText} 
+                                  {PostQuestions.QLanguage===3?<>
+                                  <CKEditor editor={ClassicEditor} data1={textque} 
                                                   onChange={(event, editor) => { const data1 = editor.getData()
-                                                  setText(data1)
+                                                  settextque(data1)
                                                   }}
                                                   config={{
                                                   headers: { 'Content-Type': 'application/json'},
@@ -402,9 +478,9 @@ export default function QuestionPageD() {
                                           },
                                   },
                                   }}/>
-                                    <CKEditor editor={ClassicEditor}  data2={PostQuestions.QText} 
+                                    <CKEditor editor={ClassicEditor}  data2={textque} 
                                                   onChange={(event, editor) => { const data2 = editor.getData()
-                                                  setText(data2)
+                                                    settextque(data2)
                                                   }}
                                                   config={{
                                                   headers: { 'Content-Type': 'application/json'},
@@ -419,10 +495,10 @@ export default function QuestionPageD() {
                                   },
                                   }}/>
                                   </>:<></>}
-                                  {PostQuestions.QLanguage==='english'?<>
-                                  <CKEditor editor={ClassicEditor} data3={PostQuestions.QText} 
+                                  {PostQuestions.QLanguage===2?<>
+                                  <CKEditor editor={ClassicEditor} data3={textque} 
                                                   onChange={(event, editor) => { const data3 = editor.getData()
-                                                  setText(data3)
+                                                    settextque(data3)
                                                   }}
                                                   config={{
                                                   headers: { 'Content-Type': 'application/json'},
@@ -438,10 +514,10 @@ export default function QuestionPageD() {
                                   }}/>
                                       
                                   </>:<></>}
-                                  {PostQuestions.QLanguage==='hindi'?<>
-                                  <CKEditor editor={ClassicEditor} data4={PostQuestions.QText} 
+                                  {PostQuestions.QLanguage===1?<>
+                                  <CKEditor editor={ClassicEditor} data4={textque} 
                                                   onChange={(event, editor) => { const data4 = editor.getData()
-                                                  setText(data4)
+                                                    settextque(data4)
                                                   }}
                                                   config={{
                                                   headers: { 'Content-Type': 'application/json'},
@@ -460,26 +536,43 @@ export default function QuestionPageD() {
                               {
                                 options.map((option, index) => <>
                                     {
-                                        PostQuestions.QLanguage === "both" ? <>
+                                        PostQuestions.QLanguage === 3 ? <>
                                             <Grid item xs={1}>
                                                 <Grid container justifyContent={"flex-end"} alignItems={"center"}>
                                                     <Grid item>
                                                         <span className="bars">=</span>
                                                     </Grid>
                                                     <Grid item>
-                                                    <RadioGroup  name="english" onClick={() => {handleChangeR(option)}} >   
-                                                        <FormControlLabel  
-                                                         key={index} checked={radiovalue==option} control={<Radio color="primary"/>} />
-                                                    </RadioGroup>
+                                                    <RadioGroup key={index} onClick={() => {handleChangeR(option,index)}} name="is_right">      
+                                                                     <FormControlLabel 
+                                                                     
+                                                                     
+                                                                      name="is_right" control={<Radio 
+                                                                      value={radiovalue}
+                                                                      checked={radiovalue===option} 
+                                                                        onChange={(event) => { 
+                                                                        
+                                                                        let RValue = [...Tquestion]
+                                                                        RValue[index] = event.target.checked===true
+                                                                        
+                                                                        setTquestion(RValue);
+                                                                        console.log("rvalue=",RValue)
+                                                                    }}
+                                                                    
+                                                                    
+                                                                    color={"primary"}/>} />
+                                                                 </RadioGroup>
                                                     </Grid>
                                                 </Grid>
                                             </Grid>
 
                                             <Grid item xs={10}>
-                                            <CKEditor editor={ClassicEditor} data5={PostQuestions.QText} 
-                                            onChange={(event, editor) => { const data5 = editor.getData()
-                                            setText(data5)
-                                            }}
+                                            <CKEditor editor={ClassicEditor} data5={optionData[index]}
+                                           onChange={(event, editor) => { const data5 = editor.getData()
+                                            let optionsValue = [...optionData]
+                                            optionsValue[index] = data5
+                                            setoptionData(optionsValue);
+                                        }}
                                             config={{
                                             headers: { 'Content-Type': 'application/json'},
                                             placeholder:'option'+'  '+ (index+1)+'  '+'english',
@@ -512,17 +605,35 @@ export default function QuestionPageD() {
                                                             <span className="bars">=</span>
                                                         </Grid>
                                                         <Grid item>
-                                                        <RadioGroup key={index} name="english">     
-                                                            <FormControlLabel value="apple" onClick={() => {handleChangeR(option)}}  control={<Radio checked={radiovalue===option}  color={"primary"}/>} />
-                                                        </RadioGroup>  
+                                                        <RadioGroup key={index} onClick={() => {handleChangeR(option,index)}} name="is_right">      
+                                                                     <FormControlLabel 
+                                                                     
+                                                                     
+                                                                      name="is_right" control={<Radio 
+                                                                      value={radiovalue}
+                                                                      checked={radiovalue===option} 
+                                                                        onChange={(event) => { 
+                                                                        
+                                                                        let RValue = [...Tquestion]
+                                                                        RValue[index] = event.target.checked===true
+                                                                        
+                                                                        setTquestion(RValue);
+                                                                        console.log("rvalue=",RValue)
+                                                                    }}
+                                                                    
+                                                                    
+                                                                    color={"primary"}/>} />
+                                                        </RadioGroup>
                                                         </Grid>
                                                     </Grid>
                                                 </Grid>
 
                                                 <Grid item xs={10}>
-                                                <CKEditor editor={ClassicEditor} data6={PostQuestions.QText} 
+                                                <CKEditor editor={ClassicEditor} data6={optionData[index]} 
                                             onChange={(event, editor) => { const data6 = editor.getData()
-                                            setText(data6)
+                                                let optionsValue = [...optionData]
+                                                optionsValue[index] = data6
+                                                setoptionData(optionsValue);
                                             }}
                                             config={{
                                             headers: { 'Content-Type': 'application/json'},
@@ -550,7 +661,7 @@ export default function QuestionPageD() {
                                                     </Grid>
                                                 </Grid>
                                         </> :
-                                             PostQuestions.QLanguage === "hindi" ? <>
+                                             PostQuestions.QLanguage === 1 ? <>
                                                      <>
                                                          <Grid item xs={1}>
                                                              <Grid container justifyContent={"flex-end"} alignItems={"center"}>
@@ -558,21 +669,41 @@ export default function QuestionPageD() {
                                                                      <span className="bars">=</span>
                                                                  </Grid>
                                                                  <Grid item>
-                                                                 <RadioGroup key={index} onClick={() => {handleChangeR(option)}} name="hindi">      
-                                                                     <FormControlLabel value="option1"  name="value" control={<Radio checked={radiovalue==option} color={"primary"}/>} />
+                                                                     
+                                                                 <RadioGroup key={index} onClick={() => {handleChangeR(option,index)}} name="is_right">      
+                                                                     <FormControlLabel 
+                                                                     
+                                                                     
+                                                                      name="is_right" control={<Radio 
+                                                                      value={radiovalue}
+                                                                      checked={radiovalue===option} 
+                                                                        onChange={(event) => { 
+                                                                        
+                                                                        let RValue = [...Tquestion]
+                                                                        RValue[index] = event.target.checked===true
+                                                                        
+                                                                        setTquestion(RValue);
+                                                                        console.log("rvalue=",RValue)
+                                                                    }}
+                                                                    
+                                                                    
+                                                                    color={"primary"}/>} />
                                                                  </RadioGroup>
                                                                  </Grid>
                                                              </Grid>
                                                          </Grid>
 
                                                          <Grid item xs={10}>
-                                                         <CKEditor editor={ClassicEditor} data7={PostQuestions.QText} 
-                                            onChange={(event, editor) => { const data7 = editor.getData()
-                                            setText(data7)
-                                            }}
+                                            <CKEditor  key={index} editor={ClassicEditor} data7={optionData[index]}
+                                           onChange={(event, editor) => { const data7 = editor.getData()
+                                            let optionsValue = [...optionData]
+                                            optionsValue[index] = data7
+                                            setoptionData(optionsValue);
+                                        }}
+                                           
                                             config={{
                                             headers: { 'Content-Type': 'application/json'},
-                                            placeholder: 'option'+'  '+ (index+1) +'  '+'Hindi' ,
+                                            placeholder: 'option'+'  '+ (index+1) +'  '+'Hindi-only' ,
                                             ckfinder: {
                                             uploadUrl: '/uploads',
                                             withCredentials: true,
@@ -612,10 +743,12 @@ export default function QuestionPageD() {
                                                 </Grid>
 
                                         <Grid item xs={10}>
-                                            <CKEditor editor={ClassicEditor} data8={PostQuestions.QText} 
-                                            onChange={(event, editor) => { const data8 = editor.getData()
-                                            setText(data8)
-                                            }}
+                                            <CKEditor editor={ClassicEditor} data8={optionData[index]}
+                                           onChange={(event, editor) => { const data8 = editor.getData()
+                                            let optionsValue = [...optionData]
+                                            optionsValue[index] = data8
+                                            setoptionData(optionsValue);
+                                        }}
                                             config={{
                                                placeholder:'option'+'  '+ (index+1)+'  '+'english1',
                                                headers: { 'Content-Type': 'application/json'},
@@ -661,10 +794,10 @@ export default function QuestionPageD() {
                         </Grid>  
                         <div className={'col-12 mt-3'}>
                         <h4 className={'pt-3'}>Solution</h4>
-                              {PostQuestions.QLanguage==='both'?<>
-                              <CKEditor editor={ClassicEditor} data9={text} 
+                              {PostQuestions.QLanguage===3?<>
+                              <CKEditor editor={ClassicEditor} data9={textsol} 
                               onChange={(event, editor) => { const data9 = editor.getData()
-                              setText(data9)}}
+                              settextsol(data9)}}
                               config={{
                               headers: { 'Content-Type': 'application/json'},
                               placeholder:'Type solution in english',
@@ -678,9 +811,9 @@ export default function QuestionPageD() {
                             <Button  endIcon={<AddCircleIcon />} variant="outlined">
                             ADD Video Solution 
                             </Button>
-                           <CKEditor editor={ClassicEditor} data10={text} 
+                           <CKEditor editor={ClassicEditor} data10={textsol} 
                            onChange={(event, editor) => { const data10 = editor.getData()
-                           setText(data10) }}
+                           settextsol(data10) }}
                            config={{
                            headers: { 'Content-Type': 'application/json'},
                            placeholder:'Type solution in hindi',
@@ -695,10 +828,10 @@ export default function QuestionPageD() {
                               ADD Video Solution 
                             </Button>
                         </>:<></>}
-                        {PostQuestions.QLanguage==='english'?<>
-                       <CKEditor editor={ClassicEditor} data11={text} 
+                        {PostQuestions.QLanguage===2?<>
+                       <CKEditor editor={ClassicEditor} data11={textsol} 
                         onChange={(event, editor) => { const data11 = editor.getData()
-                        setText(data11)
+                        settextsol(data11)
                         }}
                         config={{
                         headers: { 'Content-Type': 'application/json'},
@@ -716,10 +849,10 @@ export default function QuestionPageD() {
                             ADD Video Solution 
                         </Button>   
                         </>:<></>}
-                        {PostQuestions.QLanguage==='hindi'?<>
-                        <CKEditor editor={ClassicEditor} data12={text} 
+                        {PostQuestions.QLanguage===1?<>
+                        <CKEditor editor={ClassicEditor} data12={textsol} 
                         onChange={(event, editor) => { const data12 = editor.getData()
-                        setText(data12)
+                        settextsol(data12)
                         }}
                         config={{
                         headers: { 'Content-Type': 'application/json'},
@@ -742,14 +875,9 @@ export default function QuestionPageD() {
                         <div className={'col-5 mt-3'}>
                             <label className={'pb-2'}>Referance</label>
                             <div>
-                                <ChipInput
-                                    fullWidth
-                                    variant={'outlined'}
-                                    placeholder={'referance years'}
-                                    size={'small'}
-                                    onAdd={(chip) => setChip(chip)}
-                                    onDelete={(chip, index) => setChip(chip, index)}
-                                />
+                            <TextField value={AddFinalQuestions.QDes} variant={'outlined'}
+                            onChange={(e) => {setAddFinalQuestions({...AddFinalQuestions,QDes:e.target.value})}} 
+                            name='QDes'/>
                             </div>
                         </div>
                         <div className={'col-5 mt-3'}>
@@ -764,51 +892,63 @@ export default function QuestionPageD() {
                                     onDelete={(chip, index) => setChip(chip, index)}
                                 />
                             </div>
-                        </div> 
-                        </Grid>
-                      
+                        </div>
+                        <DialogActions>
+                                <Button onClick={() => {setOpen(false);}} color="secondary" variant={'contained'}>Cancel</Button>
+                                <Button className={clsx(classes.Btn,)} variant={'contained'} onClick={async() => {
+                                    if(formData2.ButtonTitle==='SAVE'){ 
+                                        console.log('optiondata', optionData)
+                                        
+                                        await crud.create('/testquestionsapi/',
+                                        
+                                        {
+                                       
+                                            qid:Qid[(Qid.length)-1].qu_id,
+                                            question_para:textpara,
+                                            question_text:textque,
+                                            ques_lang:PostQuestions.QLanguage,
+                                            description:AddFinalQuestions.QDes,
+                                            solution:textsol,
+                                            is_active:'true',
+                                            choices:
 
+                                        
+                                        options.map((option, index) => <>
+                                        {
+                                            [
+                                            {
+                                                language:PostQuestions.QLanguage,
+                                                answer_text:optionData[index],
+                                                is_right:Tquestion[index]
+                                                
+                                            }
+                                            ]
+                                          
+                                        }
+                                       
+                                        </>)
+                                         
+                                        }
+                                       
+                                        );
+                                        console.log("R value",Tquestion[index])  
+                                        }
+                                      
+                                    }} color="primary">
+                                    {formData2.ButtonTitle}
+
+                                </Button>
+                            </DialogActions>   
+                        </Grid>
+                        
+                        
                         }
                         </>)
                         } 
                         </div>
 
                 </div> 
-                        <DialogActions>
-                                <Button onClick={() => {setOpen(false);}} color="secondary" variant={'contained'}>Cancel</Button>
-                                <Button className={clsx(classes.Btn,)} variant={'contained'} onClick={async() => {
-                                    if(formData.ButtonTitle==='SAVE'){
-                                        await crud.create('/testquestionsapi/',{
-                                            qid:AddFinalQuestions.Queid,
-                                            question_para:AddFinalQuestions.QPara,
-                                            question_text:AddFinalQuestions.QText,
-                                            ques_lang:AddFinalQuestions.QLanguage,
-                                            description:AddFinalQuestions.QDes,
-                                            solution:AddFinalQuestions.QSol,
-                                            is_active:AddFinalQuestions.Qis_active,
-                                            choices:AddFinalQuestions.QChoices
-                                        });
-                               
-                                 
-                                       }
-                                    if(formData.ButtonTitle==='AddQ'){
-                                        await crud.create('/questionsapi/',{
-                                            qtype:PostQuestions.QType,
-                                            difficulty:PostQuestions.QDiffifulty,
-                                            language:PostQuestions.QLanguage,
-                                            user:'ooo',
-                                            topic:'kkkk'
-                                        });
-                                        console.log("under",PostQuestions.QType)
-                                    getClearAll();
-                                    }
-                                    setOpen(false)
-                                    }} color="primary">
-                                    {formData.ButtonTitle}
-
-                                    
-                                </Button>
-                            </DialogActions>
+               
               
                 </div>
                 </div>

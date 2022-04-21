@@ -37,20 +37,13 @@ import Slide from "@material-ui/core/Slide";
 import "../QuestionBankComponent/QuestionCss.css";
 import { useLocation } from "react-router-dom";
 import Loader from "../../MainComponents/Loader";
-//import Button from '@mui/material/Button';
-
-const courses = [
-    {id: 1, title: 'IIT mains', topic: 45, subtitle: 'NEET'},
-    {id: 2, title: 'IIT JEE', topic: 405, subtitle: 'NEET'},
-    {id: 3, title: 'NEET', topic: 125, subtitle: 'NEET'},
-    {id: 4, title: 'IIT advance', topic: 35, subtitle: 'NEET'},
-  
-    
-]
+import { useParams } from "react-router-dom";
 
 export default function CourseCourse() {
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
   const classes = useStyles();
+  const params = useParams();
+  const p =[params.id];
   const location = useLocation();
   const history = useHistory();
   const [formData, setFormData] = useState({
@@ -73,33 +66,38 @@ export default function CourseCourse() {
   const [data, setData] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
   const [courseData, setCourseData] = useState("");
-  //const [courses, setCourses] = useState();
+  const [courses,setCourses]=useState();
+
   function GetFormManage() {
-    setOpen(true);
-    setFormData({
-      formTitle: "Create New Category",
-      ButtonTitle: "Create Category",
-    });
+    setOpen(true)
+        setFormData({
+           formTitle: 'Create New Course',
+           ButtonTitle: 'Create Course',
+        });
   }
     
   function getClearAll() {
+        
     setCourseData({
-      courseName: "",
-      course_subtitle: "",
+        courseName: '',
+        courseCat:p
     });
-  }
+}
   //Edit
   function getEdit() {
-    setOpen(true);
+    setOpen(true)
+    
     setFormData({
-      formTitle: "Edit Category",
-      ButtonTitle: "UPDATE",
+        formTitle: 'Edit Course',
+        ButtonTitle: 'UPDATE'
     });
     setCourseData({
-      courseName: data.category_title,
-      course_subtitle: data.category_short,
-    });
-  }
+        
+        courseName: data.cr_title,
+        courseCat:data.cr_categ
+       
+    })
+}
   //For duplicating data
   function getDuplicateCourse() {
     setOpen1(true);
@@ -136,15 +134,30 @@ export default function CourseCourse() {
     getCourses();
   }
   // getCourses
-  async function getCourses() {
-    setLoader(true);
-    try {
-      const data = await crud.retrieve("/categoryapi/");
-     // setCourses(data);
+  async function getCourses()
+  {
+     
+      setLoader(true);
+      try{
+          const data1= await crud.retrieve('/courseapi/?cr_categ='+params.id+'&&')
+          setCourses(data1);
+          setLoader(false);
+          }
+      
+      catch(e){
       setLoader(false);
-    } catch (e) {
-      setLoader(false);
-    }
+      }
+  }
+  async function deletecourse(){
+        
+    await crud.confirm()
+    
+    await crud.delete('/courseapi/'+ data.cr_id)
+    .then((response) => {
+        if(response==null){
+            getCourses();
+        }
+    });
   }
   useEffect(() => {
     getClearAll();
@@ -179,9 +192,9 @@ export default function CourseCourse() {
                         {courses?.map((value, index) => (
                         <div key={index} className={'col-xl-4 col-lg-4 col-md-6 col-12  mt-4'}>
                             <div className={clsx('px-3 pt-2 card')} >
-                                <div onClick={()=>{history.push({pathname: '/course-batch/',
-                                    state: {category:value.title}})}} className={'QuestionRedirect'} />
-                                <h5>{value?.title}</h5>
+                                <div onClick={()=>{history.push({pathname: '/course-batch/'+value?.cr_id,
+                                    state: {category: location.state?.category,course:value?.cr_title}})}} className={'QuestionRedirect'} />
+                                <h5>{value?.cr_title}</h5>
                                 <p>{value?.subtitle}</p>
                                 <IconButton  onClick={(event) => {
                                     setAnchorEl(event.currentTarget);
@@ -345,44 +358,38 @@ export default function CourseCourse() {
                     getClearAll()
                 }} className={classes.CloseBtn}><Clear/></IconButton>
                 <div className={clsx('container-fluid mx-lg-4', classes.FormWidth)}>
-                    <div className={'row pl-0 pr-0'}>
+                    <div className={'row pl-0 pr-0 mt-2'}>
                         <div className={clsx('col-lg-3 col-12')}>
-                            <h6 className={classes.InputTitle}>Category Name</h6>
+                            <h6 className={classes.InputTitle}>Course Name</h6>
                         </div>
                         <div className={'col-lg-9 col-12'}>
                             <TextField value={courseData.courseName} onChange={(e)=>{
-                                     setCourseData({...courseData,courseName:e.target.value})
-                            }} name='courseName'  fullWidth variant="outlined" InputProps={{className: 'TextFieldHeight',}}/>
+                                setCourseData({...courseData,courseName:e.target.value})
+                            }} name='courseName'  fullWidth variant="outlined" InputProps={{className: 'TextFieldHeight',}}/>   
                         </div>
                     </div>
-                        <div className={'row  my-4 pl-0 pr-0'}>
-                            <div className={clsx('col-lg-3 col-12')}>
-                                <h6 className={classes.InputTitle}>Courses</h6>
-                            </div>
-                            <div className={'col-lg-9 col-12'}>
-                            <TextField value={courseData.course_subtitle} onChange={(e)=>{
-                                     setCourseData(
-                                         {...courseData,
-                                            course_subtitle:e.target.value})
-                            }} name='course_subtitle'  fullWidth variant="outlined" InputProps={{className: 'TextFieldHeight',}}/>
-                        </div>
-                        </div>
                 </div>
                 <DialogActions className={'mx-2'}>
-                    <Button className={clsx(classes.Btn,)} variant={'contained'} onClick={async() => {
-                    if(formData.ButtonTitle==='Create Category'){
-                          await crud.create('/categoryapi/',{
-                              category_short:courseData.course_subtitle,
-                              category_title:courseData.courseName,
+                <Button className={clsx(classes.Btn,)} variant={'contained'} onClick={async() => {
+                    if(formData.ButtonTitle==='Create Course'){
+                          await crud.create('/courseapi/',{
+                            
+                              cr_title:courseData.courseName,
+                              cr_categ:courseData.courseCat
+                              
+                             
                             });
+                            console.log("nniii",courseData.courseCat)
                         getCourses();
                         getClearAll();
                      }
                         setOpen(false)
                     if(formData.ButtonTitle==='UPDATE'){
-                           await crud.update('/categoryapi/'+data.category_id+'/',{
-                                    category_short:courseData.course_subtitle,      
-                                    category_title:courseData.courseName,      
+                        await crud.update('/courseapi/'+data.cr_id+'/',{
+                                        
+                                        cr_title:courseData.courseName,  
+                                        cr_categ:courseData.courseCat
+                                        
                          });
                         getCourses();
                         }

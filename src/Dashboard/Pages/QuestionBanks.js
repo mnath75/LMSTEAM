@@ -67,7 +67,7 @@ export default function QuestionCreateCourse() {
     catch(e){
         setLoader(false);
     }
-}
+    }
     useEffect(() => {
         getClearAll();
         getCourses();

@@ -11,18 +11,13 @@ import {crud} from "../../services/crud";
 import ChipInput from 'material-ui-chip-input'
 import Loader from '../../MainComponents/Loader';
 import { useParams } from "react-router-dom";
-import Select from '@mui/material/Select';
-import FormControl from '@mui/material/FormControl';
-import FormHelperText from '@mui/material/FormHelperText';
-import InputLabel from '@mui/material/InputLabel';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 
-import OutlinedInput from '@mui/material/OutlinedInput';
-import Checkbox from '@mui/material/Checkbox';
-import ListItemText from '@mui/material/ListItemText';
+import Editor from 'ckeditor5-custom-build/build/ckeditor';
 
+import { CKEditor } from '@ckeditor/ckeditor5-react'
+
+
+import VideoUpload from "./UploadVideo";
 
 const names = [
     'English',
@@ -31,8 +26,10 @@ const names = [
     
   ];
 export default function QuestionPageD() {  
-    const i=1
+    
     const [radiovalue, setRadiovalue] = useState();
+    const [radiovaluedual, setRadiovaluedual] = useState();
+
     const [Qdiff, setQdiff] = useState('');
     const [Qtype, setQtype] = useState('');
   
@@ -58,12 +55,15 @@ export default function QuestionPageD() {
 
     const [textpara, setTextpara] = useState("")
     const [textque, settextque] = useState("")
+    const [textqueDual, settextqueDual] = useState("")
+
     const [textsol, settextsol] = useState("")
+    const [textsolDual, settextsolDual] = useState("")
+
     const [textqdes, settextqdes] = useState("")
     const [optionData, setoptionData] = useState([])
-  
-    const R=[];
-    const S=0;
+    const [optionDatadual, setoptionDatadual] = useState([])
+    
    
     const [text, setText] = useState("")
     const [personName, setPersonName] = useState([]);
@@ -84,13 +84,7 @@ export default function QuestionPageD() {
         }
     ]);
     
-    const inputHandler = (event, editor, index) => {
-       
-        let optionsValue = [...optionData]
-        optionsValue[index] = editor.getData()
-        setoptionData(optionsValue);
-
-    };
+   
     const [formData, setFormData] = useState({
         formTitle: '',
         ButtonTitle: ''
@@ -99,9 +93,17 @@ export default function QuestionPageD() {
         formTitle: '',
         ButtonTitle: ''
     })
+
+    const [formData3, setFormData3] = useState({
+        formTitle: '',
+        ButtonTitle: ''
+    })
     // post questions
     const [PostQuestions, setPostQuestions] = useState('');
     const [AddFinalQuestions, setAddFinalQuestions] = useState('');
+    const[Tquestion,setTquestion]=useState([false]);
+    const[TquestionDual,setTquestionDual]=useState([false]);
+   
     function GetFormManage() {
         setOpen(true)
         setFormData({
@@ -121,10 +123,20 @@ export default function QuestionPageD() {
             ButtonTitle: 'SAVE',
         });
     }
+    function AddFinalQuestion2(){
+        setOpen(true)
+        setFormData3({
+            formTitle: 'Create Final Question2',
+            ButtonTitle: 'SAVE',
+        });
+    }
 
     function handleChangeR (option) {
         setRadiovalue(option);
          }
+    function handleChangeRdual (option) {
+            setRadiovaluedual(option);
+             }   
     function handleChangeQ(option)   {
         setAnswerRadio(option);
         
@@ -250,6 +262,37 @@ export default function QuestionPageD() {
         catch(e){
         setLoader(false);
         }
+    }  
+    const API_URl = "https://lmsoskillupdated.herokuapp.com"
+    const UPLOAD_ENDPOINT = "imagedemo/";
+    function uploadAdapter(loader) {
+        return {
+            upload: () => {
+                return new Promise((resolve, reject) => {
+                    const body = new FormData();
+                    loader.file.then((file) => {
+                        body.append("image_text", file);
+                        fetch(`${API_URl}/${UPLOAD_ENDPOINT}`, {
+                            method: "post",
+                            body: body
+                        })
+                            .then((res => res.json()))
+                            .then((res) => {
+                                resolve({ default: `${res.image_text}` })
+                            })
+                            .catch((err) => {
+                                reject(err);
+                            })
+                    })
+                })
+            }
+        }
+    }
+
+    function uploadPlugin(editor) {
+        editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
+        return uploadAdapter(loader);
+        }
     }
  
     useEffect(() => {
@@ -290,6 +333,7 @@ export default function QuestionPageD() {
                             onClick={() => {
                                 GetFormManage();
                                 AddFinalQuestion();
+                                AddFinalQuestion2();
                             }}
                             variant={'contained'}  startIcon={<AddIcon/>} className={clsx(classes.Button)}>
                                 Create Question
@@ -361,23 +405,16 @@ export default function QuestionPageD() {
                 </div>
                 <div className={'col-12 mt-3'}>
                          
-                         <CKEditor editor={ClassicEditor} datapara={textpara} 
+                <CKEditor editor={Editor} datapara={textpara} 
                                             onChange={(event, editor) => { const datapara = editor.getData()
                                             setTextpara(datapara)
                                             }}
-                                              value={AddFinalQuestions.QPara}
-                                              config={{
-                                              headers: { 'Content-Type': 'application/json'},
-                                              placeholder:'paragraph type something',
-                                              ckfinder: {
-                                              uploadUrl: '/uploads',
-                                              withCredentials: true,
-                                              headers: {
-                                               'X-CSRF-TOKEN': 'CSFR-Token',
-                                                Authorization: 'Bearer <JSON Web Token>'
-                                            },
-                            },
-                            }}/>
+                                            
+                                            value={AddFinalQuestions.QPara}
+                                            config={{
+                                                extraPlugins: [uploadPlugin]
+                                            }}
+                />
                         <div className={'col-lg-8 offset-lg-4 col-12  px-lg-3 d-lg-flex justify-content-lg-end'}>
                             <div className={'mx-lg-2 px-lg-2'}>
                             <label className={'pb-2'}>Select Level</label>
@@ -457,75 +494,43 @@ export default function QuestionPageD() {
                             <div className={'col-12 mt-3'}>Question.{index+1}</div>
                             <div className={'col-12 mt-3'}>
                                   {PostQuestions.QLanguage===3?<>
-                                  <CKEditor editor={ClassicEditor} data1={textque} 
+                                  <CKEditor editor={Editor} data1={textqueDual} 
                                                   onChange={(event, editor) => { const data1 = editor.getData()
-                                                  settextque(data1)
+                                                  settextqueDual(data1)
                                                   }}
                                                   config={{
-                                                  headers: { 'Content-Type': 'application/json'},
-                                                  placeholder:'Type MCQ Questions both english',
-                                                  ckfinder: {
-                                                  uploadUrl: '/uploads',
-                                                  withCredentials: true,
-                                                  headers: {
-                                                   'X-CSRF-TOKEN': 'CSFR-Token',
-                                                    Authorization: 'Bearer <JSON Web Token>'
-                                          },
-                                  },
-                                  }}/>
-                                    <CKEditor editor={ClassicEditor}  data2={textque} 
+                                                    extraPlugins: [uploadPlugin]
+                                                  }}
+                                                  />
+                                    <CKEditor editor={Editor}  data2={textque} 
                                                   onChange={(event, editor) => { const data2 = editor.getData()
                                                     settextque(data2)
                                                   }}
                                                   config={{
-                                                  headers: { 'Content-Type': 'application/json'},
-                                                  placeholder:'Type MCQ Questions both hindi',
-                                                  ckfinder: {
-                                                  uploadUrl: '/uploads',
-                                                  withCredentials: true,
-                                                  headers: {
-                                                   'X-CSRF-TOKEN': 'CSFR-Token',
-                                                    Authorization: 'Bearer <JSON Web Token>'
-                                          },
-                                  },
-                                  }}/>
+                                                    extraPlugins: [uploadPlugin]
+                                                  }}
+                                                  />
                                   </>:<></>}
                                   {PostQuestions.QLanguage===2?<>
-                                  <CKEditor editor={ClassicEditor} data3={textque} 
+                                  <CKEditor editor={Editor} data3={textque} 
                                                   onChange={(event, editor) => { const data3 = editor.getData()
                                                     settextque(data3)
                                                   }}
                                                   config={{
-                                                  headers: { 'Content-Type': 'application/json'},
-                                                  placeholder:'Type MCQ Questions only english',
-                                                  ckfinder: {
-                                                  uploadUrl: '/uploads',
-                                                  withCredentials: true,
-                                                  headers: {
-                                                    'X-CSRF-TOKEN': 'CSFR-Token',
-                                                    Authorization: 'Bearer <JSON Web Token>'
-                                          },
-                                  },
-                                  }}/>
+                                                    extraPlugins: [uploadPlugin]
+                                                  }}
+                                                  />
                                       
                                   </>:<></>}
                                   {PostQuestions.QLanguage===1?<>
-                                  <CKEditor editor={ClassicEditor} data4={textque} 
+                                  <CKEditor editor={Editor} data4={textque} 
                                                   onChange={(event, editor) => { const data4 = editor.getData()
                                                     settextque(data4)
                                                   }}
-                                                  config={{
-                                                  headers: { 'Content-Type': 'application/json'},
-                                                  placeholder:'Type MCQ Questions only Hindi',
-                                                  ckfinder: {
-                                                  uploadUrl: '/uploads',
-                                                  withCredentials: true,
-                                                  headers: {
-                                                   'X-CSRF-TOKEN': 'CSFR-Token',
-                                                    Authorization: 'Bearer <JSON Web Token>'
-                                          },
-                                  },
-                                  }}/>
+                                                config={{
+                                                    extraPlugins: [uploadPlugin]
+                                                }}  
+                                                />
                                   </>:<></>}
                               </div>
                               {
@@ -538,33 +543,36 @@ export default function QuestionPageD() {
                                                         <span className="bars">=</span>
                                                     </Grid>
                                                     <Grid item>
-                                                    <RadioGroup  name="english" onClick={() => {handleChangeR(option)}} >   
-                                                        <FormControlLabel  
-                                                         key={index} checked={radiovalue==option} control={<Radio color="primary"/>} />
+                                                    <RadioGroup key={index} id={index} onClick={() => {handleChangeRdual(option,index)}} name="is_right">      
+                                                                     <FormControlLabel 
+                                                                      name="is_right" control={<Radio 
+                                                                      value={radiovaluedual}
+                                                                      checked={radiovaluedual===option} 
+                                                                      onChange={(event) => { 
+                                                                        let Rvaluedual = [false,false,false,false,false,false,false,false,false,false,false,false,false]
+                                                                        event.target.checked?Rvaluedual[index]=true:Rvaluedual[index]=false
+                                                                        setTquestionDual(Rvaluedual);
+                                                                        console.log("rvalue=eng",Rvaluedual)
+                                                                    }}
+                                                                    
+                                                                    
+                                                                    color={"primary"}/>} />
                                                     </RadioGroup>
                                                     </Grid>
                                                 </Grid>
                                             </Grid>
 
                                             <Grid item xs={10}>
-                                            <CKEditor editor={ClassicEditor} data5={optionData[index]}
+                                            <CKEditor editor={Editor} data5={optionDatadual[index]}
                                            onChange={(event, editor) => { const data5 = editor.getData()
-                                            let optionsValue = [...optionData]
-                                            optionsValue[index] = data5
-                                            setoptionData(optionsValue);
+                                            let optionsValuedual = [...optionDatadual]
+                                            optionsValuedual[index] = data5
+                                            setoptionDatadual(optionsValuedual);
                                         }}
-                                            config={{
-                                            headers: { 'Content-Type': 'application/json'},
-                                            placeholder:'option'+'  '+ (index+1)+'  '+'english',
-                                            ckfinder: {
-                                            uploadUrl: '/uploads',
-                                            withCredentials: true,
-                                            headers: {
-                                             'X-CSRF-TOKEN': 'CSFR-Token',
-                                              Authorization: 'Bearer <JSON Web Token>'
-                                    },
-                            },
-                                             }}/></Grid>
+                                        config={{
+                                            extraPlugins: [uploadPlugin]
+                                        }}
+                                        /></Grid>
 
                                             <Grid item xs={1}>
                                                 <Grid container justifyContent={"flex-end"}>
@@ -585,31 +593,38 @@ export default function QuestionPageD() {
                                                             <span className="bars">=</span>
                                                         </Grid>
                                                         <Grid item>
-                                                        <RadioGroup key={index} name="english">     
-                                                            <FormControlLabel value="apple" onClick={() => {handleChangeR(option)}}  control={<Radio checked={radiovalue===option}  color={"primary"}/>} />
+                                                        <RadioGroup key={index} id={index} onClick={() => {handleChangeR(option,index)}} name="is_right">      
+                                                                     <FormControlLabel 
+                                                                     
+                                                                     
+                                                                      name="is_right" control={<Radio 
+                                                                      value={radiovalue}
+                                                                      checked={radiovalue===option} 
+                                                                        onChange={(event) => { 
+                                                                        let RValue = [false,false,false,false,false,false,false,false,false,false,false,false,false]
+                                                                        event.target.checked?RValue[index]=true:RValue[index]=false
+                                                                        setTquestion(RValue);
+                                                                        console.log("rvalue=",RValue)
+                                                                    }}
+                                                                    
+                                                                    
+                                                                    color={"primary"}/>} />
                                                         </RadioGroup>  
                                                         </Grid>
                                                     </Grid>
                                                 </Grid>
 
                                                 <Grid item xs={10}>
-                                                <CKEditor editor={ClassicEditor} data6={optionData[index]} 
+                                                <CKEditor editor={Editor} data6={optionData[index]} 
                                             onChange={(event, editor) => { const data6 = editor.getData()
                                                 let optionsValue = [...optionData]
                                                 optionsValue[index] = data6
                                                 setoptionData(optionsValue);
                                             }}
                                             config={{
-                                            headers: { 'Content-Type': 'application/json'},
-                                            placeholder: 'option'+'  '+ (index+1) +'  '+'Hindi' ,
-                                            ckfinder: {
-                                            uploadUrl: '/uploads',
-                                            withCredentials: true,
-                                            headers: {
-                                             'X-CSRF-TOKEN': 'CSFR-Token',
-                                              Authorization: 'Bearer <JSON Web Token>'
-                                    }, },
-                                }}/>
+                                                extraPlugins: [uploadPlugin]
+                                            }}
+                                            />
                                                 </Grid>
 
                                                 <Grid item xs={1}>
@@ -634,42 +649,39 @@ export default function QuestionPageD() {
                                                                  </Grid>
                                                                  <Grid item>
                                                                      
-                                                                 <RadioGroup key={index} onClick={() => {handleChangeR(option,index)}} name="is_right">      
+                                                                 <RadioGroup key={index} id={index} onClick={() => {handleChangeR(option,index)}} name="is_right">      
                                                                      <FormControlLabel 
-                                                                      onChange={(e) => {setAddFinalQuestions({...AddFinalQuestions,
-                                                                        
-                                                                        is_right:e.target.value ? true:false
-                                                                    })
-                                                                    }
-                                                                    } 
-                                                                      value={ AddFinalQuestions.is_right } 
+                                                                     
+                                                                     
                                                                       name="is_right" control={<Radio 
+                                                                      value={radiovalue}
                                                                       checked={radiovalue===option} 
-                                                                      color={"primary"}/>} />
+                                                                        onChange={(event) => { 
+                                                                        let RValue = [false,false,false,false,false,false,false,false,false,false,false,false,false]
+                                                                        event.target.checked?RValue[index]=true:RValue[index]=false
+                                                                        setTquestion(RValue);
+                                                                        console.log("rvalue=",RValue)
+                                                                    }}
+                                                                    
+                                                                    
+                                                                    color={"primary"}/>} />
                                                                  </RadioGroup>
                                                                  </Grid>
                                                              </Grid>
                                                          </Grid>
 
                                                          <Grid item xs={10}>
-                                            <CKEditor  key={index} editor={ClassicEditor} data7={optionData[index]}
+                                            <CKEditor  key={index} id={index} editor={Editor} data7={optionData[index]}
                                            onChange={(event, editor) => { const data7 = editor.getData()
                                             let optionsValue = [...optionData]
                                             optionsValue[index] = data7
                                             setoptionData(optionsValue);
                                         }}
                                            
-                                            config={{
-                                            headers: { 'Content-Type': 'application/json'},
-                                            placeholder: 'option'+'  '+ (index+1) +'  '+'Hindi-only' ,
-                                            ckfinder: {
-                                            uploadUrl: '/uploads',
-                                            withCredentials: true,
-                                            headers: {
-                                             'X-CSRF-TOKEN': 'CSFR-Token',
-                                              Authorization: 'Bearer <JSON Web Token>'
-                                    }, },
-                                }}/>
+                                        config={{
+                                            extraPlugins: [uploadPlugin]
+                                        }}
+                                        />
                                             </Grid>
 
                                                          <Grid item xs={1}>
@@ -701,23 +713,16 @@ export default function QuestionPageD() {
                                                 </Grid>
 
                                         <Grid item xs={10}>
-                                            <CKEditor editor={ClassicEditor} data8={optionData[index]}
-                                           onChange={(event, editor) => { const data8 = editor.getData()
+                                            <CKEditor editor={Editor} data8={optionData[index]}
+                                            onChange={(event, editor) => { const data8 = editor.getData()
                                             let optionsValue = [...optionData]
                                             optionsValue[index] = data8
                                             setoptionData(optionsValue);
                                         }}
-                                            config={{
-                                               placeholder:'option'+'  '+ (index+1)+'  '+'english1',
-                                               headers: { 'Content-Type': 'application/json'},
-                                               ckfinder: {
-                                               uploadUrl: '/uploads',
-                                               withCredentials: true,
-                                               headers: {
-                                                 'X-CSRF-TOKEN': 'CSFR-Token',
-                                                  Authorization: 'Bearer <JSON Web Token>'
-                                                },},
-                                            }}/>
+                                        config={{
+                                            extraPlugins: [uploadPlugin]
+                                        }}
+                                        />
                                         </Grid>
 
                                                 <Grid item xs={1}>
@@ -753,80 +758,44 @@ export default function QuestionPageD() {
                         <div className={'col-12 mt-3'}>
                         <h4 className={'pt-3'}>Solution</h4>
                               {PostQuestions.QLanguage===3?<>
-                              <CKEditor editor={ClassicEditor} data9={textsol} 
+                              <CKEditor editor={Editor} data9={textsolDual} 
                               onChange={(event, editor) => { const data9 = editor.getData()
-                              settextsol(data9)}}
+                              settextsolDual(data9)}}
                               config={{
-                              headers: { 'Content-Type': 'application/json'},
-                              placeholder:'Type solution in english',
-                              ckfinder: {
-                              uploadUrl: '/uploads',
-                              withCredentials: true,
-                              headers: {
-                                'X-CSRF-TOKEN': 'CSFR-Token',
-                                Authorization: 'Bearer <JSON Web Token>'
-                              }, }, }}/>
-                            <Button  endIcon={<AddCircleIcon />} variant="outlined">
-                            ADD Video Solution 
-                            </Button>
-                           <CKEditor editor={ClassicEditor} data10={textsol} 
+                                extraPlugins: [uploadPlugin]
+                              }}
+                            />
+                           < VideoUpload /> 
+                           <CKEditor editor={Editor} data10={textsol} 
                            onChange={(event, editor) => { const data10 = editor.getData()
                            settextsol(data10) }}
                            config={{
-                           headers: { 'Content-Type': 'application/json'},
-                           placeholder:'Type solution in hindi',
-                           ckfinder: {
-                           uploadUrl: '/uploads',
-                           withCredentials: true,
-                           headers: {
-                             'X-CSRF-TOKEN': 'CSFR-Token',
-                              Authorization: 'Bearer <JSON Web Token>'
-                            }, }, }}/>
-                            <Button  endIcon={<AddCircleIcon />} variant="outlined">
-                              ADD Video Solution 
-                            </Button>
+                            extraPlugins: [uploadPlugin]
+                           }}
+                          />
+                            < VideoUpload /> 
                         </>:<></>}
                         {PostQuestions.QLanguage===2?<>
-                       <CKEditor editor={ClassicEditor} data11={textsol} 
+                       <CKEditor editor={Editor} data11={textsol} 
                         onChange={(event, editor) => { const data11 = editor.getData()
                         settextsol(data11)
                         }}
                         config={{
-                        headers: { 'Content-Type': 'application/json'},
-                        placeholder:'Type solution in english',
-                        ckfinder: {
-                        uploadUrl: '/uploads',
-                        withCredentials: true,
-                        headers: {
-                           'X-CSRF-TOKEN': 'CSFR-Token',
-                            Authorization: 'Bearer <JSON Web Token>'
-        },
-    },
-}}/>
-                        <Button  endIcon={<AddCircleIcon />} variant="outlined">
-                            ADD Video Solution 
-                        </Button>   
+                            extraPlugins: [uploadPlugin]
+                        }}
+                        />
+                        < VideoUpload />  
                         </>:<></>}
                         {PostQuestions.QLanguage===1?<>
-                        <CKEditor editor={ClassicEditor} data12={textsol} 
+                        <CKEditor editor={Editor} data12={textsol} 
                         onChange={(event, editor) => { const data12 = editor.getData()
                         settextsol(data12)
                         }}
                         config={{
-                        headers: { 'Content-Type': 'application/json'},
-                        placeholder:'Type solution in Hindi',
-                        ckfinder: {
-                        uploadUrl: '/uploads',
-                        withCredentials: true,
-                        headers: {
-                           'X-CSRF-TOKEN': 'CSFR-Token',
-                           Authorization: 'Bearer <JSON Web Token>'
-               },
-              },
-            }}/>
-                        <Button  endIcon={<AddCircleIcon />} variant="outlined">
-                            ADD Video Solution 
-                        </Button>
+                            extraPlugins: [uploadPlugin]
+                        }}
+                        />
+                      < VideoUpload /> 
             </>:<></>}
                         </div>
 
@@ -853,14 +822,15 @@ export default function QuestionPageD() {
                         </div>
                         <DialogActions>
                                 <Button onClick={() => {setOpen(false);}} color="secondary" variant={'contained'}>Cancel</Button>
+                            {PostQuestions.QLanguage===1 || PostQuestions.QLanguage===2?<>
                                 <Button className={clsx(classes.Btn,)} variant={'contained'} onClick={async() => {
-                                    if(formData2.ButtonTitle==='SAVE'){ 
-                                        console.log('optiondata', optionData)
+                                if(formData2.ButtonTitle==='SAVE'){ 
+                                        
                                         
                                         await crud.create('/testquestionsapi/',
                                         
                                         {
-                                       
+                                        
                                             qid:Qid[(Qid.length)-1].qu_id,
                                             question_para:textpara,
                                             question_text:textque,
@@ -868,34 +838,90 @@ export default function QuestionPageD() {
                                             description:AddFinalQuestions.QDes,
                                             solution:textsol,
                                             is_active:'true',
-                                            choices:
+                                            choices: 
 
                                         
-                                        options.map((option, index) => <>
+                                        options.map((option,index) =>    
                                         {
-                                            [
+                                        return(  
                                             {
                                                 language:PostQuestions.QLanguage,
                                                 answer_text:optionData[index],
-                                                is_right:AddFinalQuestions.is_right
+                                                is_right:Tquestion[index]
                                                 
                                             }
-                                            ]
-                                          
+                                        )
                                         }
-                                       
-                                        </>)
-                                         
+                                     )
+                                    }
+                                    );
+                                        console.log("R value",Tquestion[index])  
                                         }
-                                       
-                                        );
-                                        console.log("R value",AddFinalQuestions.is_right)  
-                                        }
-                                      
                                     }} color="primary">
                                     {formData2.ButtonTitle}
-
                                 </Button>
+                            </>:<></>}    
+                            {PostQuestions.QLanguage===3?<>
+                                <Button className={clsx(classes.Btn,)} variant={'contained'} onClick={async() => {
+                                 if(formData3.ButtonTitle==='SAVE'){ 
+                                    
+                                    await crud.create('/testquestionsapi/',
+                                    {
+                                        qid:Qid[(Qid.length)-1].qu_id,
+                                        question_para:textpara,
+                                        question_text:textque,
+                                        ques_lang:1,
+                                        description:AddFinalQuestions.QDes,
+                                        solution:textsol,
+                                        is_active:'true',
+                                        choices: 
+                                    options.map((option,index) =>    
+                                    {
+                                    return(  
+                                        {
+                                            language:1,
+                                            answer_text:optionData[index],
+                                            is_right:Tquestion[index]
+                                        }
+                                    )
+                                    }
+                                    )
+                                    }
+                                    );
+                                
+                                    await crud.create('/testquestionsapi/',
+                                    {
+                                        qid:Qid[(Qid.length)-1].qu_id,
+                                        question_para:textpara,
+                                        question_text:textqueDual,
+                                        ques_lang:2,
+                                        description:AddFinalQuestions.QDes,
+                                        solution:textsolDual,
+                                        is_active:'true',
+                                        choices: 
+                                    options.map((option,index) =>    
+                                    {
+                                    return(  
+                                        {
+                                            language:2,
+                                            answer_text:optionDatadual[index],
+                                            is_right:TquestionDual[index]
+                                        }
+                                    )
+                                    }
+                                    )
+                                    
+                                    }
+                                   
+                                    );
+                                   
+                                    
+                                }
+                                    }} 
+                                color="primary">
+                                {formData3.ButtonTitle}
+                                </Button>
+                            </>:<></>}    
                             </DialogActions>   
                         </Grid>
                         
@@ -936,7 +962,7 @@ const styles = makeStyles((theme) => ({
     }
 
 }))
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="down" ref={ref} {...props} />;
+const Transition = React.forwardRef(function Transition(props,ref,key) {
+    return <Slide direction="down" ref={ref}  {...props} />;
 });
 

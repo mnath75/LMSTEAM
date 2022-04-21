@@ -123,7 +123,8 @@ export default function QuestionCourse() {
                     {courses.map((value, index) => (
                         <div key={index} className={'col-xl-3 col-lg-4 col-md-6 col-12  mt-4'}>
                             <div className={clsx('card px-3 pt-2')}>
-                                <div onClick={() => {history.push({pathname:'/question-subject/'+value?.cr_id,state: {category: location.state?.category,course:value?.cr_title}})}} className={'QuestionRedirect'}/>
+                                <div onClick={() => {history.push({pathname:'/question-subject/'+value?.cr_id,state:
+                                 {category: location.state?.category,course:value?.cr_title}})}} className={'QuestionRedirect'}/>
                                 <h5>{value?.cr_title}</h5>
                                 
                                 <IconButton onClick={(event) => {

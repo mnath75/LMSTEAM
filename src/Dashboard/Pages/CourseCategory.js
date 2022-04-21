@@ -37,13 +37,7 @@ import { useLocation } from "react-router-dom";
 import Loader from "../../MainComponents/Loader";
 //import Button from '@mui/material/Button';
 
-const courses = [
-    {id: 1, title: 'Single_Multi Choice', topic: 45, subtitle: 'NEET'},
-    {id: 2, title: 'Comprehension Type', topic: 405, subtitle: 'NEET'},
-    {id: 3, title: 'Subjective', topic: 125, subtitle: 'NEET'},
-    {id: 4, title: 'True/False', topic: 35, subtitle: 'NEET'},
-    
-]
+
 export default function CourseCategory() {
   const classes = useStyles();
   const location = useLocation();
@@ -57,48 +51,58 @@ export default function CourseCategory() {
   const [data, setData] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
   const [courseData, setCourseData] = useState("");
+  const [courses,setCourses]=useState();
   //const [courses, setCourses] = useState();
   function GetFormManage() {
-    setOpen(true);
-    setFormData({
-      formTitle: "Create New Category",
-      ButtonTitle: "Create Category",
-    });
-  }
-  function getClearAll() {
+    setOpen(true)
+        setFormData({
+            formTitle: 'Create New Category',
+            ButtonTitle: 'Create Category',
+        });
+}
+function getClearAll() {
     setCourseData({
-      courseName: "",
-      course_subtitle: "",
+        courseName: '',
+        course_subtitle:''
     });
-  }
+}
   //Edit
   function getEdit() {
-    setOpen(true);
-    setFormData({
-      formTitle: "Edit Category",
-      ButtonTitle: "UPDATE",
-    });
-    setCourseData({
-      courseName: data.category_title,
-      course_subtitle: data.category_short,
-    });
-  }
+    setOpen(true)
+        setFormData({
+            formTitle: 'Edit Category',
+            ButtonTitle: 'UPDATE'
+        });
+        setCourseData({
+            courseName: data.category_title,
+            course_subtitle:data.category_short
+        })
+}
   //delete
-  async function deletecourse() {
+  async function deletecourse(){
     await crud.confirm();
-    await crud.delete("/categoryapi/" + data.category_id);
-    getCourses();
-  }
+     await crud.delete('/categoryapi/'+ data.category_id);
+     getCourses();
+
+ }
   // getCourses
-  async function getCourses() {
-    setLoader(true);
-    try {
-      const data = await crud.retrieve("/categoryapi/");
-     // setCourses(data);
+  async function getCourses()
+  {
+      setLoader(true);
+      try{
+      const data= await crud.retrieve('/categoryapi/');
+      setCourses(data);
       setLoader(false);
-    } catch (e) {
+  }
+  catch(e){
       setLoader(false);
-    }
+  }
+  }
+  async function deletecourse(){
+    await crud.confirm();
+     await crud.delete('/categoryapi/'+ data.category_id);
+     getCourses();
+
   }
   useEffect(() => {
     getClearAll();
@@ -131,12 +135,12 @@ export default function CourseCategory() {
                     
                     {courses?.length?<>
                         {courses?.map((value, index) => (
-                        <div key={index} className={'col-xl-4 col-lg-4 col-md-6 col-12  mt-4'}>
+                        <div key={index} className={'col-xl-3 col-lg-4 col-md-6 col-12  mt-4'}>
                             <div className={clsx('px-3 pt-2 card')} >
-                                <div onClick={()=>{history.push({pathname: '/course-course/',
-                                    state: {category:value.title}})}} className={'QuestionRedirect'} />
-                                <h5>{value?.title}</h5>
-                                <p>{value?.subtitle}</p>
+                                <div onClick={()=>{history.push({pathname: '/course-course/'+value?.category_id,
+                                    state: {category:value.category_title}})}} className={'QuestionRedirect'} />
+                                <h5>{value?.category_title}</h5>
+                                <p>{value?.category_short}</p>
                                 <IconButton  onClick={(event) => {
                                     setAnchorEl(event.currentTarget);
                                     setData(value)}} className={classes.menu}><MoreVert/></IconButton>
@@ -163,7 +167,7 @@ export default function CourseCategory() {
                             </div>
                         </div>
                     ))}
-                    </>:<><h2 className='text-center pt-5'>Category is Empty...</h2></>} 
+                    </>:<><h2 className='text-center pt-5'>Category is Empty...</h2></>}
 
             </div>
            </div>
@@ -273,6 +277,62 @@ export default function CourseCategory() {
           </div>
         </div>
       </div>
+      <Dialog maxWidth={'lg'} open={open} TransitionComponent={Transition} keepMounted>
+                <DialogTitle id="alert-dialog-slide-title">{formData.formTitle}
+                    <hr/>
+                </DialogTitle>
+                <IconButton onClick={() => {
+                    setOpen(false);
+                    getClearAll()
+                }} className={classes.CloseBtn}><Clear/></IconButton>
+                <div className={clsx('container-fluid mx-lg-4', classes.FormWidth)}>
+                    <div className={'row pl-0 pr-0'}>
+                        <div className={clsx('col-lg-3 col-12')}>
+                            <h6 className={classes.InputTitle}>Category Name</h6>
+                        </div>
+                        <div className={'col-lg-9 col-12'}>
+                            <TextField value={courseData.courseName} onChange={(e)=>{
+                                     setCourseData({...courseData,courseName:e.target.value})
+                            }} name='courseName'  fullWidth variant="outlined" InputProps={{className: 'TextFieldHeight',}}/>
+                        </div>
+                    </div>
+                        <div className={'row  my-4 pl-0 pr-0'}>
+                            <div className={clsx('col-lg-3 col-12')}>
+                                <h6 className={classes.InputTitle}>Courses</h6>
+                            </div>
+                            <div className={'col-lg-9 col-12'}>
+                            <TextField value={courseData.course_subtitle} onChange={(e)=>{
+                                     setCourseData(
+                                         {...courseData,
+                                            course_subtitle:e.target.value})
+                            }} name='course_subtitle'  fullWidth variant="outlined" InputProps={{className: 'TextFieldHeight',}}/>
+                        </div>
+                        </div>
+                </div>
+                <DialogActions className={'mx-2'}>
+                    <Button className={clsx(classes.Btn,)} variant={'contained'} onClick={async() => {
+                    if(formData.ButtonTitle==='Create Category'){
+                          await crud.create('/categoryapi/',{
+                              category_short:courseData.course_subtitle,
+                              category_title:courseData.courseName,
+                            });
+                        getCourses();
+                        getClearAll();
+                     }
+                        setOpen(false)
+                    if(formData.ButtonTitle==='UPDATE'){
+                           await crud.update('/categoryapi/'+data.category_id+'/',{
+                                    category_short:courseData.course_subtitle,      
+                                    category_title:courseData.courseName,      
+                         });
+                        getCourses();
+                        }
+                    }} color="primary">
+                        {formData.ButtonTitle}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            {loader?<Loader/>:<></>}
     </>
   );
 }

@@ -31,8 +31,8 @@ const names = [
     
   ];
 export default function QuestionPageD() {  
-    const i=1
-    const [radiovalue, setRadiovalue] = useState(null);
+    
+    const [radiovalue, setRadiovalue] = useState();
     const [Qdiff, setQdiff] = useState('');
     const [Qtype, setQtype] = useState('');
   
@@ -61,14 +61,15 @@ export default function QuestionPageD() {
     const [textsol, settextsol] = useState("")
     const [textqdes, settextqdes] = useState("")
     const [optionData, setoptionData] = useState([])
-   
-    const x=[]
+    const [optionDatadual, setoptionDatadual] = useState([])
+    
+    const R=[];
+    const S=0;
    
     const [text, setText] = useState("")
     const [personName, setPersonName] = useState([]);
     const[adQuestions,setadQuestions]=useState([]);
-
-   
+    
     const [options, setOptions] =  useState([
         {
         
@@ -83,7 +84,27 @@ export default function QuestionPageD() {
          
         }
     ]);
-   
+    
+    const inputHandler = (event, editor, index) => {
+       
+        let optionsValue = [...optionData]
+        optionsValue[index] = editor.getData()
+        setoptionData(optionsValue);
+        
+        let Rvalue=[...Tquestion]
+        Rvalue[index]=event.target.checked===true
+        setTquestion(Rvalue)
+        
+        let optionsValuedual = [...optionDatadual]
+        optionsValuedual[index] = editor.getData()
+        setoptionDatadual(optionsValuedual)
+
+        let Rvaluedual=[...TquestionDual]
+        Rvaluedual[index]=event.target.checked===true
+        setTquestion(Rvalue)
+
+
+    };
     const [formData, setFormData] = useState({
         formTitle: '',
         ButtonTitle: ''
@@ -95,6 +116,9 @@ export default function QuestionPageD() {
     // post questions
     const [PostQuestions, setPostQuestions] = useState('');
     const [AddFinalQuestions, setAddFinalQuestions] = useState('');
+    const[Tquestion,setTquestion]=useState([false]);
+    const[TquestionDual,setTquestionDual]=useState([false]);
+   
     function GetFormManage() {
         setOpen(true)
         setFormData({
@@ -102,6 +126,7 @@ export default function QuestionPageD() {
             ButtonTitle: 'Add Details',
         });
     }
+
     function questionList(){
         setadQuestions([...adQuestions,{value:""}]);
     }
@@ -116,8 +141,7 @@ export default function QuestionPageD() {
 
     function handleChangeR (option) {
         setRadiovalue(option);
-        
-        }
+         }
     function handleChangeQ(option)   {
         setAnswerRadio(option);
         
@@ -243,12 +267,13 @@ export default function QuestionPageD() {
         catch(e){
         setLoader(false);
         }
-    }
+    }  
     function getText(html){
         var divContainer= document.createElement("div");
         divContainer.innerHTML = html;
         return divContainer.textContent || divContainer.innerText || "";
     }
+ 
     useEffect(() => {
         
         getQuestion();
@@ -257,7 +282,7 @@ export default function QuestionPageD() {
         getDifficulty();
         getLanguage();
         getQid();
-
+       
     }, [location]);
   
     
@@ -535,20 +560,34 @@ export default function QuestionPageD() {
                                                         <span className="bars">=</span>
                                                     </Grid>
                                                     <Grid item>
-                                                    <RadioGroup  name="english" onClick={() => {handleChangeR(option)}} >   
-                                                        <FormControlLabel  
-                                                         key={index} checked={radiovalue==option} control={<Radio color="primary"/>} />
+                                                    <RadioGroup key={index} id={index} onClick={() => {handleChangeR(option,index)}} name="is_right">      
+                                                                     <FormControlLabel 
+                                                                     
+                                                                     
+                                                                      name="is_right" control={<Radio 
+                                                                      value={radiovalue}
+                                                                      checked={radiovalue===option} 
+                                                                        onChange={(event) => { 
+                                                                        let Rvaluedual = [false,false,false,false,false,false,false,false,false,false,false,false,false]
+                                                                        event.target.checked?Rvaluedual[index]=true:Rvaluedual[index]=false
+                                                                        setTquestion(Rvaluedual);
+                                                                        console.log("rvalue=",Rvaluedual)
+                                                                    }}
+                                                                    
+                                                                    
+                                                                    color={"primary"}/>} />
                                                     </RadioGroup>
                                                     </Grid>
                                                 </Grid>
                                             </Grid>
 
                                             <Grid item xs={10}>
-                                            <CKEditor editor={ClassicEditor} data5={optionData} 
-                                            onChange={(event, editor) => { const data5 = editor.getData()
-                                             
-                                            setoptionData(data5)
-                                            }}
+                                            <CKEditor editor={ClassicEditor} data5={optionDatadual[index]}
+                                           onChange={(event, editor) => { const data5 = editor.getData()
+                                            let optionsValuedual = [...optionDatadual]
+                                            optionsValuedual[index] = data5
+                                            setoptionDatadual(optionsValuedual);
+                                        }}
                                             config={{
                                             headers: { 'Content-Type': 'application/json'},
                                             placeholder:'option'+'  '+ (index+1)+'  '+'english',
@@ -581,17 +620,33 @@ export default function QuestionPageD() {
                                                             <span className="bars">=</span>
                                                         </Grid>
                                                         <Grid item>
-                                                        <RadioGroup key={index} name="english">     
-                                                            <FormControlLabel value="apple" onClick={() => {handleChangeR(option)}}  control={<Radio checked={radiovalue===option}  color={"primary"}/>} />
+                                                        <RadioGroup key={index} id={index} onClick={() => {handleChangeR(option,index)}} name="is_right">      
+                                                                     <FormControlLabel 
+                                                                     
+                                                                     
+                                                                      name="is_right" control={<Radio 
+                                                                      value={radiovalue}
+                                                                      checked={radiovalue===option} 
+                                                                        onChange={(event) => { 
+                                                                        let RValue = [false,false,false,false,false,false,false,false,false,false,false,false,false]
+                                                                        event.target.checked?RValue[index]=true:RValue[index]=false
+                                                                        setTquestion(RValue);
+                                                                        console.log("rvalue=",RValue)
+                                                                    }}
+                                                                    
+                                                                    
+                                                                    color={"primary"}/>} />
                                                         </RadioGroup>  
                                                         </Grid>
                                                     </Grid>
                                                 </Grid>
 
                                                 <Grid item xs={10}>
-                                                <CKEditor editor={ClassicEditor} data6={optionData} 
+                                                <CKEditor editor={ClassicEditor} data6={optionData[index]} 
                                             onChange={(event, editor) => { const data6 = editor.getData()
-                                            setoptionData(data6)
+                                                let optionsValue = [...optionData]
+                                                optionsValue[index] = data6
+                                                setoptionData(optionsValue);
                                             }}
                                             config={{
                                             headers: { 'Content-Type': 'application/json'},
@@ -628,25 +683,35 @@ export default function QuestionPageD() {
                                                                  </Grid>
                                                                  <Grid item>
                                                                      
-                                                                 <RadioGroup key={index} onClick={() => {handleChangeR(option)}} name="is_right">      
+                                                                 <RadioGroup key={index} id={index} onClick={() => {handleChangeR(option,index)}} name="is_right">      
                                                                      <FormControlLabel 
-                                                                      
-                                                                      onChange={(e) => {setAddFinalQuestions({...AddFinalQuestions,is_right:e.target.value})}} 
-                                                                      value={ AddFinalQuestions.is_right ? true:false} 
+                                                                     
+                                                                     
                                                                       name="is_right" control={<Radio 
+                                                                      value={radiovalue}
                                                                       checked={radiovalue===option} 
-                                                                      color={"primary"}/>} />
+                                                                        onChange={(event) => { 
+                                                                        let RValue = [false,false,false,false,false,false,false,false,false,false,false,false,false]
+                                                                        event.target.checked?RValue[index]=true:RValue[index]=false
+                                                                        setTquestion(RValue);
+                                                                        console.log("rvalue=",RValue)
+                                                                    }}
+                                                                    
+                                                                    
+                                                                    color={"primary"}/>} />
                                                                  </RadioGroup>
                                                                  </Grid>
                                                              </Grid>
                                                          </Grid>
 
                                                          <Grid item xs={10}>
-                                            <CKEditor  key={index} editor={ClassicEditor} data7={optionData} 
-                                            onChange={(event, editor) => { const data7 = editor.getData()
-                                            setoptionData(data7)
-                                            }}
-                                            value={optionData}
+                                            <CKEditor  key={index} id={index} editor={ClassicEditor} data7={optionData[index]}
+                                           onChange={(event, editor) => { const data7 = editor.getData()
+                                            let optionsValue = [...optionData]
+                                            optionsValue[index] = data7
+                                            setoptionData(optionsValue);
+                                        }}
+                                           
                                             config={{
                                             headers: { 'Content-Type': 'application/json'},
                                             placeholder: 'option'+'  '+ (index+1) +'  '+'Hindi-only' ,
@@ -689,10 +754,12 @@ export default function QuestionPageD() {
                                                 </Grid>
 
                                         <Grid item xs={10}>
-                                            <CKEditor editor={ClassicEditor} data8={optionData} 
+                                            <CKEditor editor={ClassicEditor} data8={optionData[index]}
                                             onChange={(event, editor) => { const data8 = editor.getData()
-                                            setoptionData(data8)
-                                            }}
+                                            let optionsValue = [...optionData]
+                                            optionsValue[index] = data8
+                                            setoptionData(optionsValue);
+                                        }}
                                             config={{
                                                placeholder:'option'+'  '+ (index+1)+'  '+'english1',
                                                headers: { 'Content-Type': 'application/json'},
@@ -840,36 +907,45 @@ export default function QuestionPageD() {
                         <DialogActions>
                                 <Button onClick={() => {setOpen(false);}} color="secondary" variant={'contained'}>Cancel</Button>
                                 <Button className={clsx(classes.Btn,)} variant={'contained'} onClick={async() => {
-                                    if(formData2.ButtonTitle==='SAVE'){
+                                    if(formData2.ButtonTitle==='SAVE'){ 
+                                        console.log('optiondata', optionData)
                                         
                                         await crud.create('/testquestionsapi/',
                                         
                                         {
                                        
                                             qid:Qid[(Qid.length)-1].qu_id,
-                                            question_para:getText(textpara),
-                                            question_text:getText(textque),
+                                            question_para:textpara,
+                                            question_text:textque,
                                             ques_lang:PostQuestions.QLanguage,
                                             description:AddFinalQuestions.QDes,
-                                            solution:getText(textsol),
+                                            solution:textsol,
                                             is_active:'true',
                                             choices:
+
+                                        
+                                        options.map((option,index) =>    
+                                        
+                                        {
+                                        return(  
                                             
-                                            options.map((option, index) => <>
-                                            {
-                                            [
+                                               
                                             {
                                                 language:PostQuestions.QLanguage,
-                                                answer_text:getText(optionData),
-                                                is_right:AddFinalQuestions.is_right
-                                            } 
-                                            ]
+                                                answer_text:optionData[index],
+                                                is_right:Tquestion[index]
+                                                
                                             }
-                                        </>)
-                                         
+                                            
+                                        )
                                         }
+                                     )
+                                    
+                                        
+                                    }
+                                       
                                         );
-                                        console.log("gg",options)  
+                                        console.log("R value",Tquestion[index])  
                                         }
                                       
                                     }} color="primary">
@@ -916,7 +992,7 @@ const styles = makeStyles((theme) => ({
     }
 
 }))
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="down" ref={ref} {...props} />;
+const Transition = React.forwardRef(function Transition(props,ref,key) {
+    return <Slide direction="down" ref={ref}  {...props} />;
 });
 

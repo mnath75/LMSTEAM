@@ -30,6 +30,7 @@ import CoPresentIcon from '@mui/icons-material/CoPresent';
 import GroupIcon from '@mui/icons-material/Group';
 import SubjectIcon from '@mui/icons-material/Subject';
 import GroupsIcon from '@mui/icons-material/Groups';
+import PresentToAllIcon from '@mui/icons-material/PresentToAll';
 
 //Admin-Header
 export const DashboadNav = [
@@ -55,6 +56,34 @@ export const BatchSidebar = [
     {id: 7, title: "Analytics",icons: <AnalyticsIcon/>,page: "/analytics",},
     {id: 8, title: "Live Sessions",icons: <LiveTvIcon/>,page: "/live-sessions",},
     {id: 9, title: "Announcements",icons: <CampaignIcon/>,page: "/announcements",},
+];
+// Batches sidebar1
+export const BatchSidebar1 = [
+    {id: 1, title: "Overview",icons: <DashboardIcon fontSize="small"/>,page: "/Overview",},
+    {id: 2, title: "Batches",icons: <GroupsIcon fontSize="small"/>,page: "/course-batchs",},
+    {id: 3, title: "Subjects",icons: <SubjectIcon fontSize="small"/>,page: "/subjects",},
+    {id: 4, title: "Educators",icons: <CoPresentIcon fontSize="small"/>,page: "/educators",},
+];
+// Batch sidebar2
+export const BatchSidebar2 = [
+    {id: 1, title: "Students",icons: <GroupIcon fontSize="small"/>,page: "/students",},
+    {id: 2, title: "Analytics",icons: <AnalyticsIcon fontSize="small"/>,page: "/analytics",},
+    {id: 3, title: "Live Sessions",icons: <LiveTvIcon fontSize="small"/>,page: "/live-sessions",},
+    {id: 4, title: "Announcements",icons: <CampaignIcon fontSize="small"/>,page: "/announcements",},
+];
+
+// Contents BatchSidebar
+export const BatchContent = [
+    {id: 1, title: "Contents",icons: < ContentPasteIcon fontSize="small"/>},
+   
+];
+export const ContentNav = [
+    {id: 1, title: "Test",icons: <DescriptionIcon fontSize="small"/>,page: "/announcements",},
+    {id: 2, title: "Classes",icons: <LiveTvIcon fontSize="small"/>,page: "/announcements",},
+    {id: 3, title: "E-Books",icons: <MenuBookIcon fontSize="small"/>,page: "/announcements",},
+    {id: 4, title: "Assignment",icons: <AssignmentIcon fontSize="small"/>,page: "/announcements",},
+    {id: 5, title: "Content-Mapping",icons: <CampaignIcon fontSize="small"/>,page: "/announcements",},
+    {id: 6, title: "Presentation",icons: <PresentToAllIcon fontSize="small"/>,page: "/announcements",}
 ];
 //Website-header
 export const WebsiteNav = [
