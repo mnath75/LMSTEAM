@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Button} from "@material-ui/core";
-import {Link , useHistory,Redirect} from 'react-router-dom'
+import {Link ,Redirect} from 'react-router-dom'
 import OtpInput from 'react-otp-input';
 import SocialLogin from "./SocialLogin";
 import _ from 'lodash';

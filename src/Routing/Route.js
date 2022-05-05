@@ -10,8 +10,9 @@ import QuestionCourse from '../Dashboard/QuestionBankComponent/QuestionCourse'
 import QuestionSubjects from "../Dashboard/QuestionBankComponent/QuestionSubjects";
 import QuestionTopic from "../Dashboard/QuestionBankComponent/QuestionTopic";
 import QuestionType from "../Dashboard/QuestionBankComponent/QuestionType";
-//import QuestionPage from "../Dashboard/QuestionBankComponent/QuestionsPage";
+
 import QuestionPageD from "../Dashboard/QuestionBankComponent/QuestionPageD";
+
 import CourseCourse from "../Dashboard/CoursesComponent/CourseCourse";
 import CourseBatch from "../Dashboard/CoursesComponent/CourseBatch";
 import BatchDetail from "../Dashboard/CoursesComponent/BatchDetail";
@@ -28,7 +29,6 @@ export default function Routing() {
             <Route path="/login" exact  component={Form}/>
             <Route path="/sign-up" exact  component={Form}/>
             <PrivateRouter Component={Dashboard} path={'/dashboard'} exact/>
-          
             <PrivateRouter Component={CourseCategory} path={'/course-category'} exact/>
             <PrivateRouter Component={CourseCourse} path={'/course-course/:id'} exact/>
             <PrivateRouter Component={CourseBatch} path={'/course-batch/:id'} exact/>

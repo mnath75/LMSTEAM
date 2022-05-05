@@ -13,11 +13,10 @@ import Loader from '../../MainComponents/Loader';
 import { useParams } from "react-router-dom";
 
 import Editor from 'ckeditor5-custom-build/build/ckeditor';
-
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 
-
 import VideoUpload from "./UploadVideo";
+import ReactHtmlParser from 'react-html-parser';
 
 const names = [
     'English',
@@ -186,7 +185,7 @@ export default function QuestionPageD() {
     {
         setLoader(true);
         try{
-            const data1= await crud.retrieve('/questions/?qtype='+params.id+'&&')
+            const data1= await crud.retrieve('/testquestionsapi/')
             setQuestion(data1);
             setLoader(false);
             }
@@ -294,6 +293,8 @@ export default function QuestionPageD() {
         return uploadAdapter(loader);
         }
     }
+    
+    
  
     useEffect(() => {
         
@@ -365,12 +366,13 @@ export default function QuestionPageD() {
                         <>
                         
                             <div key={index} className={'col-12'}>
-                                <h4>{index+1}. {question?.title}</h4>
-                                {question?.answer_set.map((option,index)=>(
-                                 <RadioGroup key={index} aria-label="gender" name="gender1" value={question?.answer_set.answer_text}  
+                              
+                                {index+1}. {ReactHtmlParser(question?.question_text)}
+                                {question?.choices.map((option,index)=>(
+                                 <RadioGroup key={index} aria-label="gender" name="gender1" value={ReactHtmlParser(question?.choices.answer_text)}  
                                  onClick={() => {handleChangeQ(option)}}
                                 > 
-                                <FormControlLabel value={option.answer_text} checked={AnswerRadio==option} control={<Radio/>} label={option.answer_text}/>
+                                <FormControlLabel value={ReactHtmlParser(option.answer_text)} checked={AnswerRadio==option} control={<Radio/>} label={ReactHtmlParser(option.answer_text)}/>
                                 </RadioGroup>
                                  ))}
                                 <div className={'my-2'}>
@@ -386,7 +388,7 @@ export default function QuestionPageD() {
                 </div>
             </div> 
 
-            <Dialog maxWidth={'lg'}
+            <Dialog  disableEnforceFocus={true}  maxWidth={'lg'}
              
              open={open}
              TransitionComponent={Transition}>
@@ -470,7 +472,6 @@ export default function QuestionPageD() {
                                             topic:location.state?.topic1
                                         });
                                     console.log("under",)
-                                    
                                     }
                                     
                                     }} color="primary">
@@ -855,8 +856,9 @@ export default function QuestionPageD() {
                                      )
                                     }
                                     );
-                                        console.log("R value",Tquestion[index])  
-                                        }
+                                    console.log("qid",Qid[(Qid.length)-1].qu_id)
+                                    console.log("R value",Tquestion[index])  
+                                    }
                                     }} color="primary">
                                     {formData2.ButtonTitle}
                                 </Button>
@@ -884,11 +886,16 @@ export default function QuestionPageD() {
                                             is_right:Tquestion[index]
                                         }
                                     )
+                                    
                                     }
+                                    
                                     )
+                                    
                                     }
+                                    
                                     );
-                                
+                                    
+                                    console.log("qid",Qid[(Qid.length)-1].qu_id)  
                                     await crud.create('/testquestionsapi/',
                                     {
                                         qid:Qid[(Qid.length)-1].qu_id,
@@ -914,10 +921,9 @@ export default function QuestionPageD() {
                                     }
                                    
                                     );
-                                   
-                                    
+                                    console.log("qid",Qid[(Qid.length)-1].qu_id)
                                 }
-                                    }} 
+                                }} 
                                 color="primary">
                                 {formData3.ButtonTitle}
                                 </Button>

@@ -45,10 +45,8 @@ class Profile extends Component {
       })
     }  
   componentDidMount() {
-    
       this.fetchUserDetails(this.state.id);
-       
-      }
+    }
     
   changeProfileImage=(event)=>{
        
