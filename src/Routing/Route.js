@@ -12,7 +12,7 @@ import QuestionTopic from "../Dashboard/QuestionBankComponent/QuestionTopic";
 import QuestionType from "../Dashboard/QuestionBankComponent/QuestionType";
 
 import QuestionPageD from "../Dashboard/QuestionBankComponent/QuestionPageD";
-
+import CourseOrder from "../marketPlace/courseOrder";
 import CourseCourse from "../Dashboard/CoursesComponent/CourseCourse";
 import CourseBatch from "../Dashboard/CoursesComponent/CourseBatch";
 import BatchDetail from "../Dashboard/CoursesComponent/BatchDetail";
@@ -42,6 +42,7 @@ export default function Routing() {
             <PrivateRouter Component={QuestionTopic} path={'/question-topic/:id'} exact/>
             <PrivateRouter Component={QuestionType} path={'/question-type'} exact/>
             <PrivateRouter Component={QuestionPageD} path={'/question-page-D/:id'} exact/>
+            <PrivateRouter Component={CourseOrder} path={'/marketplace/'} exact/>
         </Switch>
     </BrowserRouter>
     </>
